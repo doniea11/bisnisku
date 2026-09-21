@@ -90,7 +90,7 @@
 
     <div id="global-loader" class="flex flex-col items-center justify-center py-20">
       <div class="w-12 h-12 border-4 border-[#00ffaa] border-t-transparent rounded-full animate-spin zett-glow"></div>
-      <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">memuat sistem API cloud...</p>
+      <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">Sistem Masdonie Group</p>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
@@ -186,7 +186,6 @@
           <button onclick="switchKasirSub('persetujuan')" id="ksub-persetujuan" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer"><i class="fa-solid fa-check-double mr-1"></i> Persetujuan Supplier</button>
           <button onclick="switchKasirSub('deposit')" id="ksub-deposit" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Deposit Kontrak</button>
           <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Pengaturan Harga</button>
-          <button onclick="switchKasirSub('masuk')" id="ksub-masuk" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Tabung Masuk</button>
           <button onclick="switchKasirSub('member')" id="ksub-member" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Transaksi Member</button>
           <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Laporan Transaksi</button>
         </div>
@@ -301,45 +300,6 @@
                 <p class="text-xs text-gray-400 mb-1">Harga Jual Tabung</p>
                 <h5 id="disp-hrg-jual-tab" class="text-xl font-bold text-[#00ffaa]">Rp 0</h5>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SUB 2: Tabung Masuk -->
-        <div id="kasir-sub-masuk" class="kasir-sub-content hidden space-y-4">
-          <h3 class="text-lg font-semibold text-white">Input Tabung Masuk Harian</h3>
-          <form id="form-tabung-masuk" onsubmit="handleTabungMasukSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="hidden" id="tm-id" value="">
-            <div>
-              <label class="block text-xs text-gray-400 mb-1">Tanggal</label>
-              <input type="date" id="tm-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none">
-            </div>
-            <div>
-              <label class="block text-xs text-gray-400 mb-1">Jumlah Tabung (Hanya Angka)</label>
-              <input type="text" id="tm-jumlah" required value="" placeholder="Masukkan Jumlah Tabung Masuk" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none">
-            </div>
-            <div class="md:col-span-2 pt-2 flex gap-3">
-              <button type="submit" id="btn-submit-tm" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Tabung Masuk</button>
-              <button type="button" id="btn-update-tm" onclick="handleTabungMasukSubmit(event)" class="hidden flex-1 py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 transition-all cursor-pointer">Update Data Tabung Masuk</button>
-            </div>
-          </form>
-
-          <div class="mt-8 pt-6 border-t border-gray-800 space-y-4">
-            <div class="flex justify-between items-center">
-              <h4 class="text-md font-bold text-white flex items-center"><i class="fa-solid fa-table-list mr-2 text-[#00ffaa]"></i> Rekapitulasi & Riwayat Tabung Masuk</h4>
-              <span id="rekap-total-tm-count" class="text-xs text-gray-400">Total: 0 Data</span>
-            </div>
-            <div class="overflow-x-auto rounded-xl border border-gray-800">
-              <table class="w-full text-left text-sm text-gray-300">
-                <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                  <tr>
-                    <th class="px-4 py-3">ID Masuk</th>
-                    <th class="px-4 py-3">Tanggal</th>
-                    <th class="px-4 py-3">Jumlah Tabung Masuk</th>
-                  </tr>
-                </thead>
-                <tbody id="table-rekap-tm-body"></tbody>
-              </table>
             </div>
           </div>
         </div>
@@ -643,7 +603,7 @@
     // 2. Akses pilih "Siapa saja (Anyone)".
     // 3. COPY URL Web App tersebut dan PASTE ke dalam variabel di bawah ini.
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzCh-Hwk2PwEIGMunMNSFSELXaRwHMSScF9tq9wnHrGmlvmeJVWwGC4Un-CLiOKuATF/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzMmVNCV0vVT1VxsPOubKwbjzBOdOFOeZWu2zamO75qJbHP68KgKoWEy_hxPFRswX6J/exec";
 
     let appData = {
       adminPinSet: "5001",
@@ -786,23 +746,6 @@
           showToast(res.message, "success"); loadBackendData();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
-        } else { showToast(res.message, "error"); }
-      });
-    }
-
-    function handleTabungMasukSubmit(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-tm', async () => {
-        const payload = {
-          idMasuk: document.getElementById('tm-id').value,
-          tanggal: document.getElementById('tm-tanggal').value,
-          jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value)
-        };
-        const res = await fetchAPI('saveTabungMasuk', payload);
-        if (res.success) {
-          showToast(res.message, "success"); loadBackendData();
-          document.getElementById('tm-id').value = ""; document.getElementById('btn-update-tm').classList.add('hidden');
-          document.getElementById('btn-submit-tm').classList.remove('hidden'); e.target.reset();
         } else { showToast(res.message, "error"); }
       });
     }
@@ -971,7 +914,7 @@
     }
     
     function switchKasirSub(subId) {
-      const subs = ['persetujuan', 'deposit', 'harga', 'masuk', 'member', 'laporan'];
+      const subs = ['persetujuan', 'deposit', 'harga', 'member', 'laporan'];
       subs.forEach(s => {
         const subEl = document.getElementById('kasir-sub-' + s); if (subEl) subEl.classList.add('hidden');
         const btn = document.getElementById('ksub-' + s); if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
@@ -1060,7 +1003,7 @@
       document.getElementById('pub-total-tabung').innerText = totalDepositTabungLocal.toLocaleString('id-ID');
       document.getElementById('pub-sisa-tabung').innerText = sisaTabungLocal.toLocaleString('id-ID');
       
-      filterTabungKeluarPublik(); renderRekapDeposit(); renderRekapTabungMasuk(); renderRekapTransaksiMember(); renderPersetujuanTable();
+      filterTabungKeluarPublik(); renderRekapDeposit(); renderRekapTransaksiMember(); renderPersetujuanTable();
 
       const memberSelects = ['trx-namamember', 'reset-id-member'];
       memberSelects.forEach(selId => {
@@ -1110,17 +1053,6 @@
       appData.deposit.forEach(row => {
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
         tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderRekapTabungMasuk() {
-      const tbody = document.getElementById('table-rekap-tm-body'); const countEl = document.getElementById('rekap-total-tm-count'); if (!tbody) return; tbody.innerHTML = '';
-      if (!appData.tabungMasuk || appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-4 text-center text-gray-500">Belum ada data masuk.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
-      if (countEl) countEl.innerText = 'Total: ' + appData.tabungMasuk.length + ' Data';
-      appData.tabungMasuk.forEach(row => {
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2]||0).toLocaleString('id-ID')} Tabung</td>`;
         tbody.appendChild(tr);
       });
     }
