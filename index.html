@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz6w7Ka9qtwGNZgVnzONUd6QK43gIpVig1FIcKns1MRhXgfSwE0rgzAbCie135R3OvQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxOSgC0hKJ1Y352_qRvkkXqzvQkpz-Mg6BjEuuFUuL6F560abeUJ6_wwGYiyJn4y0rd/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -679,18 +679,37 @@
 
     function loadBackendData() {
       const loader = document.getElementById('global-loader');
+      const loaderText = loader ? loader.querySelector('p') : null;
       if (loader) loader.style.display = 'flex';
       
+      // SWR (Stale-While-Revalidate): Muat kilat dari cache lokal browser agar tidak ada jeda loading hitam
+      try {
+        const cachedData = localStorage.getItem('ZETTBOS_DB_CACHE');
+        if (cachedData) {
+           appData = JSON.parse(cachedData);
+           populateSettingsForm();
+           updateUIAll();
+           document.getElementById('page-dashboard').classList.remove('hidden');
+           if (loaderText) loaderText.innerText = "Sinkronisasi...";
+        }
+      } catch(e) {}
+
       fetchAPI('getAppData')
         .then(res => {
           if (loader) loader.style.display = 'none';
-          if (res.success) { appData = res; populateSettingsForm(); updateUIAll(); } 
-          else { showToast("Gagal memuat data: " + res.message, "error"); }
+          if (res.success) { 
+            appData = res; 
+            try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(res)); } catch(e){}
+            populateSettingsForm(); 
+            updateUIAll(); 
+          } else { 
+            showToast("Gagal sinkronisasi data: " + res.message, "error"); 
+          }
           document.getElementById('page-dashboard').classList.remove('hidden'); 
         })
         .catch(err => {
           if (loader) loader.style.display = 'none';
-          showToast(err.message, "error");
+          showToast("Koneksi bermasalah. Menggunakan mode Offline.", "error");
           document.getElementById('page-dashboard').classList.remove('hidden'); 
         });
     }
@@ -740,12 +759,13 @@
       
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
-      // ZETTBOT FIX: Force update array lokal saat ini juga (Anti lag)
+      // Force update lokal cache dan UI instan
       const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
       if(idx > -1) {
         appData.tabungKeluar[idx][4] = newStatus;
         appData.tabungKeluar[idx][5] = tujuan;
       }
+      try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
       updateUIAll(); 
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
@@ -772,8 +792,11 @@
           hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value)
         };
         const res = await fetchAPI('savePengaturanHarga', payload);
-        if (res.success) { showToast(res.message, "success"); appData.settings = payload; updateUIAll(); populateSettingsForm(); } 
-        else { showToast(res.message, "error"); }
+        if (res.success) { 
+          showToast(res.message, "success"); appData.settings = payload; 
+          try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
+          updateUIAll(); populateSettingsForm(); 
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -788,6 +811,7 @@
             const idx = appData.deposit.findIndex(d => String(d[0]).trim() === String(payload.idDeposit).trim());
             if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
           } else { appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]); }
+          try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
           updateUIAll();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
@@ -804,6 +828,7 @@
           showToast(res.message, "success"); 
           if (res.id) {
              appData.tabungKeluar.push([res.id, payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
+             try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
              updateUIAll();
           } else {
              loadBackendData(); 
@@ -826,10 +851,12 @@
           if(payload.idTrx) {
              const idx = appData.transaksi.findIndex(t => String(t[0]).trim() === String(payload.idTrx).trim());
              if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
+             try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
              updateUIAll();
           } else { 
              if (res.id) {
                appData.transaksi.push([res.id, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]);
+               try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
                updateUIAll();
              } else {
                loadBackendData();
@@ -856,7 +883,7 @@
       executeSafeSubmit('btn-submit-add-member', async () => {
         const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value };
         const res = await fetchAPI('addNewMember', payload);
-        if (res.success) { showToast(res.message, "success"); appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]); updateUIAll(); e.target.reset(); } 
+        if (res.success) { showToast(res.message, "success"); appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]); try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){} updateUIAll(); e.target.reset(); } 
         else { showToast(res.message, "error"); }
       });
     }
@@ -878,7 +905,7 @@
       executeSafeSubmit('btn-submit-add-supplier', async () => {
         const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value };
         const res = await fetchAPI('addNewSupplier', payload);
-        if (res.success) { showToast(res.message, "success"); appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]); updateUIAll(); e.target.reset(); } 
+        if (res.success) { showToast(res.message, "success"); appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]); try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){} updateUIAll(); e.target.reset(); } 
         else { showToast(res.message, "error"); }
       });
     }
