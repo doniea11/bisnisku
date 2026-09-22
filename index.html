@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyZaZk4Jsr2_VC8Epy48ZUTUdFKAGIhmxUx8HJKex4NiGJXr9_04pHmcAQbFelBjgjV/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxFOh9u5iPCoJlIxo-i5t5dR4VOzrhnTh4oxMHwAnST8FzaRawWMgu7HSIPf3QViCUd/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -738,7 +738,7 @@
         .then(res => {
           if(res.success) { 
             showToast(res.message, "success"); 
-            const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === idKeluar);
+            const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
             if(idx > -1) {
               appData.tabungKeluar[idx][4] = newStatus;
               appData.tabungKeluar[idx][5] = tujuan || '-';
@@ -1004,9 +1004,6 @@
       document.getElementById('disp-hrg-jual-tab').innerText = 'Rp ' + (appData.settings.hargaJualTabung || 0).toLocaleString('id-ID');
     }
 
-    // ======================================================================
-    // HTML STRING BUILDER RENDERING (SUPER FAST)
-    // ======================================================================
     function updateUIAll() {
       let totalDepositTabungLocal = 0; if (appData.deposit) appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
       let totalKeluarDisetujui = 0; if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
@@ -1104,6 +1101,8 @@
       dataList.forEach(row => {
         let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
+        
+        // Membaca langsung dari Database (index 5)
         let tujuanPengiriman = row[5] || '-';
 
         html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${tujuanPengiriman}</td></tr>`;
