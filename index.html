@@ -604,7 +604,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz_0Ba4VkDfK3PXTehwiC8vlge1KzJgGv8rLNfoRoTu65nUK6SSkoopBtzc2s6MsGU9/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzCgm7Sx2QZ7tMwcnC12Q1tJL8cXXNZfpIM2RW8rXpB39oVLk6fIt0n7tBuV0nLDsyF/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -975,6 +975,7 @@
     function closeDigitalModal() { document.getElementById('digital-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('digital-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
     function openSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
     function closeSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
+    
     function openPinModal(title, desc) {
       document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = "";
       document.getElementById('pin-auth-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
