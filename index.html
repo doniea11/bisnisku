@@ -197,7 +197,7 @@
         <!-- SUB 0: Persetujuan Supplier -->
         <div id="kasir-sub-persetujuan" class="kasir-sub-content space-y-4">
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar dari Supplier</h3>
-          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending". Silakan tentukan <b>Tujuan Pengiriman</b> sebelum melakukan Setujui.</p>
+          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending" dan membutuhkan persetujuan agar stok sisa tabung ter-update.</p>
           
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4">
             <table class="w-full text-left text-sm text-gray-300">
@@ -603,12 +603,12 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx1Vv5SemQq8poczUeYSQLPqebqypJ7xhiwCAPIcFGBcSj8clduhJUflgrW7ObFAkqM/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx06oc36riYilcjgKybXkxGirTLewZna8pWHLCNKvHJqgz8vTTrDM-ooY4lHp3wLxHg/exec";
     
     let appData = {
       adminPinSet: "5001",
       settings: { hargaModalGas: 0, hargaModalTabung: 0, hargaJualGas: 0, hargaJualTabung: 0 },
-      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [], tujuanPengiriman: [],
+      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [],
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalTabungKeluar: 0 }
     };
     let pendingTargetPage = ''; 
@@ -732,7 +732,7 @@
       if (newStatus === 'Disetujui') {
         const sel = document.getElementById('tujuan-' + domId);
         if (sel) tujuan = sel.value;
-        if (!tujuan || tujuan.trim() === '') { showToast("Pilih Tujuan Pengiriman terlebih dahulu!", "error"); return; }
+        if (!tujuan || tujuan.trim() === '') { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
       }
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
@@ -1067,17 +1067,15 @@
       const pendingData = (appData.tabungKeluar || []).filter(r => String(r[4] || 'Disetujui').trim() === 'Pending');
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
-      let tujuanOptions = '<option value="" disabled selected>-- Pilih Tujuan --</option>';
-      if (appData.tujuanPengiriman && appData.tujuanPengiriman.length > 0) {
-        appData.tujuanPengiriman.forEach(tp => { tujuanOptions += `<option value="${tp[1]}">${tp[1]}</option>`; });
-      } else {
-        tujuanOptions = '<option value="" disabled selected>-- Data Tujuan Kosong (Isi di Sheet) --</option>';
+      let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
+      if (appData.members) {
+        appData.members.forEach(m => { memberOptions += `<option value="${m[1]}">${m[1]}</option>`; });
       }
 
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        let domId = cleanId.replace(/\s+/g, '');
+        let domId = cleanId.replace(/\s+/g, ''); // Amankan ID untuk atribut HTML
         html += `
           <tr class="border-b border-gray-800 hover:bg-gray-800/40">
           <td class="px-4 py-3 text-xs font-mono text-gray-400">${cleanId}</td>
@@ -1086,7 +1084,7 @@
           <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
           <td class="px-4 py-3">
              <select id="tujuan-${domId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
-                ${tujuanOptions}
+                ${memberOptions}
              </select>
           </td>
           <td class="px-4 py-3 text-center flex gap-1 justify-center">
