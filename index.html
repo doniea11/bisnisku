@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwtCNmDNePPVj87DqKMGObkGCx70JU1kRerMmNyfPmB4RmBRalCupoo2uwk6GjaQ5o5/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzJDcpnBi7lUCslzRzOMK3BtwoozEL-SQXV4jmjRXv_EFRZnZoKZKtAoG8Z3nT7pc7r/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -731,22 +731,22 @@
       let domId = String(idKeluar).trim().replace(/\s+/g, '');
       if (newStatus === 'Disetujui') {
         const sel = document.getElementById('tujuan-' + domId);
-        if (sel) tujuan = sel.value;
-        if (!tujuan || tujuan.trim() === '') { 
+        if (!sel || !sel.value || sel.value.trim() === '') { 
            showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); 
            return; 
         }
+        tujuan = sel.value.trim();
       }
       
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
-      // OPTIMISTIC FORCE-WRITE: Ubah data di frontend sebelum server membalas
+      // ZETTBOT FIX: Force update array lokal saat ini juga (Anti lag)
       const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
       if(idx > -1) {
         appData.tabungKeluar[idx][4] = newStatus;
         appData.tabungKeluar[idx][5] = tujuan;
       }
-      updateUIAll(); // Refresh UI segera!
+      updateUIAll(); 
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
@@ -754,12 +754,10 @@
             showToast(res.message, "success"); 
           } else { 
             showToast(res.message, "error"); 
-            // Rollback jika gagal
             if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
           }
         }).catch(err => {
             showToast(err.message, "error");
-            // Rollback jika gagal
             if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
         });
     }
