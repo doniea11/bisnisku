@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx56CxejxRg-ftkwRZatCEvEBKivHYp-57FFE8UBfIktTtr8-uAddxShwOvcTk7eYLX/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxv8vuSrtiXcJP4KQbNlGeb4Zoga5GJtR4_MFQgJuQsv25GjFTQ_OZK2TT7b60Q0CvT/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -726,14 +726,19 @@
     // ======================================================================
     // OPTIMISTIC UI (ANTI-RELOAD)
     // ======================================================================
-    function handleApprovalSubmit(idKeluar, newStatus) {
-      let tujuan = '';
+    function handleApprovalSubmit(idKeluar, newStatus, btnEl) {
+      let tujuan = '-';
       let domId = String(idKeluar).trim().replace(/\s+/g, '');
       if (newStatus === 'Disetujui') {
         const sel = document.getElementById('tujuan-' + domId);
         if (sel) tujuan = sel.value;
-        if (!tujuan || tujuan.trim() === '') { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
+        if (!tujuan || tujuan.trim() === '') { 
+           showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); 
+           return; 
+        }
       }
+      
+      if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
@@ -742,11 +747,17 @@
             const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
             if(idx > -1) {
               appData.tabungKeluar[idx][4] = newStatus;
-              appData.tabungKeluar[idx][5] = tujuan || '-';
+              appData.tabungKeluar[idx][5] = tujuan;
             }
             updateUIAll(); 
-          } else { showToast(res.message, "error"); }
-        }).catch(err => showToast(err.message, "error"));
+          } else { 
+            showToast(res.message, "error"); 
+            if(btnEl) btnEl.innerHTML = newStatus === 'Disetujui' ? '<i class="fa-solid fa-check mr-1"></i>Setujui' : '<i class="fa-solid fa-xmark mr-1"></i>Tolak';
+          }
+        }).catch(err => {
+            showToast(err.message, "error");
+            if(btnEl) btnEl.innerHTML = newStatus === 'Disetujui' ? '<i class="fa-solid fa-check mr-1"></i>Setujui' : '<i class="fa-solid fa-xmark mr-1"></i>Tolak';
+        });
     }
 
     function handleHargaSubmit(e) {
@@ -793,7 +804,7 @@
              appData.tabungKeluar.push([res.id, payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
              updateUIAll();
           } else {
-             loadBackendData(); // Sinkronisasi manual jika backend gagal kirim id baru
+             loadBackendData(); 
           }
           closeSupplierInputModal();
         } else { showToast(res.message, "error"); }
@@ -1102,8 +1113,8 @@
              </select>
           </td>
           <td class="px-4 py-3 text-center flex gap-1 justify-center">
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak')" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
           </td></tr>`;
       });
       tbody.innerHTML = html;
