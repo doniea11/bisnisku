@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#00ffaa">
   <title>MASDONIE GROUP - Sistem Informasi Penjualan Gas</title>
   
+  <link id="pwa-manifest" rel="manifest">
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   
@@ -87,16 +92,15 @@
     </nav>
   </header>
 
-  <!-- MAIN CONTENT CONTAINER -->
-  <main class="flex-grow container mx-auto px-4 py-6 max-w-7xl">
+  <main class="flex-grow container mx-auto px-4 py-6 max-w-7xl relative">
 
-    <div id="global-loader" class="flex flex-col items-center justify-center py-20">
-      <div class="w-12 h-12 border-4 border-[#00ffaa] border-t-transparent rounded-full animate-spin zett-glow"></div>
-      <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">Sistem Masdonie Group</p>
+    <div id="global-loader" class="fixed bottom-6 right-6 flex items-center bg-[#0f172a]/95 border border-[#00ffaa]/50 px-4 py-2.5 rounded-full z-50 shadow-[0_0_15px_rgba(0,255,170,0.3)] backdrop-blur-md transition-opacity duration-500">
+      <div class="w-4 h-4 border-2 border-[#00ffaa] border-t-transparent rounded-full animate-spin mr-2.5"></div>
+      <p class="text-[#00ffaa] text-xs font-bold tracking-wide">Menghubungkan Server...</p>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
-    <section id="page-dashboard" class="page-view space-y-8 hidden">
+    <section id="page-dashboard" class="page-view space-y-8">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none">
           <i class="fa-solid fa-leaf text-[250px] text-[#00ffaa]"></i>
@@ -203,6 +207,7 @@
                   <th class="px-4 py-3">Tanggal</th>
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
+                  <th class="px-4 py-3">Tujuan Pengiriman</th>
                   <th class="px-4 py-3 text-center">Aksi Persetujuan</th>
                 </tr>
               </thead>
@@ -493,6 +498,7 @@
             </form>
           </div>
 
+          <!-- Tambah Supplier Baru -->
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-truck-fast text-[#00ffaa] mr-2"></i> Tambah Supplier Baru</h3>
             <form onsubmit="handleAddSupplier(event)" class="space-y-3">
@@ -508,6 +514,7 @@
             </form>
           </div>
 
+          <!-- Reset PIN Supplier -->
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-rotate-left text-[#00ffaa] mr-2"></i> Reset PIN Supplier</h3>
             <form onsubmit="handleResetSupplierPin(event)" class="space-y-3">
@@ -534,6 +541,7 @@
     <p>@masdonie_group</p>
   </footer>
 
+  <!-- SEMUA MODAL -->
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
     <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
       <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
@@ -595,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbztJn5rvW6kPSmrBy7k8I_cpR0edehop1dEdUimSQ2vDZX-oGq4YkauJWELhgOOi4A/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyZaZk4Jsr2_VC8Epy48ZUTUdFKAGIhmxUx8HJKex4NiGJXr9_04pHmcAQbFelBjgjV/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -640,6 +648,27 @@
     }
 
     window.addEventListener('DOMContentLoaded', function() {
+      // PWA Manifest Setup
+      try {
+        const manifest = {
+          "name": "Masdonie Group Gas",
+          "short_name": "GasMasdonie",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#0b0f19",
+          "theme_color": "#00ffaa",
+          "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/7901/7901416.png", "sizes": "512x512", "type": "image/png" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+        if ('serviceWorker' in navigator) {
+          const swCode = `self.addEventListener('fetch', function() { return; });`;
+          const swBlob = new Blob([swCode], {type: 'application/javascript'});
+          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+        }
+      } catch(e) {}
+
       const dateInputs = ['dep-tanggal', 'tk-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'filter-start-date', 'filter-end-date'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation();
@@ -680,11 +709,11 @@
       } else if (pendingAllowedRole === 'admin_only') {
         msg = "PIN Kasir salah! Hanya PIN Admin yang diizinkan.";
       } else if (pendingAllowedRole === 'supplier_only') {
-        const sup = (appData.suppliers || []).find(s => s[2] == pinVal);
+        const sup = (appData.suppliers || []).find(s => String(s[2]).trim() === pinVal);
         if (sup) { isSuccess = true; name = sup[1]; msg = "Akses diberikan sebagai Supplier."; }
         else { msg = "PIN Supplier salah!"; }
       } else {
-        const mem = (appData.members || []).find(m => m[2] == pinVal);
+        const mem = (appData.members || []).find(m => String(m[2]).trim() === pinVal);
         if (mem) { isSuccess = true; name = mem[1]; msg = "Akses diberikan sebagai Member."; }
       }
 
@@ -698,12 +727,22 @@
     // OPTIMISTIC UI (ANTI-RELOAD)
     // ======================================================================
     function handleApprovalSubmit(idKeluar, newStatus) {
-      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: "" })
+      let tujuan = '';
+      if (newStatus === 'Disetujui') {
+        const sel = document.getElementById('tujuan-' + idKeluar);
+        if (sel) tujuan = sel.value;
+        if (!tujuan) { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
+      }
+      
+      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
           if(res.success) { 
             showToast(res.message, "success"); 
-            const idx = appData.tabungKeluar.findIndex(t => t[0] === idKeluar);
-            if(idx > -1) { appData.tabungKeluar[idx][4] = newStatus; }
+            const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === idKeluar);
+            if(idx > -1) {
+              appData.tabungKeluar[idx][4] = newStatus;
+              appData.tabungKeluar[idx][5] = tujuan || '-';
+            }
             updateUIAll(); 
           } else { showToast(res.message, "error"); }
         }).catch(err => showToast(err.message, "error"));
@@ -732,7 +771,7 @@
         if (res.success) {
           showToast(res.message, "success"); 
           if(payload.idDeposit) {
-            const idx = appData.deposit.findIndex(d => d[0] === payload.idDeposit);
+            const idx = appData.deposit.findIndex(d => String(d[0]).trim() === String(payload.idDeposit).trim());
             if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
           } else { appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]); }
           updateUIAll();
@@ -766,7 +805,7 @@
         if (res.success) {
           showToast(res.message, "success"); 
           if(payload.idTrx) {
-             const idx = appData.transaksi.findIndex(t => t[0] === payload.idTrx);
+             const idx = appData.transaksi.findIndex(t => String(t[0]).trim() === String(payload.idTrx).trim());
              if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
           } else { appData.transaksi.push([res.id || 'TRX-NEW', payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]); }
           updateUIAll();
@@ -802,7 +841,7 @@
         const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value };
         const res = await fetchAPI('resetMemberPin', payload);
         if (res.success) { 
-            showToast(res.message, "success"); const idx = appData.members.findIndex(m => m[0] === payload.idMember);
+            showToast(res.message, "success"); const idx = appData.members.findIndex(m => String(m[0]).trim() === String(payload.idMember).trim());
             if (idx > -1) appData.members[idx][2] = payload.newPIN; e.target.reset(); 
         } else { showToast(res.message, "error"); }
       });
@@ -824,7 +863,7 @@
         const payload = { idSupplier: document.getElementById('reset-id-supplier').value, newPin: document.getElementById('reset-new-pin-supplier').value };
         const res = await fetchAPI('resetSupplierPin', payload);
         if (res.success) { 
-           showToast(res.message, "success"); const idx = appData.suppliers.findIndex(s => s[0] === payload.idSupplier);
+           showToast(res.message, "success"); const idx = appData.suppliers.findIndex(s => String(s[0]).trim() === String(payload.idSupplier).trim());
            if (idx > -1) appData.suppliers[idx][2] = payload.newPin; e.target.reset(); 
         } else { showToast(res.message, "error"); }
       });
@@ -1028,16 +1067,35 @@
     function renderPersetujuanTable() {
       const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return;
       const pendingData = (appData.tabungKeluar || []).filter(r => (r[4] || 'Disetujui') === 'Pending');
-      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
+      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
+      let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
+      if (appData.members) {
+        appData.members.forEach(m => { memberOptions += `<option value="${m[1]}">${m[1]}</option>`; });
+      }
+
       let html = '';
       pendingData.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td><td class="px-4 py-3">${row[1]}</td><td class="px-4 py-3 font-bold text-white">${row[2]}</td><td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-center"><button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button><button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button></td></tr>`;
+        let cleanId = String(row[0]).trim();
+        html += `
+          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
+          <td class="px-4 py-3 text-xs font-mono text-gray-400">${cleanId}</td>
+          <td class="px-4 py-3">${row[1]}</td>
+          <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
+          <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
+          <td class="px-4 py-3">
+             <select id="tujuan-${cleanId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
+                ${memberOptions}
+             </select>
+          </td>
+          <td class="px-4 py-3 text-center">
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
+          </td></tr>`;
       });
       tbody.innerHTML = html;
     }
 
-    // MULTI-MATCH AUTO-SYNC (Tujuan Pengiriman)
     function renderPublikTabungKeluar(dataList) {
       const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return;
       if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
@@ -1045,14 +1103,10 @@
       let html = '';
       dataList.forEach(row => {
         let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
-        let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0; let autoTujuan = '-';
-        
-        if(appData.transaksi && appData.transaksi.length > 0 && status === 'Disetujui') {
-           const matchTrxs = appData.transaksi.filter(t => t[1] === tanggalKeluar && (Number(t[5]) || 0) === jumlahKeluar);
-           if(matchTrxs && matchTrxs.length > 0) { autoTujuan = matchTrxs.map(t => t[2]).join(', '); }
-        }
+        let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
+        let tujuanPengiriman = row[5] || '-';
 
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${autoTujuan}</td></tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${tujuanPengiriman}</td></tr>`;
       });
       tbody.innerHTML = html;
     }
