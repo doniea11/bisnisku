@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz29bW9wz17lH7aP-4BkTzdHmrf2U8unUE07KetAajfdNIbPmFJu6f4B3VqLhtYKCWw/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwcg9MrjxL8pJ5xp6_EzzAcGw_o2QdaMotFv6YBB-zrn9-pVavhCavwzF-nf1FpuYKH/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -665,7 +665,7 @@
         document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
 
         if ('serviceWorker' in navigator) {
-          const swCode = `self.addEventListener('fetch', function() { return; });`;
+          const swCode = "self.addEventListener('fetch', function() { return; });";
           const swBlob = new Blob([swCode], {type: 'application/javascript'});
           navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
         }
@@ -1060,7 +1060,9 @@
       if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
       
       let html = '';
-      appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td></tr>`; });
+      appData.deposit.forEach(row => { 
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">' + (row[0]||'-') + '</td><td class="px-4 py-3">' + (row[1]||'-') + '</td><td class="px-4 py-3 text-blue-400">Rp ' + Number(row[2]||0).toLocaleString('id-ID') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td></tr>'; 
+      });
       tbody.innerHTML = html;
     }
 
@@ -1070,7 +1072,9 @@
       if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
       
       let html = '';
-      appData.transaksi.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td></tr>`; });
+      appData.transaksi.forEach(row => { 
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">' + (row[0]||'-') + '</td><td class="px-4 py-3 text-xs">' + (row[1]||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 text-xs text-[#00ffaa]">' + (row[3]||'-') + '</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">' + (row[4]||'-') + '</span></td><td class="px-4 py-3">' + Number(row[5]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ' + Number(row[6]||0).toLocaleString('id-ID') + '</td></tr>'; 
+      });
       tbody.innerHTML = html;
     }
 
@@ -1081,7 +1085,7 @@
       
       let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
       if (appData.members && appData.members.length > 0) {
-        appData.members.forEach(m => { memberOptions += `<option value="${m[1]}">${m[1]}</option>`; });
+        appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; });
       } else {
         memberOptions = '<option value="" disabled selected>-- Data Member Kosong --</option>';
       }
@@ -1090,21 +1094,16 @@
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
         let domId = cleanId.replace(/\s+/g, '');
-        html += `
-          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
-          <td class="px-4 py-3 text-xs font-mono text-gray-400">${cleanId}</td>
-          <td class="px-4 py-3">${row[1]}</td>
-          <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
-          <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
-          <td class="px-4 py-3">
-             <select id="tujuan-${domId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full">
-                ${memberOptions}
-             </select>
-          </td>
-          <td class="px-4 py-3 text-center flex gap-1 justify-center">
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
-          </td></tr>`;
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40">' +
+          '<td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td>' +
+          '<td class="px-4 py-3">' + row[1] + '</td>' +
+          '<td class="px-4 py-3 font-bold text-white">' + row[2] + '</td>' +
+          '<td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td>' +
+          '<td class="px-4 py-3"><select id="tujuan-' + domId + '" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full">' + memberOptions + '</select></td>' +
+          '<td class="px-4 py-3 text-center flex gap-1 justify-center">' +
+          '<button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>' +
+          '<button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>' +
+          '</td></tr>';
       });
       tbody.innerHTML = html;
     }
@@ -1120,7 +1119,7 @@
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
         let tujuanPengiriman = row[5] || '-';
 
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${tujuanPengiriman}</td></tr>`;
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">' + (tanggalKeluar||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + jumlahKeluar.toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ' + statusClass + '">' + status + '</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">' + tujuanPengiriman + '</td></tr>';
       });
       tbody.innerHTML = html;
     }
@@ -1158,13 +1157,13 @@
         const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
         let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung); let profitBersihBaris = volume * profitSatuan;
         totalProfitBersihMember += profitBersihBaris; totalVolumeAll += volume;
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${row[2]}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td></tr>`;
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">' + row[0] + '</td><td class="px-4 py-3 text-xs">' + row[1] + '</td><td class="px-4 py-3 font-semibold text-white">' + row[2] + '</td><td class="px-4 py-3 text-xs text-[#00ffaa]">' + row[3] + '</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">' + row[4] + '</span></td><td class="px-4 py-3">' + volume.toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 text-blue-400">Rp ' + totalRupiah.toLocaleString('id-ID') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ' + profitBersihBaris.toLocaleString('id-ID') + '</td></tr>';
       });
       if(filtered.length > 0) tbody.innerHTML = html;
       
       document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
       document.getElementById('rep-member-profit').innerText = 'Rp ' + totalProfitBersihMember.toLocaleString('id-ID');
-      document.getElementById('rep-total-setoran').innerHTML = `<span id="rep-total-volume">${totalVolumeAll.toLocaleString('id-ID')}</span> Tabung`;
+      document.getElementById('rep-total-setoran').innerHTML = '<span id="rep-total-volume">' + totalVolumeAll.toLocaleString('id-ID') + '</span> Tabung';
     }
   </script>
 </body>
