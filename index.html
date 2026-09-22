@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MASDONIE GROUP - Sistem Informasi Penjualan Gas</title>
+  
+  <!-- Preconnect untuk mempercepat loading aset eksternal -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -104,13 +109,13 @@
         </h2>
 
         <div class="flex flex-col items-center justify-center gap-3 max-w-xs mx-auto mb-4">
-          <button onclick="openDigitalModal()" class="w-full py-3 px-6 rounded-xl glass-card text-[#00ffaa] font-bold border border-[#00ffaa]/40 hover:bg-[#00ffaa]/20 transition-all flex items-center justify-center shadow-lg cursor-pointer">
+          <button class="w-full py-3 px-6 rounded-xl glass-card text-[#00ffaa] font-bold border border-[#00ffaa]/40 hover:bg-[#00ffaa]/20 transition-all flex items-center justify-center shadow-lg cursor-default">
             <i class="fa-solid fa-globe mr-2"></i> Digital
           </button>
-          <button onclick="openSmartphoneModal()" class="w-full py-3 px-6 rounded-xl glass-card text-white font-bold border border-gray-700 hover:border-[#00ffaa] transition-all flex items-center justify-center shadow-lg cursor-pointer">
+          <button class="w-full py-3 px-6 rounded-xl glass-card text-white font-bold border border-gray-700 hover:border-[#00ffaa] transition-all flex items-center justify-center shadow-lg cursor-default">
             <i class="fa-solid fa-mobile-screen mr-2"></i> Smartphone
           </button>
-          <button onclick="handleLiquefiedClick()" class="w-full py-3 px-6 rounded-xl bg-[#00ffaa] text-gray-900 font-extrabold hover:bg-[#00cc88] transition-all flex items-center justify-center shadow-lg cursor-pointer">
+          <button class="w-full py-3 px-6 rounded-xl bg-[#00ffaa] text-gray-900 font-extrabold hover:bg-[#00cc88] transition-all flex items-center justify-center shadow-lg cursor-default">
             <i class="fa-solid fa-fire-flame-curved mr-2"></i> Liquefied Petroleum Gas
           </button>
         </div>
@@ -127,9 +132,8 @@
             </h2>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <!-- Tombol Tambahan Input Tabung Keluar Supplier & Status -->
+            <!-- Tombol Tambahan Input Tabung Keluar Supplier -->
             <button onclick="requestSupplierAccess()" class="px-3 py-1.5 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 rounded-lg text-xs font-semibold hover:bg-yellow-500/30 transition-all cursor-pointer"><i class="fa-solid fa-truck-ramp-box mr-1"></i> Input Tabung Keluar</button>
-            <span id="today-supplier-status" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-400 border border-gray-700 mr-2 shadow">Status Hari Ini: Belum Input</span>
             
             <span class="text-xs text-gray-400">Rentang Tanggal:</span>
             <input type="date" id="filter-start-date" class="bg-[#161b22] border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
@@ -161,11 +165,12 @@
             <table class="w-full text-left text-sm text-gray-300">
               <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
                 <tr>
-                  <th class="px-4 py-3">ID Keluar</th>
+                  <!-- Kolom ID Dihapus, diganti Tujuan Pengiriman -->
                   <th class="px-4 py-3">Tanggal</th>
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
                   <th class="px-4 py-3">Status Persetujuan</th>
+                  <th class="px-4 py-3">Tujuan Pengiriman</th>
                 </tr>
               </thead>
               <tbody id="table-publik-keluar-body"></tbody>
@@ -193,7 +198,7 @@
         <!-- SUB 0: Persetujuan Supplier -->
         <div id="kasir-sub-persetujuan" class="kasir-sub-content space-y-4">
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar dari Supplier</h3>
-          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending" dan membutuhkan persetujuan agar stok sisa tabung ter-update.</p>
+          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending". Silakan tentukan <b>Tujuan Pengiriman (Member)</b> sebelum melakukan Setujui.</p>
           
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4">
             <table class="w-full text-left text-sm text-gray-300">
@@ -203,6 +208,7 @@
                   <th class="px-4 py-3">Tanggal</th>
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
+                  <th class="px-4 py-3">Tujuan (Member)</th>
                   <th class="px-4 py-3 text-center">Aksi Persetujuan</th>
                 </tr>
               </thead>
@@ -335,7 +341,7 @@
             </div>
             <div>
               <label class="block text-xs text-gray-400 mb-1">Jumlah Tabung</label>
-              <input type="text" id="trx-jumlahtabung" required value="" placeholder="Masukkan Jumlah Tabung" data-form-input oninput="formatRupiahInput(this); calcTransaksiTotal();" onclick="calcTransaksiTotal()" onblur="calcTransaksiTotal()" onkeydown="if(event.key==='Enter'){ calcTransaksiTotal(); }" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none">
+              <input type="text" id="trx-jumlahtabung" required value="" placeholder="Masukkan Jumlah Tabung" data-form-input oninput="formatRupiahInput(this); calcTransaksiTotal();" onclick="calcTransaksiTotal()" onblur="calcTransaksiTotal()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none">
             </div>
             <div>
               <label class="block text-xs text-gray-400 mb-1">Jumlah Rupiah (Auto)</label>
@@ -538,7 +544,6 @@
 
   <!-- SEMUA MODAL -->
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
-    <!-- Konten Modal Digital Sama Seperti Sebelumnya -->
     <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
       <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
         <h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3>
@@ -578,8 +583,8 @@
       </div>
       <form id="form-tabung-keluar" onsubmit="handleTabungKeluarSubmit(event)" class="space-y-4">
         <input type="hidden" id="tk-supplier-name">
-        <div><input type="date" id="tk-tanggal" required readonly class="w-full bg-[#161b22]/50 border border-gray-700 rounded-lg p-2.5 text-sm text-gray-400 outline-none cursor-not-allowed"></div>
-        <div><input type="text" id="tk-jumlah" required placeholder="Jumlah Tabung" oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
+        <div><input type="date" id="tk-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+        <div><input type="text" id="tk-jumlah" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
         <button type="submit" id="btn-submit-tk" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer mt-2">Kirim Data Tabung Keluar</button>
       </form>
     </div>
@@ -597,47 +602,48 @@
 
   <script>
     // ======================================================================
-    // KONFIGURASI API VERCEL KE GOOGLE APPS SCRIPT
+    // KONFIGURASI GLOBAL & VARIABEL STATE
     // ======================================================================
-    // 1. Terapkan (Deploy) kode backend.gs di Apps Script sebagai "Web App".
-    // 2. Akses pilih "Siapa saja (Anyone)".
-    // 3. COPY URL Web App tersebut dan PASTE ke dalam variabel di bawah ini.
-    // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyJnm3o6_-uVikL9I7XZvZzTNepqDFBVYSD4ZMUyAtW3l-19y6JWf7BjJT6hY56OqGV/exec";
-
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzMCF0PONZe6HPBmsTeJ43VUyVD6ugP1wyUJbmbbOszpK_rgnyKbXRccBwAspOihTY/exec";
+    
     let appData = {
       adminPinSet: "5001",
       settings: { hargaModalGas: 0, hargaModalTabung: 0, hargaJualGas: 0, hargaJualTabung: 0 },
       deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [],
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalTabungKeluar: 0 }
     };
-    let pendingTargetPage = ''; let pendingAllowedRole = '';
+    let pendingTargetPage = ''; 
+    let pendingAllowedRole = '';
 
     // ======================================================================
-    // CORE API FETCHER (PENGGANTI google.script.run)
+    // CORE API FETCHER (OPTIMIZED DUAL-MODE BY ZETTBOT)
     // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
-      if (GAS_API_URL.includes("MASUKKAN_URL")) {
-        throw new Error("Tolong ganti variabel GAS_API_URL di dalam index.html dengan URL Web App Anda.");
-      }
-      try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          redirect: 'follow', // PENTING: Bypass Google Apps Script Redirects
-          body: JSON.stringify({ action: action, data: dataParams })
-        });
-        
-        const textResult = await response.text();
-        try {
-          return JSON.parse(textResult); // Parsing aman
-        } catch (parseError) {
-          console.error("Error/HTML Response dari Google:", textResult);
-          throw new Error("Akses API Ditolak! Pastikan akses Deployment Google Apps Script diset ke 'Siapa saja (Anyone)'.");
+      return new Promise(async (resolve, reject) => {
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(res => {
+              try { resolve(typeof res === 'string' ? JSON.parse(res) : res); } 
+              catch(e) { resolve(res); }
+            })
+            .withFailureHandler(err => reject(new Error(err.message)))
+            [action](dataParams);
+          return;
         }
-      } catch (error) {
-        throw new Error("Gagal terhubung ke Server Apps Script: " + error.message);
-      }
+        
+        if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Tolong ganti variabel GAS_API_URL")); return; }
+        try {
+          const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            redirect: 'follow',
+            body: JSON.stringify({ action: action, data: dataParams })
+          });
+          const textResult = await response.text();
+          try { resolve(JSON.parse(textResult)); } 
+          catch (parseError) { reject(new Error("Akses API Ditolak! Pastikan akses Deployment diset ke 'Siapa saja (Anyone)'.")); }
+        } catch (error) { reject(new Error("Gagal terhubung ke Server: " + error.message)); }
+      });
     }
 
     async function executeSafeSubmit(btnId, submitFunction) {
@@ -646,14 +652,9 @@
       btn.disabled = true;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Memproses...';
-      try {
-        await submitFunction();
-      } catch(err) {
-        showToast(err.message, "error");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-      }
+      try { await submitFunction(); } 
+      catch(err) { showToast(err.message, "error"); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
 
     window.addEventListener('DOMContentLoaded', function() {
@@ -676,10 +677,8 @@
             appData = res;
             populateSettingsForm();
             updateUIAll();
-            document.getElementById('page-dashboard').classList.remove('hidden'); // Show content after load
-          } else {
-            showToast("Gagal memuat data: " + res.message, "error");
-          }
+            document.getElementById('page-dashboard').classList.remove('hidden');
+          } else { showToast("Gagal memuat data: " + res.message, "error"); }
         })
         .catch(err => {
           if (loader) loader.style.display = 'none';
@@ -711,7 +710,14 @@
 
     // Form Submits
     function handleApprovalSubmit(idKeluar, newStatus) {
-      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus })
+      let tujuan = '';
+      if (newStatus === 'Disetujui') {
+        const sel = document.getElementById('tujuan-' + idKeluar);
+        if (sel) tujuan = sel.value;
+        if (!tujuan) { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
+      }
+      
+      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
           if(res.success) { showToast(res.message, "success"); loadBackendData(); }
           else { showToast(res.message, "error"); }
@@ -870,21 +876,41 @@
     }
 
     // ==========================================
-    // UI HELPER FUNCTIONS
+    // UI HELPER FUNCTIONS & SMART ENTER
     // ==========================================
     function setupSmartEnterNavigation() {
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           const activeEl = document.activeElement;
-          if (activeEl && activeEl.id === 'trx-jumlahtabung') { e.preventDefault(); calcTransaksiTotal(); return; }
+          
+          if (activeEl && activeEl.id === 'trx-jumlahtabung') { 
+            calcTransaksiTotal(); 
+          }
+          
+          // Smart Navigation untuk elemen input form
           if (activeEl && activeEl.hasAttribute('data-form-input')) {
-            const form = activeEl.closest('form'); if (!form) return;
+            e.preventDefault(); 
+            const form = activeEl.closest('form'); 
+            if (!form) return;
             const inputs = Array.from(form.querySelectorAll('[data-form-input]'));
-            const currentIndex = inputs.indexOf(activeEl); let nextEmptyInput = null;
+            const currentIndex = inputs.indexOf(activeEl); 
+            let nextEmptyInput = null;
+            
             for (let i = currentIndex + 1; i < inputs.length; i++) {
-              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { nextEmptyInput = inputs[i]; break; }
+              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { 
+                nextEmptyInput = inputs[i]; break; 
+              }
             }
-            if (nextEmptyInput) { e.preventDefault(); nextEmptyInput.focus(); }
+            
+            if (nextEmptyInput) { 
+              nextEmptyInput.focus(); 
+            } else {
+              // Auto Submit jika semua form terisi
+              const submitBtn = form.querySelector('[type="submit"]');
+              if (submitBtn && !submitBtn.disabled) {
+                submitBtn.click();
+              }
+            }
           }
         }
       });
@@ -946,10 +972,9 @@
     
     function openSupplierInputModal(supplierName) {
       const today = new Date(); const wibOffset = 7 * 60 * 60 * 1000; const localWIB = new Date(today.getTime() + (today.getTimezoneOffset() * 60000) + wibOffset); const todayStr = localWIB.toISOString().slice(0,10); 
-      const hasInputToday = (appData.tabungKeluar || []).some(r => r[1] === todayStr && r[2] === supplierName);
-      if(hasInputToday) { showToast("Anda sudah menginput data hari ini.", "error"); return; }
       document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = "";
       document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
+      setTimeout(() => document.getElementById('tk-tanggal').focus(), 100); // Auto-focus ke kalender untuk Smart Enter
     }
     function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
 
@@ -1029,20 +1054,6 @@
         if (appData.members) appData.members.forEach(m => { const opt = document.createElement('option'); opt.value = m[1]; opt.innerText = m[1]; if (m[1] === currentSelected) opt.selected = true; repMemberSel.appendChild(opt); });
       }
 
-      const todayStr = new Date(new Date().getTime() + (new Date().getTimezoneOffset() * 60000) + 7 * 60 * 60 * 1000).toISOString().slice(0,10);
-      const todayInputs = (appData.tabungKeluar || []).filter(r => r[1] === todayStr);
-      const statusBadge = document.getElementById('today-supplier-status');
-      if(statusBadge) {
-        if(todayInputs.length > 0) {
-          const latestStat = todayInputs[todayInputs.length - 1][4] || 'Disetujui'; statusBadge.innerText = "Status Hari Ini: " + latestStat;
-          if (latestStat === 'Pending') statusBadge.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 mr-2 shadow";
-          else if (latestStat === 'Ditolak') statusBadge.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/40 mr-2 shadow";
-          else statusBadge.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/40 mr-2 shadow";
-        } else {
-          statusBadge.innerText = "Status Hari Ini: Belum Input"; statusBadge.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-800 text-gray-400 border border-gray-700 mr-2 shadow";
-        }
-      }
-
       renderLaporanTable();
     }
 
@@ -1050,44 +1061,78 @@
       const tbody = document.getElementById('table-rekap-deposit-body'); const countEl = document.getElementById('rekap-total-deposit-count'); if (!tbody) return; tbody.innerHTML = '';
       if (!appData.deposit || appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
+      
+      const fragment = document.createDocumentFragment();
       appData.deposit.forEach(row => {
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
         tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>`;
-        tbody.appendChild(tr);
+        fragment.appendChild(tr);
       });
+      tbody.appendChild(fragment);
     }
 
     function renderRekapTransaksiMember() {
       const tbody = document.getElementById('table-rekap-trx-body'); const countEl = document.getElementById('rekap-total-trx-count'); if (!tbody) return; tbody.innerHTML = '';
       if (!appData.transaksi || appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
+      
+      const fragment = document.createDocumentFragment();
       appData.transaksi.forEach(row => {
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
         tr.innerHTML = `<td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td>`;
-        tbody.appendChild(tr);
+        fragment.appendChild(tr);
       });
+      tbody.appendChild(fragment);
     }
 
     function renderPersetujuanTable() {
       const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return; tbody.innerHTML = '';
       const pendingData = (appData.tabungKeluar || []).filter(r => (r[4] || 'Disetujui') === 'Pending');
-      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
+      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
+      
+      const fragment = document.createDocumentFragment();
+      
+      let memberOpts = '<option value="" disabled selected>Pilih Member</option>';
+      if (appData.members) appData.members.forEach(m => { memberOpts += `<option value="${m[1]}">${m[1]}</option>`; });
+      
       pendingData.forEach(row => {
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td><td class="px-4 py-3">${row[1]}</td><td class="px-4 py-3 font-bold text-white">${row[2]}</td><td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-center"><button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer"><i class="fa-solid fa-check mr-1"></i>Setujui</button><button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button></td>`;
-        tbody.appendChild(tr);
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td>
+          <td class="px-4 py-3">${row[1]}</td>
+          <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
+          <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
+          <td class="px-4 py-3">
+            <select id="tujuan-${row[0]}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full shadow-lg">
+              ${memberOpts}
+            </select>
+          </td>
+          <td class="px-4 py-3 text-center">
+            <button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
+            <button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
+          </td>`;
+        fragment.appendChild(tr);
       });
+      tbody.appendChild(fragment);
     }
 
     function renderPublikTabungKeluar(dataList) {
       const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return; tbody.innerHTML = '';
       if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
+      
+      const fragment = document.createDocumentFragment();
       dataList.forEach(row => {
         let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td>`;
-        tbody.appendChild(tr);
+        tr.innerHTML = `
+          <td class="px-4 py-3">${row[1]||'-'}</td>
+          <td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td>
+          <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
+          <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td>
+          <td class="px-4 py-3 font-semibold text-[#00bfff]">${row[5]||'-'}</td>`;
+        fragment.appendChild(tr);
       });
+      tbody.appendChild(fragment);
     }
 
     function filterTabungKeluarPublik() {
@@ -1117,17 +1162,32 @@
       let totalProfitBersihAll = 0; let totalProfitBersihMember = 0; let totalVolumeAll = 0;
 
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi.</td></tr>'; }
+      
+      const fragment = document.createDocumentFragment();
+      
+      // Hitung total profit dari SELURUH data tanpa mempedulikan filter
+      (appData.transaksi || []).forEach(row => {
+         const volAll = Number(row[5]) || 0;
+         let pSatuanAll = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
+         totalProfitBersihAll += (volAll * pSatuanAll);
+      });
+      
       filtered.forEach(row => {
         const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
         let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
         let profitBersihBaris = volume * profitSatuan;
-        totalProfitBersihAll += profitBersihBaris; if (filterMember === 'semua' || row[2] === filterMember) totalProfitBersihMember += profitBersihBaris;
+        
+        // Profit Member dan Volume hanya dihitung dari data yang TERSARING
+        totalProfitBersihMember += profitBersihBaris;
         totalVolumeAll += volume;
         
         const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
         tr.innerHTML = `<td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${row[2]}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td>`;
-        tbody.appendChild(tr);
+        fragment.appendChild(tr);
       });
+      
+      tbody.appendChild(fragment);
+      
       document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
       document.getElementById('rep-member-profit').innerText = 'Rp ' + totalProfitBersihMember.toLocaleString('id-ID');
       document.getElementById('rep-total-setoran').innerHTML = `<span id="rep-total-volume">${totalVolumeAll.toLocaleString('id-ID')}</span> Tabung`;
