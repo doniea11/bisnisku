@@ -604,7 +604,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyZNNpo3047jO7U6D_9HyVRlieatRGctihlcm5RjFsDx0DG97wjyLVrHjivzMgATGYg/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzvMzwjcXzY7_P4ZHktusUanj0tmryjXwvjaDFgqevnrzqUPjsk06-8_-8MuhMQGtm7/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -739,11 +739,9 @@
       let domId = String(idKeluar).trim().replace(/\s+/g, '');
       if (newStatus === 'Disetujui') {
         const sel = document.getElementById('tujuan-' + domId);
-        
-        // VALIDASI FRONTEND: Mencegah pilihan default
-        if (!sel || !sel.value || sel.value.trim() === '' || sel.value.includes('Pilih Member')) { 
+        if (!sel || !sel.value || sel.value.trim() === '') { 
            showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); 
-           return; // Berhenti di sini jika kosong
+           return; 
         }
         tujuan = sel.value.trim();
       }
