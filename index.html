@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby0AUw9JtLNYepLlJzqZVQ1e3FK0f0MV58XKAUNPHC0pIXRKRS3cQ_lhhM1b-UAhVCc/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx56CxejxRg-ftkwRZatCEvEBKivHYp-57FFE8UBfIktTtr8-uAddxShwOvcTk7eYLX/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -789,8 +789,13 @@
         const res = await fetchAPI('saveTabungKeluar', payload);
         if (res.success) {
           showToast(res.message, "success"); 
-          appData.tabungKeluar.push([res.id || 'OUT-NEW', payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
-          closeSupplierInputModal(); updateUIAll();
+          if (res.id) {
+             appData.tabungKeluar.push([res.id, payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
+             updateUIAll();
+          } else {
+             loadBackendData(); // Sinkronisasi manual jika backend gagal kirim id baru
+          }
+          closeSupplierInputModal();
         } else { showToast(res.message, "error"); }
       });
     }
@@ -808,8 +813,15 @@
           if(payload.idTrx) {
              const idx = appData.transaksi.findIndex(t => String(t[0]).trim() === String(payload.idTrx).trim());
              if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
-          } else { appData.transaksi.push([res.id || 'TRX-NEW', payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]); }
-          updateUIAll();
+             updateUIAll();
+          } else { 
+             if (res.id) {
+               appData.transaksi.push([res.id, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]);
+               updateUIAll();
+             } else {
+               loadBackendData();
+             }
+          }
           document.getElementById('trx-id').value = ""; document.getElementById('btn-update-trx').classList.add('hidden');
           document.getElementById('btn-submit-trx').classList.remove('hidden'); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0";
         } else { showToast(res.message, "error"); }
@@ -1085,12 +1097,12 @@
           <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
           <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
           <td class="px-4 py-3">
-             <select id="tujuan-${domId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
+             <select id="tujuan-${domId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full">
                 ${memberOptions}
              </select>
           </td>
           <td class="px-4 py-3 text-center flex gap-1 justify-center">
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
             <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak')" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
           </td></tr>`;
       });
