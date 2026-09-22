@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz5ul_Fyi2Xw6cJEIamqacTQlsBYmxO8ZTV4XC_RUIkrR4_fQQ-3XxzcLPF1D-3q_7S/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz29bW9wz17lH7aP-4BkTzdHmrf2U8unUE07KetAajfdNIbPmFJu6f4B3VqLhtYKCWw/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -648,7 +648,9 @@
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-      // PWA Manifest Setup
+      // Hapus Cache Lokal agar tidak ada memori basi
+      try { localStorage.removeItem('ZETTBOS_DB_CACHE'); } catch(e){}
+
       try {
         const manifest = {
           "name": "Masdonie Group Gas",
@@ -679,37 +681,23 @@
 
     function loadBackendData() {
       const loader = document.getElementById('global-loader');
-      const loaderText = loader ? loader.querySelector('p') : null;
       if (loader) loader.style.display = 'flex';
       
-      // SWR (Stale-While-Revalidate): Muat kilat dari cache lokal browser agar tidak ada jeda loading hitam
-      try {
-        const cachedData = localStorage.getItem('ZETTBOS_DB_CACHE');
-        if (cachedData) {
-           appData = JSON.parse(cachedData);
-           populateSettingsForm();
-           updateUIAll();
-           document.getElementById('page-dashboard').classList.remove('hidden');
-           if (loaderText) loaderText.innerText = "Sinkronisasi...";
-        }
-      } catch(e) {}
-
       fetchAPI('getAppData')
         .then(res => {
           if (loader) loader.style.display = 'none';
           if (res.success) { 
             appData = res; 
-            try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(res)); } catch(e){}
             populateSettingsForm(); 
             updateUIAll(); 
           } else { 
-            showToast("Gagal sinkronisasi data: " + res.message, "error"); 
+            showToast("Gagal memuat data: " + res.message, "error"); 
           }
           document.getElementById('page-dashboard').classList.remove('hidden'); 
         })
         .catch(err => {
           if (loader) loader.style.display = 'none';
-          showToast("Koneksi bermasalah. Menggunakan mode Offline.", "error");
+          showToast(err.message, "error");
           document.getElementById('page-dashboard').classList.remove('hidden'); 
         });
     }
@@ -759,19 +747,18 @@
       
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
-      // Force update lokal cache dan UI instan
       const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
       if(idx > -1) {
         appData.tabungKeluar[idx][4] = newStatus;
         appData.tabungKeluar[idx][5] = tujuan;
       }
-      try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
       updateUIAll(); 
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
           if(res.success) { 
             showToast(res.message, "success"); 
+            loadBackendData(); // Sinkronisasi ulang secara penuh dari database
           } else { 
             showToast(res.message, "error"); 
             if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
@@ -792,11 +779,8 @@
           hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value)
         };
         const res = await fetchAPI('savePengaturanHarga', payload);
-        if (res.success) { 
-          showToast(res.message, "success"); appData.settings = payload; 
-          try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
-          updateUIAll(); populateSettingsForm(); 
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); appData.settings = payload; updateUIAll(); populateSettingsForm(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
@@ -811,7 +795,6 @@
             const idx = appData.deposit.findIndex(d => String(d[0]).trim() === String(payload.idDeposit).trim());
             if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
           } else { appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]); }
-          try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
           updateUIAll();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
@@ -826,13 +809,7 @@
         const res = await fetchAPI('saveTabungKeluar', payload);
         if (res.success) {
           showToast(res.message, "success"); 
-          if (res.id) {
-             appData.tabungKeluar.push([res.id, payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
-             try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
-             updateUIAll();
-          } else {
-             loadBackendData(); 
-          }
+          loadBackendData();
           closeSupplierInputModal();
         } else { showToast(res.message, "error"); }
       });
@@ -848,20 +825,7 @@
         const res = await fetchAPI('saveTransaksiMember', payload);
         if (res.success) {
           showToast(res.message, "success"); 
-          if(payload.idTrx) {
-             const idx = appData.transaksi.findIndex(t => String(t[0]).trim() === String(payload.idTrx).trim());
-             if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
-             try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
-             updateUIAll();
-          } else { 
-             if (res.id) {
-               appData.transaksi.push([res.id, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]);
-               try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){}
-               updateUIAll();
-             } else {
-               loadBackendData();
-             }
-          }
+          loadBackendData();
           document.getElementById('trx-id').value = ""; document.getElementById('btn-update-trx').classList.add('hidden');
           document.getElementById('btn-submit-trx').classList.remove('hidden'); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0";
         } else { showToast(res.message, "error"); }
@@ -883,7 +847,7 @@
       executeSafeSubmit('btn-submit-add-member', async () => {
         const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value };
         const res = await fetchAPI('addNewMember', payload);
-        if (res.success) { showToast(res.message, "success"); appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]); try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){} updateUIAll(); e.target.reset(); } 
+        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
         else { showToast(res.message, "error"); }
       });
     }
@@ -893,10 +857,8 @@
       executeSafeSubmit('btn-submit-reset-pin', async () => {
         const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value };
         const res = await fetchAPI('resetMemberPin', payload);
-        if (res.success) { 
-            showToast(res.message, "success"); const idx = appData.members.findIndex(m => String(m[0]).trim() === String(payload.idMember).trim());
-            if (idx > -1) appData.members[idx][2] = payload.newPIN; e.target.reset(); 
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
@@ -905,7 +867,7 @@
       executeSafeSubmit('btn-submit-add-supplier', async () => {
         const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value };
         const res = await fetchAPI('addNewSupplier', payload);
-        if (res.success) { showToast(res.message, "success"); appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]); try { localStorage.setItem('ZETTBOS_DB_CACHE', JSON.stringify(appData)); } catch(e){} updateUIAll(); e.target.reset(); } 
+        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
         else { showToast(res.message, "error"); }
       });
     }
@@ -915,10 +877,8 @@
       executeSafeSubmit('btn-submit-reset-pin-supplier', async () => {
         const payload = { idSupplier: document.getElementById('reset-id-supplier').value, newPin: document.getElementById('reset-new-pin-supplier').value };
         const res = await fetchAPI('resetSupplierPin', payload);
-        if (res.success) { 
-           showToast(res.message, "success"); const idx = appData.suppliers.findIndex(s => String(s[0]).trim() === String(payload.idSupplier).trim());
-           if (idx > -1) appData.suppliers[idx][2] = payload.newPin; e.target.reset(); 
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
@@ -1129,7 +1089,7 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        let domId = cleanId.replace(/\s+/g, ''); // Amankan ID untuk atribut HTML
+        let domId = cleanId.replace(/\s+/g, '');
         html += `
           <tr class="border-b border-gray-800 hover:bg-gray-800/40">
           <td class="px-4 py-3 text-xs font-mono text-gray-400">${cleanId}</td>
