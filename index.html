@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MASDONIE GROUP - Sistem Informasi Penjualan Gas</title>
   
-  <!-- Preconnect untuk mempercepat loading aset eksternal -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
@@ -98,7 +95,6 @@
       <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">Sistem Masdonie Group</p>
     </div>
 
-    <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="page-view space-y-8 hidden">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none">
@@ -122,7 +118,6 @@
       </div>
     </section>
 
-    <!-- 2. HALAMAN PUBLIK (Informasi Tabung Keluar) -->
     <section id="page-publik" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
@@ -132,7 +127,6 @@
             </h2>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <!-- Tombol Tambahan Input Tabung Keluar Supplier -->
             <button onclick="requestSupplierAccess()" class="px-3 py-1.5 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 rounded-lg text-xs font-semibold hover:bg-yellow-500/30 transition-all cursor-pointer"><i class="fa-solid fa-truck-ramp-box mr-1"></i> Input Tabung Keluar</button>
             
             <span class="text-xs text-gray-400">Rentang Tanggal:</span>
@@ -165,7 +159,6 @@
             <table class="w-full text-left text-sm text-gray-300">
               <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
                 <tr>
-                  <!-- Kolom ID Dihapus, diganti Tujuan Pengiriman -->
                   <th class="px-4 py-3">Tanggal</th>
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
@@ -180,7 +173,6 @@
       </div>
     </section>
 
-    <!-- 3. HALAMAN KASIR -->
     <section id="page-kasir" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
@@ -195,10 +187,9 @@
           <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Laporan Transaksi</button>
         </div>
 
-        <!-- SUB 0: Persetujuan Supplier -->
         <div id="kasir-sub-persetujuan" class="kasir-sub-content space-y-4">
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar dari Supplier</h3>
-          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending". Silakan tentukan <b>Tujuan Pengiriman (Member)</b> sebelum melakukan Setujui.</p>
+          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending" dan membutuhkan persetujuan agar stok sisa tabung ter-update.</p>
           
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4">
             <table class="w-full text-left text-sm text-gray-300">
@@ -208,7 +199,6 @@
                   <th class="px-4 py-3">Tanggal</th>
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
-                  <th class="px-4 py-3">Tujuan (Member)</th>
                   <th class="px-4 py-3 text-center">Aksi Persetujuan</th>
                 </tr>
               </thead>
@@ -217,7 +207,6 @@
           </div>
         </div>
 
-        <!-- SUB 1: Deposit Kontrak Tabung -->
         <div id="kasir-sub-deposit" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Input Deposit Kontrak Tabung</h3>
           <form id="form-deposit" onsubmit="handleDepositSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -261,7 +250,6 @@
           </div>
         </div>
 
-        <!-- SUB 1.5: Pengaturan Harga -->
         <div id="kasir-sub-harga" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Pengaturan Harga Gas & Tabung</h3>
           <form id="form-harga" onsubmit="handleHargaSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -310,7 +298,6 @@
           </div>
         </div>
 
-        <!-- SUB 3: Transaksi Member -->
         <div id="kasir-sub-member" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Input Transaksi Penjualan Member</h3>
           <form id="form-transaksi" onsubmit="handleTransaksiMemberSubmit(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -377,7 +364,6 @@
           </div>
         </div>
 
-        <!-- SUB 4: Laporan Transaksi -->
         <div id="kasir-sub-laporan" class="kasir-sub-content hidden space-y-4">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h3 class="text-lg font-semibold text-white">Laporan Transaksi & Profit Bersih Per Bulan</h3>
@@ -434,7 +420,6 @@
       </div>
     </section>
 
-    <!-- 4. HALAMAN ADMIN -->
     <section id="page-admin" class="page-view hidden space-y-6">
       <div id="admin-auth-container" class="glass-card p-8 rounded-2xl max-w-md mx-auto text-center space-y-4 my-12">
         <div class="w-16 h-16 rounded-full bg-[#00ffaa]/10 border border-[#00ffaa]/40 flex items-center justify-center mx-auto zett-glow">
@@ -499,7 +484,6 @@
             </form>
           </div>
 
-          <!-- Tambah Supplier Baru -->
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-truck-fast text-[#00ffaa] mr-2"></i> Tambah Supplier Baru</h3>
             <form onsubmit="handleAddSupplier(event)" class="space-y-3">
@@ -515,7 +499,6 @@
             </form>
           </div>
 
-          <!-- Reset PIN Supplier -->
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-rotate-left text-[#00ffaa] mr-2"></i> Reset PIN Supplier</h3>
             <form onsubmit="handleResetSupplierPin(event)" class="space-y-3">
@@ -542,7 +525,6 @@
     <p>@masdonie_group</p>
   </footer>
 
-  <!-- SEMUA MODAL -->
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
     <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
       <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
@@ -601,10 +583,7 @@
   </div>
 
   <script>
-    // ======================================================================
-    // KONFIGURASI GLOBAL & VARIABEL STATE
-    // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzMCF0PONZe6HPBmsTeJ43VUyVD6ugP1wyUJbmbbOszpK_rgnyKbXRccBwAspOihTY/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxt0XZLjFEWtfijU-hec42YV5XCJJHRHgSQRNJD5Qcs3jC1NSeacV3IvrW7rwsAV1-W/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -615,9 +594,6 @@
     let pendingTargetPage = ''; 
     let pendingAllowedRole = '';
 
-    // ======================================================================
-    // CORE API FETCHER (OPTIMIZED DUAL-MODE BY ZETTBOT)
-    // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
         if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -677,50 +653,61 @@
             appData = res;
             populateSettingsForm();
             updateUIAll();
-            document.getElementById('page-dashboard').classList.remove('hidden');
           } else { showToast("Gagal memuat data: " + res.message, "error"); }
+          document.getElementById('page-dashboard').classList.remove('hidden'); 
         })
         .catch(err => {
           if (loader) loader.style.display = 'none';
           showToast(err.message, "error");
+          document.getElementById('page-dashboard').classList.remove('hidden'); 
         });
     }
 
-    // Modal Auth Logic
     function submitModalPin() {
-      const pinVal = document.getElementById('modal-pin-input').value;
+      const pinVal = document.getElementById('modal-pin-input').value.trim();
       if (!pinVal) { showToast("PIN tidak boleh kosong!", "error"); return; }
 
-      fetchAPI('verifyUserPinAccess', { pinVal: pinVal, allowedRole: pendingAllowedRole })
-        .then(res => {
-          if (res.success) {
-            if (pendingAllowedRole === 'supplier_only') {
-              closePinModal();
-              openSupplierInputModal(res.name);
-            } else {
-              const target = pendingTargetPage;
-              closePinModal();
-              showToast(res.message, "success");
-              switchPage(target);
-            }
-          } else { showToast(res.message, "error"); }
-        })
-        .catch(err => showToast(err.message, "error"));
+      let isSuccess = false; 
+      let msg = "PIN yang Anda masukkan salah atau tidak valid!"; 
+      let name = "";
+
+      if (pinVal === appData.adminPinSet) {
+        isSuccess = true; msg = "Akses diberikan sebagai Admin.";
+      } else if (pendingAllowedRole === 'admin_only') {
+        msg = "PIN Kasir salah! Hanya PIN Admin yang diizinkan.";
+      } else if (pendingAllowedRole === 'supplier_only') {
+        const sup = (appData.suppliers || []).find(s => s[2] == pinVal);
+        if (sup) { isSuccess = true; name = sup[1]; msg = "Akses diberikan sebagai Supplier."; }
+        else { msg = "PIN Supplier salah!"; }
+      } else {
+        const mem = (appData.members || []).find(m => m[2] == pinVal);
+        if (mem) { isSuccess = true; name = mem[1]; msg = "Akses diberikan sebagai Member."; }
+      }
+
+      if (isSuccess) {
+        if (pendingAllowedRole === 'supplier_only') {
+          closePinModal();
+          openSupplierInputModal(name);
+        } else {
+          const target = pendingTargetPage;
+          closePinModal();
+          showToast(msg, "success");
+          switchPage(target);
+        }
+      } else { 
+        showToast(msg, "error"); 
+      }
     }
 
-    // Form Submits
     function handleApprovalSubmit(idKeluar, newStatus) {
-      let tujuan = '';
-      if (newStatus === 'Disetujui') {
-        const sel = document.getElementById('tujuan-' + idKeluar);
-        if (sel) tujuan = sel.value;
-        if (!tujuan) { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
-      }
-      
-      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
+      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: "" })
         .then(res => {
-          if(res.success) { showToast(res.message, "success"); loadBackendData(); }
-          else { showToast(res.message, "error"); }
+          if(res.success) { 
+            showToast(res.message, "success"); 
+            const idx = appData.tabungKeluar.findIndex(t => t[0] === idKeluar);
+            if(idx > -1) { appData.tabungKeluar[idx][4] = newStatus; }
+            updateUIAll(); 
+          } else { showToast(res.message, "error"); }
         }).catch(err => showToast(err.message, "error"));
     }
 
@@ -734,8 +721,11 @@
           hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value)
         };
         const res = await fetchAPI('savePengaturanHarga', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); }
-        else { showToast(res.message, "error"); }
+        if (res.success) { 
+           showToast(res.message, "success"); 
+           appData.settings = payload; 
+           updateUIAll(); populateSettingsForm();
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -749,7 +739,14 @@
         };
         const res = await fetchAPI('saveDepositKontrak', payload);
         if (res.success) {
-          showToast(res.message, "success"); loadBackendData();
+          showToast(res.message, "success"); 
+          if(payload.idDeposit) {
+            const idx = appData.deposit.findIndex(d => d[0] === payload.idDeposit);
+            if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
+          } else {
+            appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]);
+          }
+          updateUIAll();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
         } else { showToast(res.message, "error"); }
@@ -766,7 +763,10 @@
         };
         const res = await fetchAPI('saveTabungKeluar', payload);
         if (res.success) {
-          showToast(res.message, "success"); closeSupplierInputModal(); loadBackendData();
+          showToast(res.message, "success"); 
+          appData.tabungKeluar.push([res.id || 'OUT-NEW', payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
+          closeSupplierInputModal(); 
+          updateUIAll();
         } else { showToast(res.message, "error"); }
       });
     }
@@ -784,7 +784,14 @@
         };
         const res = await fetchAPI('saveTransaksiMember', payload);
         if (res.success) {
-          showToast(res.message, "success"); loadBackendData();
+          showToast(res.message, "success"); 
+          if(payload.idTrx) {
+             const idx = appData.transaksi.findIndex(t => t[0] === payload.idTrx);
+             if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
+          } else {
+             appData.transaksi.push([res.id || 'TRX-NEW', payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]);
+          }
+          updateUIAll();
           document.getElementById('trx-id').value = ""; document.getElementById('btn-update-trx').classList.add('hidden');
           document.getElementById('btn-submit-trx').classList.remove('hidden'); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0";
         } else { showToast(res.message, "error"); }
@@ -794,11 +801,7 @@
     function handleUpdateAdminPin(e) {
       e.preventDefault();
       executeSafeSubmit('btn-submit-adm-pin', async () => {
-        const payload = {
-          currentPin: document.getElementById('adm-current-pin').value,
-          newPin1: document.getElementById('adm-new-pin1').value,
-          newPin2: document.getElementById('adm-new-pin2').value
-        };
+        const payload = { currentPin: document.getElementById('adm-current-pin').value, newPin1: document.getElementById('adm-new-pin1').value, newPin2: document.getElementById('adm-new-pin2').value };
         const res = await fetchAPI('updateAdminPin', payload);
         if (res.success) { showToast(res.message, "success"); appData.adminPinSet = payload.newPin1; e.target.reset(); }
         else { showToast(res.message, "error"); }
@@ -810,8 +813,11 @@
       executeSafeSubmit('btn-submit-add-member', async () => {
         const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value };
         const res = await fetchAPI('addNewMember', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); }
-        else { showToast(res.message, "error"); }
+        if (res.success) { 
+           showToast(res.message, "success"); 
+           appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]);
+           updateUIAll(); e.target.reset(); 
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -820,7 +826,12 @@
       executeSafeSubmit('btn-submit-reset-pin', async () => {
         const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value };
         const res = await fetchAPI('resetMemberPin', payload);
-        if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); }
+        if (res.success) { 
+            showToast(res.message, "success"); 
+            const idx = appData.members.findIndex(m => m[0] === payload.idMember);
+            if (idx > -1) appData.members[idx][2] = payload.newPIN;
+            e.target.reset(); 
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -829,7 +840,11 @@
       executeSafeSubmit('btn-submit-add-supplier', async () => {
         const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value };
         const res = await fetchAPI('addNewSupplier', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); }
+        if (res.success) { 
+           showToast(res.message, "success"); 
+           appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]);
+           updateUIAll(); e.target.reset(); 
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -838,7 +853,12 @@
       executeSafeSubmit('btn-submit-reset-pin-supplier', async () => {
         const payload = { idSupplier: document.getElementById('reset-id-supplier').value, newPin: document.getElementById('reset-new-pin-supplier').value };
         const res = await fetchAPI('resetSupplierPin', payload);
-        if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); }
+        if (res.success) { 
+           showToast(res.message, "success"); 
+           const idx = appData.suppliers.findIndex(s => s[0] === payload.idSupplier);
+           if (idx > -1) appData.suppliers[idx][2] = payload.newPin;
+           e.target.reset(); 
+        } else { showToast(res.message, "error"); }
       });
     }
 
@@ -875,9 +895,6 @@
       } else { showToast("PIN Admin Salah!", "error"); }
     }
 
-    // ==========================================
-    // UI HELPER FUNCTIONS & SMART ENTER
-    // ==========================================
     function setupSmartEnterNavigation() {
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
@@ -887,7 +904,6 @@
             calcTransaksiTotal(); 
           }
           
-          // Smart Navigation untuk elemen input form
           if (activeEl && activeEl.hasAttribute('data-form-input')) {
             e.preventDefault(); 
             const form = activeEl.closest('form'); 
@@ -905,11 +921,8 @@
             if (nextEmptyInput) { 
               nextEmptyInput.focus(); 
             } else {
-              // Auto Submit jika semua form terisi
               const submitBtn = form.querySelector('[type="submit"]');
-              if (submitBtn && !submitBtn.disabled) {
-                submitBtn.click();
-              }
+              if (submitBtn && !submitBtn.disabled) { submitBtn.click(); }
             }
           }
         }
@@ -974,7 +987,7 @@
       const today = new Date(); const wibOffset = 7 * 60 * 60 * 1000; const localWIB = new Date(today.getTime() + (today.getTimezoneOffset() * 60000) + wibOffset); const todayStr = localWIB.toISOString().slice(0,10); 
       document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = "";
       document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
-      setTimeout(() => document.getElementById('tk-tanggal').focus(), 100); // Auto-focus ke kalender untuk Smart Enter
+      setTimeout(() => document.getElementById('tk-tanggal').focus(), 100); 
     }
     function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
 
@@ -985,7 +998,7 @@
       const box = document.getElementById('toast-box');
       const msg = document.getElementById('toast-message');
       
-      if (!toast || !msg || !title || !box) return; // Safety check
+      if (!toast || !msg || !title || !box) return; 
       
       msg.innerText = message;
       if (type === "success") {
@@ -1058,81 +1071,80 @@
     }
 
     function renderRekapDeposit() {
-      const tbody = document.getElementById('table-rekap-deposit-body'); const countEl = document.getElementById('rekap-total-deposit-count'); if (!tbody) return; tbody.innerHTML = '';
+      const tbody = document.getElementById('table-rekap-deposit-body'); const countEl = document.getElementById('rekap-total-deposit-count'); if (!tbody) return;
       if (!appData.deposit || appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
       
-      const fragment = document.createDocumentFragment();
+      let html = '';
       appData.deposit.forEach(row => {
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>`;
-        fragment.appendChild(tr);
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td></tr>`;
       });
-      tbody.appendChild(fragment);
+      tbody.innerHTML = html;
     }
 
     function renderRekapTransaksiMember() {
-      const tbody = document.getElementById('table-rekap-trx-body'); const countEl = document.getElementById('rekap-total-trx-count'); if (!tbody) return; tbody.innerHTML = '';
+      const tbody = document.getElementById('table-rekap-trx-body'); const countEl = document.getElementById('rekap-total-trx-count'); if (!tbody) return;
       if (!appData.transaksi || appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
       
-      const fragment = document.createDocumentFragment();
+      let html = '';
       appData.transaksi.forEach(row => {
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td>`;
-        fragment.appendChild(tr);
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td></tr>`;
       });
-      tbody.appendChild(fragment);
+      tbody.innerHTML = html;
     }
 
     function renderPersetujuanTable() {
-      const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return; tbody.innerHTML = '';
+      const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return;
       const pendingData = (appData.tabungKeluar || []).filter(r => (r[4] || 'Disetujui') === 'Pending');
-      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
+      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
-      const fragment = document.createDocumentFragment();
-      
-      let memberOpts = '<option value="" disabled selected>Pilih Member</option>';
-      if (appData.members) appData.members.forEach(m => { memberOpts += `<option value="${m[1]}">${m[1]}</option>`; });
-      
+      let html = '';
       pendingData.forEach(row => {
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `
+        html += `
+          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
           <td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td>
           <td class="px-4 py-3">${row[1]}</td>
           <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
           <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
-          <td class="px-4 py-3">
-            <select id="tujuan-${row[0]}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full shadow-lg">
-              ${memberOpts}
-            </select>
-          </td>
           <td class="px-4 py-3 text-center">
             <button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
             <button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
-          </td>`;
-        fragment.appendChild(tr);
+          </td></tr>`;
       });
-      tbody.appendChild(fragment);
+      tbody.innerHTML = html;
     }
 
+    // 🚀 Advanced Multi-Match Auto-Sync dengan .filter().map().join(', ')
     function renderPublikTabungKeluar(dataList) {
-      const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return; tbody.innerHTML = '';
+      const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return;
       if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
       
-      const fragment = document.createDocumentFragment();
+      let html = '';
       dataList.forEach(row => {
-        let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `
-          <td class="px-4 py-3">${row[1]||'-'}</td>
+        let status = row[4] || 'Disetujui'; 
+        let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
+        
+        let tanggalKeluar = row[1];
+        let jumlahKeluar = Number(row[3]) || 0;
+        let autoTujuan = '-';
+        
+        if(appData.transaksi && appData.transaksi.length > 0 && status === 'Disetujui') {
+           const matchTrxs = appData.transaksi.filter(t => t[1] === tanggalKeluar && (Number(t[5]) || 0) === jumlahKeluar);
+           if(matchTrxs && matchTrxs.length > 0) { 
+              autoTujuan = matchTrxs.map(t => t[2]).join(', '); 
+           }
+        }
+
+        html += `
+          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
+          <td class="px-4 py-3">${tanggalKeluar||'-'}</td>
           <td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td>
-          <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
+          <td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td>
           <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td>
-          <td class="px-4 py-3 font-semibold text-[#00bfff]">${row[5]||'-'}</td>`;
-        fragment.appendChild(tr);
+          <td class="px-4 py-3 font-semibold text-[#00bfff]">${autoTujuan}</td></tr>`;
       });
-      tbody.appendChild(fragment);
+      tbody.innerHTML = html;
     }
 
     function filterTabungKeluarPublik() {
@@ -1158,35 +1170,31 @@
         return true;
       });
 
-      const tbody = document.getElementById('table-laporan-body'); if (!tbody) return; tbody.innerHTML = '';
-      let totalProfitBersihAll = 0; let totalProfitBersihMember = 0; let totalVolumeAll = 0;
-
+      const tbody = document.getElementById('table-laporan-body'); if (!tbody) return;
+      
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi.</td></tr>'; }
       
-      const fragment = document.createDocumentFragment();
+      let totalProfitBersihAll = 0; let totalProfitBersihMember = 0; let totalVolumeAll = 0;
       
-      // Hitung total profit dari SELURUH data tanpa mempedulikan filter
       (appData.transaksi || []).forEach(row => {
          const volAll = Number(row[5]) || 0;
          let pSatuanAll = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
          totalProfitBersihAll += (volAll * pSatuanAll);
       });
       
+      let html = '';
       filtered.forEach(row => {
         const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
         let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
         let profitBersihBaris = volume * profitSatuan;
         
-        // Profit Member dan Volume hanya dihitung dari data yang TERSARING
         totalProfitBersihMember += profitBersihBaris;
         totalVolumeAll += volume;
         
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${row[2]}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td>`;
-        fragment.appendChild(tr);
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${row[2]}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td></tr>`;
       });
       
-      tbody.appendChild(fragment);
+      if(filtered.length > 0) tbody.innerHTML = html;
       
       document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
       document.getElementById('rep-member-profit').innerText = 'Rp ' + totalProfitBersihMember.toLocaleString('id-ID');
