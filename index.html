@@ -95,6 +95,7 @@
       <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">Sistem Masdonie Group</p>
     </div>
 
+    <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="page-view space-y-8 hidden">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none">
@@ -118,6 +119,7 @@
       </div>
     </section>
 
+    <!-- 2. HALAMAN PUBLIK (Informasi Tabung Keluar) -->
     <section id="page-publik" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
@@ -173,6 +175,7 @@
       </div>
     </section>
 
+    <!-- 3. HALAMAN KASIR -->
     <section id="page-kasir" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
@@ -187,6 +190,7 @@
           <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Laporan Transaksi</button>
         </div>
 
+        <!-- SUB 0: Persetujuan Supplier -->
         <div id="kasir-sub-persetujuan" class="kasir-sub-content space-y-4">
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar dari Supplier</h3>
           <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending" dan membutuhkan persetujuan agar stok sisa tabung ter-update.</p>
@@ -207,6 +211,7 @@
           </div>
         </div>
 
+        <!-- SUB 1: Deposit Kontrak Tabung -->
         <div id="kasir-sub-deposit" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Input Deposit Kontrak Tabung</h3>
           <form id="form-deposit" onsubmit="handleDepositSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -250,6 +255,7 @@
           </div>
         </div>
 
+        <!-- SUB 1.5: Pengaturan Harga -->
         <div id="kasir-sub-harga" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Pengaturan Harga Gas & Tabung</h3>
           <form id="form-harga" onsubmit="handleHargaSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -298,6 +304,7 @@
           </div>
         </div>
 
+        <!-- SUB 3: Transaksi Member -->
         <div id="kasir-sub-member" class="kasir-sub-content hidden space-y-4">
           <h3 class="text-lg font-semibold text-white">Input Transaksi Penjualan Member</h3>
           <form id="form-transaksi" onsubmit="handleTransaksiMemberSubmit(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -364,6 +371,7 @@
           </div>
         </div>
 
+        <!-- SUB 4: Laporan Transaksi -->
         <div id="kasir-sub-laporan" class="kasir-sub-content hidden space-y-4">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h3 class="text-lg font-semibold text-white">Laporan Transaksi & Profit Bersih Per Bulan</h3>
@@ -420,6 +428,7 @@
       </div>
     </section>
 
+    <!-- 4. HALAMAN ADMIN -->
     <section id="page-admin" class="page-view hidden space-y-6">
       <div id="admin-auth-container" class="glass-card p-8 rounded-2xl max-w-md mx-auto text-center space-y-4 my-12">
         <div class="w-16 h-16 rounded-full bg-[#00ffaa]/10 border border-[#00ffaa]/40 flex items-center justify-center mx-auto zett-glow">
@@ -583,7 +592,10 @@
   </div>
 
   <script>
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxt0XZLjFEWtfijU-hec42YV5XCJJHRHgSQRNJD5Qcs3jC1NSeacV3IvrW7rwsAV1-W/exec";
+    // ======================================================================
+    // KONFIGURASI GLOBAL
+    // ======================================================================
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbztJn5rvW6kPSmrBy7k8I_cpR0edehop1dEdUimSQ2vDZX-oGq4YkauJWELhgOOi4A/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -594,30 +606,26 @@
     let pendingTargetPage = ''; 
     let pendingAllowedRole = '';
 
+    // ======================================================================
+    // CORE API FETCHER
+    // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
-            .withSuccessHandler(res => {
-              try { resolve(typeof res === 'string' ? JSON.parse(res) : res); } 
-              catch(e) { resolve(res); }
-            })
+            .withSuccessHandler(res => { try { resolve(typeof res === 'string' ? JSON.parse(res) : res); } catch(e) { resolve(res); } })
             .withFailureHandler(err => reject(new Error(err.message)))
             [action](dataParams);
           return;
         }
         
-        if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Tolong ganti variabel GAS_API_URL")); return; }
+        if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Ganti variabel GAS_API_URL")); return; }
         try {
           const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            redirect: 'follow',
-            body: JSON.stringify({ action: action, data: dataParams })
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow', body: JSON.stringify({ action: action, data: dataParams })
           });
           const textResult = await response.text();
-          try { resolve(JSON.parse(textResult)); } 
-          catch (parseError) { reject(new Error("Akses API Ditolak! Pastikan akses Deployment diset ke 'Siapa saja (Anyone)'.")); }
+          try { resolve(JSON.parse(textResult)); } catch (parseError) { reject(new Error("Akses API Ditolak! Cek akses Deployment.")); }
         } catch (error) { reject(new Error("Gagal terhubung ke Server: " + error.message)); }
       });
     }
@@ -628,13 +636,11 @@
       btn.disabled = true;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Memproses...';
-      try { await submitFunction(); } 
-      catch(err) { showToast(err.message, "error"); } 
-      finally { btn.disabled = false; btn.innerHTML = originalText; }
+      try { await submitFunction(); } catch(err) { showToast(err.message, "error"); } finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-      const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'filter-start-date', 'filter-end-date'];
+      const dateInputs = ['dep-tanggal', 'tk-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'filter-start-date', 'filter-end-date'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation();
       switchKasirSub('persetujuan');
@@ -649,11 +655,8 @@
       fetchAPI('getAppData')
         .then(res => {
           if (loader) loader.style.display = 'none';
-          if (res.success) {
-            appData = res;
-            populateSettingsForm();
-            updateUIAll();
-          } else { showToast("Gagal memuat data: " + res.message, "error"); }
+          if (res.success) { appData = res; populateSettingsForm(); updateUIAll(); } 
+          else { showToast("Gagal memuat data: " + res.message, "error"); }
           document.getElementById('page-dashboard').classList.remove('hidden'); 
         })
         .catch(err => {
@@ -663,13 +666,14 @@
         });
     }
 
+    // ======================================================================
+    // LOCAL AUTHENTICATION
+    // ======================================================================
     function submitModalPin() {
       const pinVal = document.getElementById('modal-pin-input').value.trim();
       if (!pinVal) { showToast("PIN tidak boleh kosong!", "error"); return; }
 
-      let isSuccess = false; 
-      let msg = "PIN yang Anda masukkan salah atau tidak valid!"; 
-      let name = "";
+      let isSuccess = false; let msg = "PIN yang Anda masukkan salah atau tidak valid!"; let name = "";
 
       if (pinVal === appData.adminPinSet) {
         isSuccess = true; msg = "Akses diberikan sebagai Admin.";
@@ -685,20 +689,14 @@
       }
 
       if (isSuccess) {
-        if (pendingAllowedRole === 'supplier_only') {
-          closePinModal();
-          openSupplierInputModal(name);
-        } else {
-          const target = pendingTargetPage;
-          closePinModal();
-          showToast(msg, "success");
-          switchPage(target);
-        }
-      } else { 
-        showToast(msg, "error"); 
-      }
+        if (pendingAllowedRole === 'supplier_only') { closePinModal(); openSupplierInputModal(name); } 
+        else { const target = pendingTargetPage; closePinModal(); showToast(msg, "success"); switchPage(target); }
+      } else { showToast(msg, "error"); }
     }
 
+    // ======================================================================
+    // OPTIMISTIC UI (ANTI-RELOAD)
+    // ======================================================================
     function handleApprovalSubmit(idKeluar, newStatus) {
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: "" })
         .then(res => {
@@ -721,31 +719,22 @@
           hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value)
         };
         const res = await fetchAPI('savePengaturanHarga', payload);
-        if (res.success) { 
-           showToast(res.message, "success"); 
-           appData.settings = payload; 
-           updateUIAll(); populateSettingsForm();
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); appData.settings = payload; updateUIAll(); populateSettingsForm(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
     function handleDepositSubmit(e) {
       e.preventDefault();
       executeSafeSubmit('btn-submit-dep', async () => {
-        const payload = {
-          idDeposit: document.getElementById('dep-id').value,
-          tanggal: document.getElementById('dep-tanggal').value,
-          nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value)
-        };
+        const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) };
         const res = await fetchAPI('saveDepositKontrak', payload);
         if (res.success) {
           showToast(res.message, "success"); 
           if(payload.idDeposit) {
             const idx = appData.deposit.findIndex(d => d[0] === payload.idDeposit);
             if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
-          } else {
-            appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]);
-          }
+          } else { appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]); }
           updateUIAll();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
@@ -756,17 +745,12 @@
     function handleTabungKeluarSubmit(e) {
       e.preventDefault();
       executeSafeSubmit('btn-submit-tk', async () => {
-        const payload = {
-          tanggal: document.getElementById('tk-tanggal').value,
-          namaSupplier: document.getElementById('tk-supplier-name').value,
-          jumlahTabung: parseCleanNumber(document.getElementById('tk-jumlah').value)
-        };
+        const payload = { tanggal: document.getElementById('tk-tanggal').value, namaSupplier: document.getElementById('tk-supplier-name').value, jumlahTabung: parseCleanNumber(document.getElementById('tk-jumlah').value) };
         const res = await fetchAPI('saveTabungKeluar', payload);
         if (res.success) {
           showToast(res.message, "success"); 
           appData.tabungKeluar.push([res.id || 'OUT-NEW', payload.tanggal, payload.namaSupplier, payload.jumlahTabung, "Pending", "-"]);
-          closeSupplierInputModal(); 
-          updateUIAll();
+          closeSupplierInputModal(); updateUIAll();
         } else { showToast(res.message, "error"); }
       });
     }
@@ -775,12 +759,8 @@
       e.preventDefault();
       executeSafeSubmit('btn-submit-trx', async () => {
         const payload = {
-          idTrx: document.getElementById('trx-id').value,
-          tanggal: document.getElementById('trx-tanggal').value,
-          namaMember: document.getElementById('trx-namamember').value,
-          jenisTransaksi: document.getElementById('trx-jenis').value,
-          metodeSetoran: document.getElementById('trx-metode').value,
-          jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value)
+          idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value,
+          jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value)
         };
         const res = await fetchAPI('saveTransaksiMember', payload);
         if (res.success) {
@@ -788,9 +768,7 @@
           if(payload.idTrx) {
              const idx = appData.transaksi.findIndex(t => t[0] === payload.idTrx);
              if(idx > -1) appData.transaksi[idx] = [payload.idTrx, payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0];
-          } else {
-             appData.transaksi.push([res.id || 'TRX-NEW', payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]);
-          }
+          } else { appData.transaksi.push([res.id || 'TRX-NEW', payload.tanggal, payload.namaMember, payload.jenisTransaksi, payload.metodeSetoran, payload.jumlahTabung, res.jumlahRupiah || 0]); }
           updateUIAll();
           document.getElementById('trx-id').value = ""; document.getElementById('btn-update-trx').classList.add('hidden');
           document.getElementById('btn-submit-trx').classList.remove('hidden'); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0";
@@ -813,11 +791,8 @@
       executeSafeSubmit('btn-submit-add-member', async () => {
         const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value };
         const res = await fetchAPI('addNewMember', payload);
-        if (res.success) { 
-           showToast(res.message, "success"); 
-           appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]);
-           updateUIAll(); e.target.reset(); 
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); appData.members.push(['MEMBER-NEW', payload.namaMember.toUpperCase(), payload.pinMember]); updateUIAll(); e.target.reset(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
@@ -827,10 +802,8 @@
         const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value };
         const res = await fetchAPI('resetMemberPin', payload);
         if (res.success) { 
-            showToast(res.message, "success"); 
-            const idx = appData.members.findIndex(m => m[0] === payload.idMember);
-            if (idx > -1) appData.members[idx][2] = payload.newPIN;
-            e.target.reset(); 
+            showToast(res.message, "success"); const idx = appData.members.findIndex(m => m[0] === payload.idMember);
+            if (idx > -1) appData.members[idx][2] = payload.newPIN; e.target.reset(); 
         } else { showToast(res.message, "error"); }
       });
     }
@@ -840,11 +813,8 @@
       executeSafeSubmit('btn-submit-add-supplier', async () => {
         const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value };
         const res = await fetchAPI('addNewSupplier', payload);
-        if (res.success) { 
-           showToast(res.message, "success"); 
-           appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]);
-           updateUIAll(); e.target.reset(); 
-        } else { showToast(res.message, "error"); }
+        if (res.success) { showToast(res.message, "success"); appData.suppliers.push(['SUP-NEW', payload.namaSupplier.toUpperCase(), payload.pinSupplier]); updateUIAll(); e.target.reset(); } 
+        else { showToast(res.message, "error"); }
       });
     }
 
@@ -854,10 +824,8 @@
         const payload = { idSupplier: document.getElementById('reset-id-supplier').value, newPin: document.getElementById('reset-new-pin-supplier').value };
         const res = await fetchAPI('resetSupplierPin', payload);
         if (res.success) { 
-           showToast(res.message, "success"); 
-           const idx = appData.suppliers.findIndex(s => s[0] === payload.idSupplier);
-           if (idx > -1) appData.suppliers[idx][2] = payload.newPin;
-           e.target.reset(); 
+           showToast(res.message, "success"); const idx = appData.suppliers.findIndex(s => s[0] === payload.idSupplier);
+           if (idx > -1) appData.suppliers[idx][2] = payload.newPin; e.target.reset(); 
         } else { showToast(res.message, "error"); }
       });
     }
@@ -870,17 +838,6 @@
         if (jenis === 'Penjualan Gas') hargaSatuan = parseCleanNumber(appData.settings.hargaJualGas);
         else if (jenis === 'Penjualan Tabung Kosong') hargaSatuan = parseCleanNumber(appData.settings.hargaJualTabung);
       }
-
-      if (hargaSatuan === 0) {
-        try {
-          const res = await fetchAPI('getAppSettings');
-          if (res.success && res.settings) {
-            appData.settings = res.settings;
-            hargaSatuan = (jenis === 'Penjualan Gas') ? parseCleanNumber(res.settings.hargaJualGas) : parseCleanNumber(res.settings.hargaJualTabung);
-          }
-        } catch (err) { console.error(err); }
-      }
-
       let totalRupiah = jumlahTabung * hargaSatuan;
       const rupiahInput = document.getElementById('trx-jumlahrupiah');
       if (rupiahInput) rupiahInput.value = totalRupiah.toLocaleString('id-ID');
@@ -895,32 +852,22 @@
       } else { showToast("PIN Admin Salah!", "error"); }
     }
 
+    // ==========================================
+    // UI HELPER FUNCTIONS & SMART ENTER
+    // ==========================================
     function setupSmartEnterNavigation() {
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           const activeEl = document.activeElement;
-          
-          if (activeEl && activeEl.id === 'trx-jumlahtabung') { 
-            calcTransaksiTotal(); 
-          }
-          
+          if (activeEl && activeEl.id === 'trx-jumlahtabung') { calcTransaksiTotal(); }
           if (activeEl && activeEl.hasAttribute('data-form-input')) {
-            e.preventDefault(); 
-            const form = activeEl.closest('form'); 
-            if (!form) return;
+            e.preventDefault(); const form = activeEl.closest('form'); if (!form) return;
             const inputs = Array.from(form.querySelectorAll('[data-form-input]'));
-            const currentIndex = inputs.indexOf(activeEl); 
-            let nextEmptyInput = null;
-            
+            const currentIndex = inputs.indexOf(activeEl); let nextEmptyInput = null;
             for (let i = currentIndex + 1; i < inputs.length; i++) {
-              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { 
-                nextEmptyInput = inputs[i]; break; 
-              }
+              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { nextEmptyInput = inputs[i]; break; }
             }
-            
-            if (nextEmptyInput) { 
-              nextEmptyInput.focus(); 
-            } else {
+            if (nextEmptyInput) { nextEmptyInput.focus(); } else {
               const submitBtn = form.querySelector('[type="submit"]');
               if (submitBtn && !submitBtn.disabled) { submitBtn.click(); }
             }
@@ -933,8 +880,7 @@
     function formatPinAngkaOnly(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
     function parseCleanNumber(val) { if (!val) return 0; return parseFloat(val.toString().replace(/\./g, '').replace(/,/g, '.')) || 0; }
     function formatRupiahInput(input) {
-      let value = input.value.replace(/[^,\d]/g, '').toString();
-      let split = value.split(','); let integerPart = split[0];
+      let value = input.value.replace(/[^,\d]/g, '').toString(); let split = value.split(','); let integerPart = split[0];
       if (integerPart.length > 1 && integerPart.startsWith('0')) { integerPart = integerPart.replace(/^0+/, ''); if (integerPart === '') integerPart = '0'; }
       let sisa = integerPart.length % 3; let rupiah = integerPart.substr(0, sisa); let ribuan = integerPart.substr(sisa).match(/\d{3}/gi);
       if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
@@ -992,32 +938,19 @@
     function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
 
     function showToast(message, type = "success") {
-      const toast = document.getElementById('toast-notification'); 
-      const title = document.getElementById('toast-title'); 
-      const icon = document.getElementById('toast-icon'); 
-      const box = document.getElementById('toast-box');
-      const msg = document.getElementById('toast-message');
-      
+      const toast = document.getElementById('toast-notification'); const title = document.getElementById('toast-title'); const icon = document.getElementById('toast-icon'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message');
       if (!toast || !msg || !title || !box) return; 
       
       msg.innerText = message;
       if (type === "success") {
-        title.innerText = "BERHASIL"; 
-        title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; 
-        if (icon) icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl";
+        title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; if (icon) icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl";
         box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300";
       } else {
-        title.innerText = "PERHATIAN / ERROR"; 
-        title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; 
-        if (icon) icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl";
+        title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; if (icon) icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl";
         box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300";
       }
-      toast.classList.replace('opacity-0', 'opacity-100'); 
-      toast.classList.replace('pointer-events-none', 'pointer-events-auto');
-      setTimeout(() => { 
-        toast.classList.replace('opacity-100', 'opacity-0'); 
-        toast.classList.replace('pointer-events-auto', 'pointer-events-none'); 
-      }, 3000);
+      toast.classList.replace('opacity-0', 'opacity-100'); toast.classList.replace('pointer-events-none', 'pointer-events-auto');
+      setTimeout(() => { toast.classList.replace('opacity-100', 'opacity-0'); toast.classList.replace('pointer-events-auto', 'pointer-events-none'); }, 3000);
     }
 
     function populateSettingsForm() {
@@ -1032,10 +965,12 @@
       document.getElementById('disp-hrg-jual-tab').innerText = 'Rp ' + (appData.settings.hargaJualTabung || 0).toLocaleString('id-ID');
     }
 
+    // ======================================================================
+    // HTML STRING BUILDER RENDERING (SUPER FAST)
+    // ======================================================================
     function updateUIAll() {
       let totalDepositTabungLocal = 0; if (appData.deposit) appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
-      let totalKeluarDisetujui = 0;
-      if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
+      let totalKeluarDisetujui = 0; if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
       let sisaTabungLocal = totalDepositTabungLocal - totalKeluarDisetujui;
 
       document.getElementById('pub-total-tabung').innerText = totalDepositTabungLocal.toLocaleString('id-ID');
@@ -1076,9 +1011,7 @@
       if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
       
       let html = '';
-      appData.deposit.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td></tr>`;
-      });
+      appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0]||'-'}</td><td class="px-4 py-3">${row[1]||'-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2]||0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td></tr>`; });
       tbody.innerHTML = html;
     }
 
@@ -1088,9 +1021,7 @@
       if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
       
       let html = '';
-      appData.transaksi.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td></tr>`;
-      });
+      appData.transaksi.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0]||'-'}</td><td class="px-4 py-3 text-xs">${row[1]||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]||'-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]||'-'}</span></td><td class="px-4 py-3">${Number(row[5]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6]||0).toLocaleString('id-ID')}</td></tr>`; });
       tbody.innerHTML = html;
     }
 
@@ -1101,60 +1032,35 @@
       
       let html = '';
       pendingData.forEach(row => {
-        html += `
-          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
-          <td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td>
-          <td class="px-4 py-3">${row[1]}</td>
-          <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
-          <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
-          <td class="px-4 py-3 text-center">
-            <button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
-            <button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
-          </td></tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">${row[0]}</td><td class="px-4 py-3">${row[1]}</td><td class="px-4 py-3 font-bold text-white">${row[2]}</td><td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-center"><button onclick="handleApprovalSubmit('${row[0]}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button><button onclick="handleApprovalSubmit('${row[0]}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button></td></tr>`;
       });
       tbody.innerHTML = html;
     }
 
-    // 🚀 Advanced Multi-Match Auto-Sync dengan .filter().map().join(', ')
+    // MULTI-MATCH AUTO-SYNC (Tujuan Pengiriman)
     function renderPublikTabungKeluar(dataList) {
       const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return;
       if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
       
       let html = '';
       dataList.forEach(row => {
-        let status = row[4] || 'Disetujui'; 
-        let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
-        
-        let tanggalKeluar = row[1];
-        let jumlahKeluar = Number(row[3]) || 0;
-        let autoTujuan = '-';
+        let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
+        let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0; let autoTujuan = '-';
         
         if(appData.transaksi && appData.transaksi.length > 0 && status === 'Disetujui') {
            const matchTrxs = appData.transaksi.filter(t => t[1] === tanggalKeluar && (Number(t[5]) || 0) === jumlahKeluar);
-           if(matchTrxs && matchTrxs.length > 0) { 
-              autoTujuan = matchTrxs.map(t => t[2]).join(', '); 
-           }
+           if(matchTrxs && matchTrxs.length > 0) { autoTujuan = matchTrxs.map(t => t[2]).join(', '); }
         }
 
-        html += `
-          <tr class="border-b border-gray-800 hover:bg-gray-800/40">
-          <td class="px-4 py-3">${tanggalKeluar||'-'}</td>
-          <td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td>
-          <td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td>
-          <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td>
-          <td class="px-4 py-3 font-semibold text-[#00bfff]">${autoTujuan}</td></tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${autoTujuan}</td></tr>`;
       });
       tbody.innerHTML = html;
     }
 
     function filterTabungKeluarPublik() {
-      const start = document.getElementById('filter-start-date') ? document.getElementById('filter-start-date').value : '';
-      const end = document.getElementById('filter-end-date') ? document.getElementById('filter-end-date').value : '';
-      let filtered = appData.tabungKeluar || [];
-      if (start && end) filtered = filtered.filter(row => row[1] >= start && row[1] <= end);
-      renderPublikTabungKeluar(filtered);
-      let sumFiltered = 0; filtered.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') sumFiltered += Number(r[3]) || 0; });
-      document.getElementById('pub-tabung-keluar').innerText = sumFiltered.toLocaleString('id-ID');
+      const start = document.getElementById('filter-start-date') ? document.getElementById('filter-start-date').value : ''; const end = document.getElementById('filter-end-date') ? document.getElementById('filter-end-date').value : '';
+      let filtered = appData.tabungKeluar || []; if (start && end) filtered = filtered.filter(row => row[1] >= start && row[1] <= end);
+      renderPublikTabungKeluar(filtered); let sumFiltered = 0; filtered.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') sumFiltered += Number(r[3]) || 0; }); document.getElementById('pub-tabung-keluar').innerText = sumFiltered.toLocaleString('id-ID');
     }
 
     function resetFilterPublik() { document.getElementById('filter-start-date').value = ''; document.getElementById('filter-end-date').value = ''; filterTabungKeluarPublik(); }
@@ -1171,29 +1077,21 @@
       });
 
       const tbody = document.getElementById('table-laporan-body'); if (!tbody) return;
-      
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi.</td></tr>'; }
       
       let totalProfitBersihAll = 0; let totalProfitBersihMember = 0; let totalVolumeAll = 0;
       
       (appData.transaksi || []).forEach(row => {
-         const volAll = Number(row[5]) || 0;
-         let pSatuanAll = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
-         totalProfitBersihAll += (volAll * pSatuanAll);
+         const volAll = Number(row[5]) || 0; let pSatuanAll = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung); totalProfitBersihAll += (volAll * pSatuanAll);
       });
       
       let html = '';
       filtered.forEach(row => {
         const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
-        let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung);
-        let profitBersihBaris = volume * profitSatuan;
-        
-        totalProfitBersihMember += profitBersihBaris;
-        totalVolumeAll += volume;
-        
+        let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung); let profitBersihBaris = volume * profitSatuan;
+        totalProfitBersihMember += profitBersihBaris; totalVolumeAll += volume;
         html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${row[2]}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3]}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td></tr>`;
       });
-      
       if(filtered.length > 0) tbody.innerHTML = html;
       
       document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
