@@ -197,7 +197,7 @@
         <!-- SUB 0: Persetujuan Supplier -->
         <div id="kasir-sub-persetujuan" class="kasir-sub-content space-y-4">
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar dari Supplier</h3>
-          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending" dan membutuhkan persetujuan agar stok sisa tabung ter-update.</p>
+          <p class="text-xs text-gray-400 mb-4">Daftar input tabung keluar di bawah ini berstatus "Pending". Silakan tentukan <b>Tujuan Pengiriman</b> sebelum melakukan Setujui.</p>
           
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4">
             <table class="w-full text-left text-sm text-gray-300">
@@ -603,12 +603,12 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxFOh9u5iPCoJlIxo-i5t5dR4VOzrhnTh4oxMHwAnST8FzaRawWMgu7HSIPf3QViCUd/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz-wsQu7ubERO0jO22QV2RWTpK-dvYSJHXlQKGrAzHFoAukM8hO1OYs8GLI5gtqSbBi/exec";
     
     let appData = {
       adminPinSet: "5001",
       settings: { hargaModalGas: 0, hargaModalTabung: 0, hargaJualGas: 0, hargaJualTabung: 0 },
-      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [],
+      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [], tujuanPengiriman: [],
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalTabungKeluar: 0 }
     };
     let pendingTargetPage = ''; 
@@ -728,10 +728,11 @@
     // ======================================================================
     function handleApprovalSubmit(idKeluar, newStatus) {
       let tujuan = '';
+      let domId = String(idKeluar).trim().replace(/\s+/g, '');
       if (newStatus === 'Disetujui') {
-        const sel = document.getElementById('tujuan-' + idKeluar);
+        const sel = document.getElementById('tujuan-' + domId);
         if (sel) tujuan = sel.value;
-        if (!tujuan) { showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); return; }
+        if (!tujuan || tujuan.trim() === '') { showToast("Pilih Tujuan Pengiriman terlebih dahulu!", "error"); return; }
       }
       
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
@@ -1006,7 +1007,7 @@
 
     function updateUIAll() {
       let totalDepositTabungLocal = 0; if (appData.deposit) appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
-      let totalKeluarDisetujui = 0; if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
+      let totalKeluarDisetujui = 0; if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if(String(r[4] || 'Disetujui').trim() === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
       let sisaTabungLocal = totalDepositTabungLocal - totalKeluarDisetujui;
 
       document.getElementById('pub-total-tabung').innerText = totalDepositTabungLocal.toLocaleString('id-ID');
@@ -1063,17 +1064,20 @@
 
     function renderPersetujuanTable() {
       const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return;
-      const pendingData = (appData.tabungKeluar || []).filter(r => (r[4] || 'Disetujui') === 'Pending');
+      const pendingData = (appData.tabungKeluar || []).filter(r => String(r[4] || 'Disetujui').trim() === 'Pending');
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
-      let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
-      if (appData.members) {
-        appData.members.forEach(m => { memberOptions += `<option value="${m[1]}">${m[1]}</option>`; });
+      let tujuanOptions = '<option value="" disabled selected>-- Pilih Tujuan --</option>';
+      if (appData.tujuanPengiriman && appData.tujuanPengiriman.length > 0) {
+        appData.tujuanPengiriman.forEach(tp => { tujuanOptions += `<option value="${tp[1]}">${tp[1]}</option>`; });
+      } else {
+        tujuanOptions = '<option value="" disabled selected>-- Data Tujuan Kosong (Isi di Sheet) --</option>';
       }
 
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
+        let domId = cleanId.replace(/\s+/g, '');
         html += `
           <tr class="border-b border-gray-800 hover:bg-gray-800/40">
           <td class="px-4 py-3 text-xs font-mono text-gray-400">${cleanId}</td>
@@ -1081,13 +1085,13 @@
           <td class="px-4 py-3 font-bold text-white">${row[2]}</td>
           <td class="px-4 py-3 font-black text-blue-400">${Number(row[3]||0).toLocaleString('id-ID')} Tabung</td>
           <td class="px-4 py-3">
-             <select id="tujuan-${cleanId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
-                ${memberOptions}
+             <select id="tujuan-${domId}" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none">
+                ${tujuanOptions}
              </select>
           </td>
-          <td class="px-4 py-3 text-center">
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all mr-2 cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
-            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak')" class="px-3 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
+          <td class="px-4 py-3 text-center flex gap-1 justify-center">
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Disetujui')" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer"><i class="fa-solid fa-check mr-1"></i>Setujui</button>
+            <button onclick="handleApprovalSubmit('${cleanId}', 'Ditolak')" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>
           </td></tr>`;
       });
       tbody.innerHTML = html;
@@ -1099,10 +1103,9 @@
       
       let html = '';
       dataList.forEach(row => {
-        let status = row[4] || 'Disetujui'; let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
+        let status = String(row[4] || 'Disetujui').trim(); 
+        let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
-        
-        // Membaca langsung dari Database (index 5)
         let tujuanPengiriman = row[5] || '-';
 
         html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">${tanggalKeluar||'-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2]||'-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahKeluar.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ${statusClass}">${status}</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">${tujuanPengiriman}</td></tr>`;
@@ -1113,7 +1116,7 @@
     function filterTabungKeluarPublik() {
       const start = document.getElementById('filter-start-date') ? document.getElementById('filter-start-date').value : ''; const end = document.getElementById('filter-end-date') ? document.getElementById('filter-end-date').value : '';
       let filtered = appData.tabungKeluar || []; if (start && end) filtered = filtered.filter(row => row[1] >= start && row[1] <= end);
-      renderPublikTabungKeluar(filtered); let sumFiltered = 0; filtered.forEach(r => { if((r[4] || 'Disetujui') === 'Disetujui') sumFiltered += Number(r[3]) || 0; }); document.getElementById('pub-tabung-keluar').innerText = sumFiltered.toLocaleString('id-ID');
+      renderPublikTabungKeluar(filtered); let sumFiltered = 0; filtered.forEach(r => { if(String(r[4] || 'Disetujui').trim() === 'Disetujui') sumFiltered += Number(r[3]) || 0; }); document.getElementById('pub-tabung-keluar').innerText = sumFiltered.toLocaleString('id-ID');
     }
 
     function resetFilterPublik() { document.getElementById('filter-start-date').value = ''; document.getElementById('filter-end-date').value = ''; filterTabungKeluarPublik(); }
