@@ -110,7 +110,7 @@
           <button onclick="openSmartphoneModal()" class="w-full py-3 px-6 rounded-xl glass-card text-white font-bold border border-gray-700 hover:border-[#00ffaa] transition-all flex items-center justify-center shadow-lg cursor-pointer">
             <i class="fa-solid fa-mobile-screen mr-2"></i> Smartphone
           </button>
-          <button onclick="handleLiquefiedClick()" class="w-full py-3 px-6 rounded-xl bg-[#00ffaa] text-gray-900 font-extrabold hover:bg-[#00cc88] transition-all flex items-center justify-center shadow-lg cursor-pointer">
+          <button onclick="openLpgModal()" class="w-full py-3 px-6 rounded-xl bg-[#00ffaa] text-gray-900 font-extrabold hover:bg-[#00cc88] transition-all flex items-center justify-center shadow-lg cursor-pointer">
             <i class="fa-solid fa-fire-flame-curved mr-2"></i> Liquefied Petroleum Gas
           </button>
         </div>
@@ -538,11 +538,13 @@
 
   <!-- SEMUA MODAL -->
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
-    <!-- Konten Modal Digital Sama Seperti Sebelumnya -->
     <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
       <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
         <h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3>
         <button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="py-2 text-gray-300 text-sm leading-relaxed">
+        Nikmati kemudahan dalam berbagai transaksi digital Anda. Layanan kami mencakup berbagai kebutuhan seperti pembelian pulsa, paket data, token listrik, hingga pembayaran tagihan PPOB. Semua dirancang untuk memberikan pengalaman transaksi yang cepat, aman, dan efisien.
       </div>
       <div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div>
     </div>
@@ -554,7 +556,23 @@
         <h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Upgrade Gaya Hidup</h3>
         <button onclick="closeSmartphoneModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
+      <div class="py-2 text-gray-300 text-sm leading-relaxed">
+        Temukan perangkat smartphone impian Anda dengan teknologi terkini. Kami menyediakan berbagai pilihan produk gadget berkualitas tinggi dengan garansi resmi dan penawaran harga terbaik untuk menunjang aktivitas dan produktivitas Anda sehari-hari.
+      </div>
       <div class="pt-2"><button onclick="closeSmartphoneModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer shadow-lg">Pilih Smartphone Impianmu Sekarang!</button></div>
+    </div>
+  </div>
+
+  <div id="lpg-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
+    <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
+      <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
+        <h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Liquefied Petroleum Gas</h3>
+        <button onclick="closeLpgModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="py-2 text-gray-300 text-sm leading-relaxed">
+        Pangkalan distribusi gas terpercaya yang siap memenuhi kebutuhan energi rumah tangga dan bisnis Anda. Kami memastikan ketersediaan stok, ketepatan distribusi, dan pelayanan terbaik dengan standar keamanan yang tinggi.
+      </div>
+      <div class="pt-2"><button onclick="closeLpgModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div>
     </div>
   </div>
 
@@ -603,7 +621,7 @@
     // 2. Akses pilih "Siapa saja (Anyone)".
     // 3. COPY URL Web App tersebut dan PASTE ke dalam variabel di bawah ini.
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzc6XbTgAE0m0juK7i-vYjER49Y26WNShsZwm95HLRGr2eQ4MtmLh7-DYWa7geSGia6/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzDNMPVRECiM6gnSw00kJ-PHCZC3o8MtpG6G7amiiFEqjMrgjEQB0TmOwVLx_3INOxW/exec";
 
     let appData = {
       adminPinSet: "5001",
@@ -930,13 +948,15 @@
       else { switchPage(pageId); }
     }
     function requestSupplierAccess() { pendingAllowedRole = 'supplier_only'; pendingTargetPage = 'modal_input_keluar'; openPinModal("Autentikasi Supplier", "Masukkan PIN Anda."); }
-    function handleLiquefiedClick() { switchPage('kasir'); }
     function onJenisTransaksiChange() { calcTransaksiTotal(); }
 
     function openDigitalModal() { document.getElementById('digital-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('digital-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
     function closeDigitalModal() { document.getElementById('digital-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('digital-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
     function openSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
     function closeSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
+    function openLpgModal() { document.getElementById('lpg-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('lpg-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
+    function closeLpgModal() { document.getElementById('lpg-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('lpg-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
+    
     function openPinModal(title, desc) {
       document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = "";
       document.getElementById('pin-auth-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
@@ -1135,3 +1155,8 @@
   </script>
 </body>
 </html>
+```eof
+
+🚀 ZettBOT Idea:
+- Modular Check: UI saat ini masih menggunakan format *Single-File*. Apakah Anda ingin saya pecah menjadi file terpisah (seperti `css.html`, `js.html`) dengan konsep *Component-Based* agar mempermudah pengembangan fitur ke depannya?
+- ZettBOT Feature: Saat ini navigasi user di-handle manual dengan menimpa *class*. Saya merekomendasikan penambahan sistem *Routing state-based* untuk menyimpan parameter tab atau halaman aktif dalam URL (Hash/History API) agar ketika di-*refresh*, halaman tidak kembali ke dashboard.
