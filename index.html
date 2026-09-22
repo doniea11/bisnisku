@@ -603,7 +603,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxv8vuSrtiXcJP4KQbNlGeb4Zoga5GJtR4_MFQgJuQsv25GjFTQ_OZK2TT7b60Q0CvT/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby5Mc8FmscqWtiMfzncu5OZt9Emayq6WQOoyc2mpqzSTCWGQWEooRR3KeN3nxZqjVfd/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -740,23 +740,27 @@
       
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
+      // OPTIMISTIC FORCE-WRITE: Ubah data di frontend sebelum server membalas
+      const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
+      if(idx > -1) {
+        appData.tabungKeluar[idx][4] = newStatus;
+        appData.tabungKeluar[idx][5] = tujuan;
+      }
+      updateUIAll(); // Refresh UI segera!
+      
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan })
         .then(res => {
           if(res.success) { 
             showToast(res.message, "success"); 
-            const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
-            if(idx > -1) {
-              appData.tabungKeluar[idx][4] = newStatus;
-              appData.tabungKeluar[idx][5] = tujuan;
-            }
-            updateUIAll(); 
           } else { 
             showToast(res.message, "error"); 
-            if(btnEl) btnEl.innerHTML = newStatus === 'Disetujui' ? '<i class="fa-solid fa-check mr-1"></i>Setujui' : '<i class="fa-solid fa-xmark mr-1"></i>Tolak';
+            // Rollback jika gagal
+            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
           }
         }).catch(err => {
             showToast(err.message, "error");
-            if(btnEl) btnEl.innerHTML = newStatus === 'Disetujui' ? '<i class="fa-solid fa-check mr-1"></i>Setujui' : '<i class="fa-solid fa-xmark mr-1"></i>Tolak';
+            // Rollback jika gagal
+            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
         });
     }
 
