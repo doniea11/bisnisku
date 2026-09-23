@@ -73,7 +73,7 @@
         <i class="fa-solid fa-leaf text-lg"></i>
       </div>
       <div>
-        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.4 (Relational DB)</span></h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.5 (Relational DB)</span></h1>
       </div>
     </div>
     
@@ -602,7 +602,7 @@
 
   <script>
     // PENTING: Wajib ganti URL di bawah ini dengan URL Apps Script "Versi Baru" milikmu
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx3nfqd83QOE2jqZChy0wPGHjIwVt8qXPt39vofyFGtZ4m_RTz6Li5Kx2G3zF_rQnlC/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzg_aCKVNENBkeYkIzAMMsllx-IVarUgApn_NQt0YXCaQhF3hmq69CUt1WCBxn7pMac/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -1119,7 +1119,6 @@
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
         
-        // ZETTBOT RELATIONAL CHECK: Ambil nama member dari Sheet Distribusi_Member
         let targetId = String(row[0]).trim();
         let distMatch = appData.distribusi.find(d => String(d[0]).trim() === targetId);
         let tujuanPengiriman = distMatch ? String(distMatch[2]).trim() : '-';
