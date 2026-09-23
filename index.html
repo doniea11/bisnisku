@@ -100,7 +100,7 @@
       <p class="text-[#00ffaa] text-xs font-bold tracking-wide">Menghubungkan Server...</p>
     </div>
 
-    <!-- 1. HALAMAN DASHBOARD -->
+    <!-- 1. HAL উভয় HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="page-view space-y-8">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none">
@@ -604,7 +604,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxSZI02COpIhgUzKY08wZIOALB71JJwhYGK2D0bwZ7K70N4HYireplFMV0-HI4fqzjH/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9-rLzzSOw5-rBFqaVARJeZBkvHbdTjo-pCrUcx0t60dzVVjQZDVYnW9zOb5GMHeMt/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -736,10 +736,15 @@
     // ======================================================================
     function handleApprovalSubmit(idKeluar, newStatus, btnEl) {
       let tujuan = '-';
-      let domId = String(idKeluar).trim().replace(/\s+/g, '');
+      let domId = String(idKeluar).trim().replace(/[^a-zA-Z0-9_-]/g, '');
+      
       if (newStatus === 'Disetujui') {
         const sel = document.getElementById('tujuan-' + domId);
-        if (!sel || !sel.value || sel.value.trim() === '') { 
+        if (!sel) {
+           showToast("Terjadi kesalahan sistem: Dropdown tujuan tidak ditemukan.", "error");
+           return;
+        }
+        if (!sel.value || sel.value.trim() === '') { 
            showToast("Pilih Tujuan Pengiriman (Member) terlebih dahulu!", "error"); 
            return; 
         }
@@ -1094,7 +1099,9 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        let domId = cleanId.replace(/\s+/g, '');
+        // Regex diperketat agar aman di DOM (ID Element tidak terpotong oleh spasi/karakter aneh)
+        let domId = cleanId.replace(/[^a-zA-Z0-9_-]/g, '');
+        
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40">' +
           '<td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td>' +
           '<td class="px-4 py-3">' + row[1] + '</td>' +
@@ -1124,6 +1131,8 @@
         let UI_Tujuan = '-';
         if (status === 'Pending' || tujuanPengiriman === '-') {
            UI_Tujuan = '<span class="text-gray-500 italic text-xs"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Menunggu</span>';
+        } else if (tujuanPengiriman.includes("ERROR")) {
+           UI_Tujuan = '<span class="text-red-400 text-xs font-bold">' + tujuanPengiriman + '</span>';
         } else {
            UI_Tujuan = '<div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>' + tujuanPengiriman + '</div>';
         }
