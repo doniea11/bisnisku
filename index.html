@@ -73,7 +73,7 @@
         <i class="fa-solid fa-leaf text-lg"></i>
       </div>
       <div>
-        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.7</span></h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.8 (Force Sync)</span></h1>
       </div>
     </div>
     
@@ -602,7 +602,7 @@
 
   <script>
     // PENTING: Wajib ganti URL di bawah ini dengan URL Apps Script "Versi Baru" milikmu
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx3YyVsKd3nz95qZO7QqclZKhWHbR4inwfPxXIAqrLzbESP5Bf6Hl6RtaIDDgUOvrjB/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzxMZW6drIQpzFpOYCKuDntitzKb_fGI_RUVgCpJhXEcP3JYEpZL8Daj2THRBZRsC_i/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -614,7 +614,7 @@
     let pendingAllowedRole = '';
 
     // ======================================================================
-    // CORE API FETCHER DENGAN METODE STANDARD FETCH POST
+    // CORE API FETCHER
     // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
