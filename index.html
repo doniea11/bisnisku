@@ -73,7 +73,7 @@
         <i class="fa-solid fa-leaf text-lg"></i>
       </div>
       <div>
-        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas</h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.4 (Relational DB)</span></h1>
       </div>
     </div>
     
@@ -601,22 +601,20 @@
   </div>
 
   <script>
-    // ======================================================================
-    // KONFIGURASI GLOBAL
-    // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwBaNLH_AJuYuztRFdI-xO592UIGaf1Bh3HdwEQoPc3C8_qFcQBjqsXK_cxmfWQGIeJ/exec";
+    // PENTING: Wajib ganti URL di bawah ini dengan URL Apps Script "Versi Baru" milikmu
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx3nfqd83QOE2jqZChy0wPGHjIwVt8qXPt39vofyFGtZ4m_RTz6Li5Kx2G3zF_rQnlC/exec";
     
     let appData = {
       adminPinSet: "5001",
       settings: { hargaModalGas: 0, hargaModalTabung: 0, hargaJualGas: 0, hargaJualTabung: 0 },
-      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [],
+      deposit: [], tabungMasuk: [], tabungKeluar: [], distribusi: [], members: [], suppliers: [], transaksi: [],
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalTabungKeluar: 0 }
     };
     let pendingTargetPage = ''; 
     let pendingAllowedRole = '';
 
     // ======================================================================
-    // CORE API FETCHER
+    // CORE API FETCHER DENGAN ANTI-CACHE VERCEL
     // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
@@ -629,9 +627,15 @@
         }
         
         if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Ganti variabel GAS_API_URL")); return; }
+        
         try {
-          const response = await fetch(GAS_API_URL, {
-            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow', body: JSON.stringify({ action: action, data: dataParams })
+          const urlWithBuster = GAS_API_URL + (GAS_API_URL.includes('?') ? '&' : '?') + "t=" + new Date().getTime();
+          
+          const response = await fetch(urlWithBuster, {
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            redirect: 'follow', 
+            body: JSON.stringify({ action: action, data: dataParams })
           });
           const textResult = await response.text();
           try { resolve(JSON.parse(textResult)); } catch (parseError) { reject(new Error("Akses API Ditolak! Cek akses Deployment.")); }
@@ -649,7 +653,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-      // Hapus Cache Lokal agar tidak ada memori basi
       try { localStorage.removeItem('ZETTBOS_DB_CACHE'); } catch(e){}
 
       try {
@@ -703,9 +706,6 @@
         });
     }
 
-    // ======================================================================
-    // LOCAL AUTHENTICATION
-    // ======================================================================
     function submitModalPin() {
       const pinVal = document.getElementById('modal-pin-input').value.trim();
       if (!pinVal) { showToast("PIN tidak boleh kosong!", "error"); return; }
@@ -731,9 +731,6 @@
       } else { showToast(msg, "error"); }
     }
 
-    // ======================================================================
-    // OPTIMISTIC UI (ANTI-RELOAD)
-    // ======================================================================
     function handleApprovalSubmit(idKeluar, newStatus, btnEl) {
       let tujuan = '-';
       let domId = String(idKeluar).trim().replace(/[^a-zA-Z0-9_-]/g, '');
@@ -764,7 +761,7 @@
         .then(res => {
           if(res.success) { 
             showToast(res.message, "success"); 
-            loadBackendData(); // Sinkronisasi ulang secara penuh dari database
+            loadBackendData(); 
           } else { 
             showToast(res.message, "error"); 
             if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
@@ -910,9 +907,6 @@
       } else { showToast("PIN Admin Salah!", "error"); }
     }
 
-    // ==========================================
-    // UI HELPER FUNCTIONS & SMART ENTER
-    // ==========================================
     function setupSmartEnterNavigation() {
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
@@ -1099,7 +1093,6 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        // Regex diperketat agar aman di DOM (ID Element tidak terpotong oleh spasi/karakter aneh)
         let domId = cleanId.replace(/[^a-zA-Z0-9_-]/g, '');
         
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40">' +
@@ -1125,9 +1118,12 @@
         let status = String(row[4] || 'Disetujui').trim(); 
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
-        let tujuanPengiriman = String(row[5] || '-').trim();
+        
+        // ZETTBOT RELATIONAL CHECK: Ambil nama member dari Sheet Distribusi_Member
+        let targetId = String(row[0]).trim();
+        let distMatch = appData.distribusi.find(d => String(d[0]).trim() === targetId);
+        let tujuanPengiriman = distMatch ? String(distMatch[2]).trim() : '-';
 
-        // 🚀 ZETTBOT: Visualisasi UI Tujuan Pengiriman (Nama Member)
         let UI_Tujuan = '-';
         if (status === 'Pending' || tujuanPengiriman === '-') {
            UI_Tujuan = '<span class="text-gray-500 italic text-xs"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Menunggu</span>';
