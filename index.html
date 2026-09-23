@@ -73,7 +73,7 @@
         <i class="fa-solid fa-leaf text-lg"></i>
       </div>
       <div>
-        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.5 (Relational DB)</span></h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.5 (Fixed)</span></h1>
       </div>
     </div>
     
@@ -602,7 +602,7 @@
 
   <script>
     // PENTING: Wajib ganti URL di bawah ini dengan URL Apps Script "Versi Baru" milikmu
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzg_aCKVNENBkeYkIzAMMsllx-IVarUgApn_NQt0YXCaQhF3hmq69CUt1WCBxn7pMac/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAIrgRcALO20SNqRtFauIaFRaNdIjZueDkKco8U27SlhGavka-_EM143U-ZPbUlkbI/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -614,7 +614,7 @@
     let pendingAllowedRole = '';
 
     // ======================================================================
-    // CORE API FETCHER DENGAN ANTI-CACHE VERCEL
+    // CORE API FETCHER
     // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
@@ -629,9 +629,7 @@
         if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Ganti variabel GAS_API_URL")); return; }
         
         try {
-          const urlWithBuster = GAS_API_URL + (GAS_API_URL.includes('?') ? '&' : '?') + "t=" + new Date().getTime();
-          
-          const response = await fetch(urlWithBuster, {
+          const response = await fetch(GAS_API_URL, {
             method: 'POST', 
             headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
             redirect: 'follow', 
@@ -750,10 +748,13 @@
       
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       
-      const idx = appData.tabungKeluar.findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
+      const idx = (appData.tabungKeluar || []).findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
       if(idx > -1) {
         appData.tabungKeluar[idx][4] = newStatus;
-        appData.tabungKeluar[idx][5] = tujuan;
+        if (newStatus === 'Disetujui') {
+            appData.distribusi = appData.distribusi || [];
+            appData.distribusi.push([idKeluar, new Date().toISOString(), tujuan, appData.tabungKeluar[idx][3]]);
+        }
       }
       updateUIAll(); 
       
@@ -764,11 +765,11 @@
             loadBackendData(); 
           } else { 
             showToast(res.message, "error"); 
-            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
+            loadBackendData();
           }
         }).catch(err => {
             showToast(err.message, "error");
-            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
+            loadBackendData();
         });
     }
 
@@ -794,11 +795,7 @@
         const res = await fetchAPI('saveDepositKontrak', payload);
         if (res.success) {
           showToast(res.message, "success"); 
-          if(payload.idDeposit) {
-            const idx = appData.deposit.findIndex(d => String(d[0]).trim() === String(payload.idDeposit).trim());
-            if(idx > -1) appData.deposit[idx] = [payload.idDeposit, payload.tanggal, payload.nominalDeposit, res.totalTabung];
-          } else { appData.deposit.push([res.id || 'DEP-NEW', payload.tanggal, payload.nominalDeposit, res.totalTabung]); }
-          updateUIAll();
+          loadBackendData();
           document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden');
           document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0";
         } else { showToast(res.message, "error"); }
@@ -1056,7 +1053,7 @@
 
     function renderRekapDeposit() {
       const tbody = document.getElementById('table-rekap-deposit-body'); const countEl = document.getElementById('rekap-total-deposit-count'); if (!tbody) return;
-      if (!appData.deposit || appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
+      if (!(appData.deposit || []).length) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
       
       let html = '';
@@ -1068,7 +1065,7 @@
 
     function renderRekapTransaksiMember() {
       const tbody = document.getElementById('table-rekap-trx-body'); const countEl = document.getElementById('rekap-total-trx-count'); if (!tbody) return;
-      if (!appData.transaksi || appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
+      if (!(appData.transaksi || []).length) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
       if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
       
       let html = '';
@@ -1084,7 +1081,7 @@
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
       let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
-      if (appData.members && appData.members.length > 0) {
+      if ((appData.members || []).length > 0) {
         appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; });
       } else {
         memberOptions = '<option value="" disabled selected>-- Data Member Kosong --</option>';
@@ -1120,7 +1117,7 @@
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
         
         let targetId = String(row[0]).trim();
-        let distMatch = appData.distribusi.find(d => String(d[0]).trim() === targetId);
+        let distMatch = (appData.distribusi || []).find(d => String(d[0]).trim() === targetId);
         let tujuanPengiriman = distMatch ? String(distMatch[2]).trim() : '-';
 
         let UI_Tujuan = '-';
