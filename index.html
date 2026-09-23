@@ -73,7 +73,7 @@
         <i class="fa-solid fa-leaf text-lg"></i>
       </div>
       <div>
-        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.5 (Fixed)</span></h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v3.6 (Flat-Sync)</span></h1>
       </div>
     </div>
     
@@ -602,19 +602,19 @@
 
   <script>
     // PENTING: Wajib ganti URL di bawah ini dengan URL Apps Script "Versi Baru" milikmu
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAIrgRcALO20SNqRtFauIaFRaNdIjZueDkKco8U27SlhGavka-_EM143U-ZPbUlkbI/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxG6sypVoEODJU0_jySZn3pEb9Z8yqbIvO47Y4klKof8y-FCfj1i7eYqhvL2xfTcokz/exec";
     
     let appData = {
       adminPinSet: "5001",
       settings: { hargaModalGas: 0, hargaModalTabung: 0, hargaJualGas: 0, hargaJualTabung: 0 },
-      deposit: [], tabungMasuk: [], tabungKeluar: [], distribusi: [], members: [], suppliers: [], transaksi: [],
+      deposit: [], tabungMasuk: [], tabungKeluar: [], members: [], suppliers: [], transaksi: [],
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalTabungKeluar: 0 }
     };
     let pendingTargetPage = ''; 
     let pendingAllowedRole = '';
 
     // ======================================================================
-    // CORE API FETCHER
+    // CORE API FETCHER DENGAN ANTI-CACHE PAYLOAD
     // ======================================================================
     async function fetchAPI(action, dataParams = {}) {
       return new Promise(async (resolve, reject) => {
@@ -626,17 +626,19 @@
           return;
         }
         
-        if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("Ganti variabel GAS_API_URL")); return; }
+        if (GAS_API_URL.includes("MASUKKAN_URL")) { reject(new Error("PENTING: Ganti variabel GAS_API_URL dengan URL Deployment baru.")); return; }
         
         try {
+          // ZETTBOT: Menyelipkan Anti-Cache di Payload (Aman dari CORS)
+          const payload = { action: action, data: dataParams, _noCache: new Date().getTime() };
           const response = await fetch(GAS_API_URL, {
             method: 'POST', 
             headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
             redirect: 'follow', 
-            body: JSON.stringify({ action: action, data: dataParams })
+            body: JSON.stringify(payload)
           });
           const textResult = await response.text();
-          try { resolve(JSON.parse(textResult)); } catch (parseError) { reject(new Error("Akses API Ditolak! Cek akses Deployment.")); }
+          try { resolve(JSON.parse(textResult)); } catch (parseError) { reject(new Error("Akses API Ditolak! Pastikan akses Deployment diset 'Anyone'.")); }
         } catch (error) { reject(new Error("Gagal terhubung ke Server: " + error.message)); }
       });
     }
@@ -751,10 +753,7 @@
       const idx = (appData.tabungKeluar || []).findIndex(t => String(t[0]).trim() === String(idKeluar).trim());
       if(idx > -1) {
         appData.tabungKeluar[idx][4] = newStatus;
-        if (newStatus === 'Disetujui') {
-            appData.distribusi = appData.distribusi || [];
-            appData.distribusi.push([idKeluar, new Date().toISOString(), tujuan, appData.tabungKeluar[idx][3]]);
-        }
+        appData.tabungKeluar[idx][5] = tujuan;
       }
       updateUIAll(); 
       
@@ -765,11 +764,11 @@
             loadBackendData(); 
           } else { 
             showToast(res.message, "error"); 
-            loadBackendData();
+            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
           }
         }).catch(err => {
             showToast(err.message, "error");
-            loadBackendData();
+            if(idx > -1) { appData.tabungKeluar[idx][4] = 'Pending'; appData.tabungKeluar[idx][5] = '-'; updateUIAll(); }
         });
     }
 
@@ -847,334 +846,18 @@
       executeSafeSubmit('btn-submit-add-member', async () => {
         const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value };
         const res = await fetchAPI('addNewMember', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
-        else { showToast(res.message, "error"); }
-      });
-    }
+        if (res.success) { showToast(res.message, "successUntuk memperbaiki kendala nama member yang tidak muncul di bagian tujuan pengiriman, saya membutuhkan cuplikan kode eksisting Anda. Masalah ini umumnya terjadi karena tiga hal:
 
-    function handleResetMemberPin(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-reset-pin', async () => {
-        const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value };
-        const res = await fetchAPI('resetMemberPin', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
-        else { showToast(res.message, "error"); }
-      });
-    }
+*   **Backend (`code.gs`):** Fungsi gagal mengambil atau memformat *array* nama member dari *sheet* database (misalnya karena ketidaksesuaian indeks kolom atau gagal membaca objek *range*).
+*   **Frontend HTML:** ID elemen target pada HTML (seperti `<select id="tujuanPengiriman">` atau `<datalist>`) tidak cocok dengan yang ditargetkan oleh skrip manipulasi DOM di JavaScript.
+*   **Render JavaScript:** Proses asinkron `google.script.run` berhasil mengeksekusi *backend*, namun fungsi *callback onSuccess* gagal melakukan *looping* atau menyisipkan elemen `<option>` dengan benar ke dalam HTML.
 
-    function handleAddSupplier(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-add-supplier', async () => {
-        const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value };
-        const res = await fetchAPI('addNewSupplier', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
-        else { showToast(res.message, "error"); }
-      });
-    }
+Mohon lampirkan:
+1. Fungsi di `code.gs` yang bertugas mengambil daftar data member.
+2. Blok kode di `index.html` yang mencakup elemen *input/dropdown* tujuan pengiriman beserta fungsi JavaScript (Google Script Run) yang merendernya.
 
-    function handleResetSupplierPin(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-reset-pin-supplier', async () => {
-        const payload = { idSupplier: document.getElementById('reset-id-supplier').value, newPin: document.getElementById('reset-new-pin-supplier').value };
-        const res = await fetchAPI('resetSupplierPin', payload);
-        if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } 
-        else { showToast(res.message, "error"); }
-      });
-    }
+Setelah Anda melampirkannya, saya akan menganalisis penyebabnya dan langsung menyajikan *Full Code* revisi di panel Canvas agar Anda bisa melakukan *copy-paste* (replace) dengan aman.
 
-    async function calcTransaksiTotal() {
-      const jenis = document.getElementById('trx-jenis').value;
-      const jumlahTabung = parseCleanNumber(document.getElementById('trx-jumlahtabung').value);
-      let hargaSatuan = 0;
-      if (appData && appData.settings) {
-        if (jenis === 'Penjualan Gas') hargaSatuan = parseCleanNumber(appData.settings.hargaJualGas);
-        else if (jenis === 'Penjualan Tabung Kosong') hargaSatuan = parseCleanNumber(appData.settings.hargaJualTabung);
-      }
-      let totalRupiah = jumlahTabung * hargaSatuan;
-      const rupiahInput = document.getElementById('trx-jumlahrupiah');
-      if (rupiahInput) rupiahInput.value = totalRupiah.toLocaleString('id-ID');
-    }
-
-    function verifyAdminPin() {
-      const pin = document.getElementById('input-admin-auth-pin').value;
-      if (pin === appData.adminPinSet) {
-        document.getElementById('admin-auth-container').style.display = 'none';
-        document.getElementById('admin-panel-content').classList.remove('hidden');
-        showToast("Autentikasi admin berhasil!", "success");
-      } else { showToast("PIN Admin Salah!", "error"); }
-    }
-
-    function setupSmartEnterNavigation() {
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          const activeEl = document.activeElement;
-          if (activeEl && activeEl.id === 'trx-jumlahtabung') { calcTransaksiTotal(); }
-          if (activeEl && activeEl.hasAttribute('data-form-input')) {
-            e.preventDefault(); const form = activeEl.closest('form'); if (!form) return;
-            const inputs = Array.from(form.querySelectorAll('[data-form-input]'));
-            const currentIndex = inputs.indexOf(activeEl); let nextEmptyInput = null;
-            for (let i = currentIndex + 1; i < inputs.length; i++) {
-              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { nextEmptyInput = inputs[i]; break; }
-            }
-            if (nextEmptyInput) { nextEmptyInput.focus(); } else {
-              const submitBtn = form.querySelector('[type="submit"]');
-              if (submitBtn && !submitBtn.disabled) { submitBtn.click(); }
-            }
-          }
-        }
-      });
-    }
-
-    function formatNamaMemberInput(input) { let val = input.value; val = val.replace(/[^A-Za-z\s\-']/g, ''); input.value = val.toUpperCase(); }
-    function formatPinAngkaOnly(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
-    function parseCleanNumber(val) { if (!val) return 0; return parseFloat(val.toString().replace(/\./g, '').replace(/,/g, '.')) || 0; }
-    function formatRupiahInput(input) {
-      let value = input.value.replace(/[^,\d]/g, '').toString(); let split = value.split(','); let integerPart = split[0];
-      if (integerPart.length > 1 && integerPart.startsWith('0')) { integerPart = integerPart.replace(/^0+/, ''); if (integerPart === '') integerPart = '0'; }
-      let sisa = integerPart.length % 3; let rupiah = integerPart.substr(0, sisa); let ribuan = integerPart.substr(sisa).match(/\d{3}/gi);
-      if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
-      rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah; input.value = rupiah;
-    }
-
-    function switchPage(pageId) {
-      const pages = ['dashboard', 'publik', 'kasir', 'admin'];
-      pages.forEach(p => {
-        const pageEl = document.getElementById('page-' + p); if (pageEl) pageEl.classList.add('hidden');
-        const navBtn = document.getElementById('nav-' + p); if (navBtn) navBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-gray-800 hover:text-white cursor-pointer";
-      });
-      const targetPage = document.getElementById('page-' + pageId); if (targetPage) targetPage.classList.remove('hidden');
-      const activeNav = document.getElementById('nav-' + pageId); if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer";
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    function switchKasirSub(subId) {
-      const subs = ['persetujuan', 'deposit', 'harga', 'member', 'laporan'];
-      subs.forEach(s => {
-        const subEl = document.getElementById('kasir-sub-' + s); if (subEl) subEl.classList.add('hidden');
-        const btn = document.getElementById('ksub-' + s); if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
-      });
-      const targetSub = document.getElementById('kasir-sub-' + subId); if (targetSub) targetSub.classList.remove('hidden');
-      const activeBtn = document.getElementById('ksub-' + subId); if (activeBtn) activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
-    }
-
-    function requestAccessPage(pageId) {
-      pendingTargetPage = pageId;
-      if (pageId === 'kasir') { pendingAllowedRole = 'admin_only'; openPinModal("Autentikasi Kasir", "Masukkan PIN Admin untuk mengakses menu Kasir."); }
-      else if (pageId === 'publik') { switchPage('publik'); }
-      else { switchPage(pageId); }
-    }
-    function requestSupplierAccess() { pendingAllowedRole = 'supplier_only'; pendingTargetPage = 'modal_input_keluar'; openPinModal("Autentikasi Supplier", "Masukkan PIN Anda."); }
-    function handleLiquefiedClick() { switchPage('kasir'); }
-    function onJenisTransaksiChange() { calcTransaksiTotal(); }
-
-    function openDigitalModal() { document.getElementById('digital-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('digital-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
-    function closeDigitalModal() { document.getElementById('digital-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('digital-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
-    function openSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
-    function closeSmartphoneModal() { document.getElementById('smartphone-info-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('smartphone-info-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
-    function openPinModal(title, desc) {
-      document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = "";
-      document.getElementById('pin-auth-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
-      setTimeout(() => document.getElementById('modal-pin-input').focus(), 100);
-    }
-    function closePinModal() { document.getElementById('pin-auth-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); pendingTargetPage = ''; pendingAllowedRole = ''; }
-    
-    function openSupplierInputModal(supplierName) {
-      const today = new Date(); const wibOffset = 7 * 60 * 60 * 1000; const localWIB = new Date(today.getTime() + (today.getTimezoneOffset() * 60000) + wibOffset); const todayStr = localWIB.toISOString().slice(0,10); 
-      document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = "";
-      document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto');
-      setTimeout(() => document.getElementById('tk-tanggal').focus(), 100); 
-    }
-    function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
-
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast-notification'); const title = document.getElementById('toast-title'); const icon = document.getElementById('toast-icon'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message');
-      if (!toast || !msg || !title || !box) return; 
-      
-      msg.innerText = message;
-      if (type === "success") {
-        title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; if (icon) icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl";
-        box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300";
-      } else {
-        title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; if (icon) icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl";
-        box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300";
-      }
-      toast.classList.replace('opacity-0', 'opacity-100'); toast.classList.replace('pointer-events-none', 'pointer-events-auto');
-      setTimeout(() => { toast.classList.replace('opacity-100', 'opacity-0'); toast.classList.replace('pointer-events-auto', 'pointer-events-none'); }, 3000);
-    }
-
-    function populateSettingsForm() {
-      if (!appData.settings) return;
-      document.getElementById('hrg-modal-gas').value = appData.settings.hargaModalGas ? appData.settings.hargaModalGas.toLocaleString('id-ID') : '';
-      document.getElementById('hrg-modal-tabung').value = appData.settings.hargaModalTabung ? appData.settings.hargaModalTabung.toLocaleString('id-ID') : '';
-      document.getElementById('hrg-jual-gas').value = appData.settings.hargaJualGas ? appData.settings.hargaJualGas.toLocaleString('id-ID') : '';
-      document.getElementById('hrg-jual-tabung').value = appData.settings.hargaJualTabung ? appData.settings.hargaJualTabung.toLocaleString('id-ID') : '';
-      document.getElementById('disp-hrg-mod-gas').innerText = 'Rp ' + (appData.settings.hargaModalGas || 0).toLocaleString('id-ID');
-      document.getElementById('disp-hrg-mod-tab').innerText = 'Rp ' + (appData.settings.hargaModalTabung || 0).toLocaleString('id-ID');
-      document.getElementById('disp-hrg-jual-gas').innerText = 'Rp ' + (appData.settings.hargaJualGas || 0).toLocaleString('id-ID');
-      document.getElementById('disp-hrg-jual-tab').innerText = 'Rp ' + (appData.settings.hargaJualTabung || 0).toLocaleString('id-ID');
-    }
-
-    function updateUIAll() {
-      let totalDepositTabungLocal = 0; if (appData.deposit) appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
-      let totalKeluarDisetujui = 0; if (appData.tabungKeluar) appData.tabungKeluar.forEach(r => { if(String(r[4] || 'Disetujui').trim() === 'Disetujui') totalKeluarDisetujui += Number(r[3]) || 0; });
-      let sisaTabungLocal = totalDepositTabungLocal - totalKeluarDisetujui;
-
-      document.getElementById('pub-total-tabung').innerText = totalDepositTabungLocal.toLocaleString('id-ID');
-      document.getElementById('pub-sisa-tabung').innerText = sisaTabungLocal.toLocaleString('id-ID');
-      
-      filterTabungKeluarPublik(); renderRekapDeposit(); renderRekapTransaksiMember(); renderPersetujuanTable();
-
-      const memberSelects = ['trx-namamember', 'reset-id-member'];
-      memberSelects.forEach(selId => {
-        const sel = document.getElementById(selId);
-        if (sel) {
-          sel.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>';
-          if (appData.members) appData.members.forEach(m => { const opt = document.createElement('option'); opt.value = (selId === 'reset-id-member') ? m[0] : m[1]; opt.innerText = m[0] + ' - ' + m[1]; sel.appendChild(opt); });
-        }
-      });
-
-      const supplierSelects = ['reset-id-supplier'];
-      supplierSelects.forEach(selId => {
-        const sel = document.getElementById(selId);
-        if (sel) {
-          sel.innerHTML = '<option value="" disabled selected>-- Pilih Supplier --</option>';
-          if (appData.suppliers) appData.suppliers.forEach(s => { const opt = document.createElement('option'); opt.value = s[0]; opt.innerText = s[0] + ' - ' + s[1]; sel.appendChild(opt); });
-        }
-      });
-
-      const repMemberSel = document.getElementById('rep-filter-member');
-      if (repMemberSel) {
-        let currentSelected = repMemberSel.value; repMemberSel.innerHTML = '<option value="semua">Semua Member</option>';
-        if (appData.members) appData.members.forEach(m => { const opt = document.createElement('option'); opt.value = m[1]; opt.innerText = m[1]; if (m[1] === currentSelected) opt.selected = true; repMemberSel.appendChild(opt); });
-      }
-
-      renderLaporanTable();
-    }
-
-    function renderRekapDeposit() {
-      const tbody = document.getElementById('table-rekap-deposit-body'); const countEl = document.getElementById('rekap-total-deposit-count'); if (!tbody) return;
-      if (!(appData.deposit || []).length) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
-      if (countEl) countEl.innerText = 'Total: ' + appData.deposit.length + ' Data';
-      
-      let html = '';
-      appData.deposit.forEach(row => { 
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">' + (row[0]||'-') + '</td><td class="px-4 py-3">' + (row[1]||'-') + '</td><td class="px-4 py-3 text-blue-400">Rp ' + Number(row[2]||0).toLocaleString('id-ID') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td></tr>'; 
-      });
-      tbody.innerHTML = html;
-    }
-
-    function renderRekapTransaksiMember() {
-      const tbody = document.getElementById('table-rekap-trx-body'); const countEl = document.getElementById('rekap-total-trx-count'); if (!tbody) return;
-      if (!(appData.transaksi || []).length) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; if (countEl) countEl.innerText = 'Total: 0 Data'; return; }
-      if (countEl) countEl.innerText = 'Total: ' + appData.transaksi.length + ' Data';
-      
-      let html = '';
-      appData.transaksi.forEach(row => { 
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">' + (row[0]||'-') + '</td><td class="px-4 py-3 text-xs">' + (row[1]||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 text-xs text-[#00ffaa]">' + (row[3]||'-') + '</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">' + (row[4]||'-') + '</span></td><td class="px-4 py-3">' + Number(row[5]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ' + Number(row[6]||0).toLocaleString('id-ID') + '</td></tr>'; 
-      });
-      tbody.innerHTML = html;
-    }
-
-    function renderPersetujuanTable() {
-      const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return;
-      const pendingData = (appData.tabungKeluar || []).filter(r => String(r[4] || 'Disetujui').trim() === 'Pending');
-      if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
-      
-      let memberOptions = '<option value="" disabled selected>-- Pilih Member --</option>';
-      if ((appData.members || []).length > 0) {
-        appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; });
-      } else {
-        memberOptions = '<option value="" disabled selected>-- Data Member Kosong --</option>';
-      }
-
-      let html = '';
-      pendingData.forEach(row => {
-        let cleanId = String(row[0]).trim();
-        let domId = cleanId.replace(/[^a-zA-Z0-9_-]/g, '');
-        
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40">' +
-          '<td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td>' +
-          '<td class="px-4 py-3">' + row[1] + '</td>' +
-          '<td class="px-4 py-3 font-bold text-white">' + row[2] + '</td>' +
-          '<td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td>' +
-          '<td class="px-4 py-3"><select id="tujuan-' + domId + '" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white focus:border-[#00ffaa] outline-none w-full">' + memberOptions + '</select></td>' +
-          '<td class="px-4 py-3 text-center flex gap-1 justify-center">' +
-          '<button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs hover:bg-[#00cc88] transition-all cursor-pointer mb-1 md:mb-0"><i class="fa-solid fa-check mr-1"></i>Setujui</button>' +
-          '<button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs hover:bg-red-600 transition-all cursor-pointer"><i class="fa-solid fa-xmark mr-1"></i>Tolak</button>' +
-          '</td></tr>';
-      });
-      tbody.innerHTML = html;
-    }
-
-    function renderPublikTabungKeluar(dataList) {
-      const tbody = document.getElementById('table-publik-keluar-body'); if (!tbody) return;
-      if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
-      
-      let html = '';
-      dataList.forEach(row => {
-        let status = String(row[4] || 'Disetujui').trim(); 
-        let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
-        let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
-        
-        let targetId = String(row[0]).trim();
-        let distMatch = (appData.distribusi || []).find(d => String(d[0]).trim() === targetId);
-        let tujuanPengiriman = distMatch ? String(distMatch[2]).trim() : '-';
-
-        let UI_Tujuan = '-';
-        if (status === 'Pending' || tujuanPengiriman === '-') {
-           UI_Tujuan = '<span class="text-gray-500 italic text-xs"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Menunggu</span>';
-        } else if (tujuanPengiriman.includes("ERROR")) {
-           UI_Tujuan = '<span class="text-red-400 text-xs font-bold">' + tujuanPengiriman + '</span>';
-        } else {
-           UI_Tujuan = '<div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>' + tujuanPengiriman + '</div>';
-        }
-
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">' + (tanggalKeluar||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 font-bold text-white">' + jumlahKeluar.toLocaleString('id-ID') + ' <span class="text-xs text-gray-400 font-normal">Tbg</span></td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ' + statusClass + '">' + status + '</span></td><td class="px-4 py-3">' + UI_Tujuan + '</td></tr>';
-      });
-      tbody.innerHTML = html;
-    }
-
-    function filterTabungKeluarPublik() {
-      const start = document.getElementById('filter-start-date') ? document.getElementById('filter-start-date').value : ''; const end = document.getElementById('filter-end-date') ? document.getElementById('filter-end-date').value : '';
-      let filtered = appData.tabungKeluar || []; if (start && end) filtered = filtered.filter(row => row[1] >= start && row[1] <= end);
-      renderPublikTabungKeluar(filtered); let sumFiltered = 0; filtered.forEach(r => { if(String(r[4] || 'Disetujui').trim() === 'Disetujui') sumFiltered += Number(r[3]) || 0; }); document.getElementById('pub-tabung-keluar').innerText = sumFiltered.toLocaleString('id-ID');
-    }
-
-    function resetFilterPublik() { document.getElementById('filter-start-date').value = ''; document.getElementById('filter-end-date').value = ''; filterTabungKeluarPublik(); }
-
-    function renderLaporanTable() {
-      const start = document.getElementById('rep-start').value; const end = document.getElementById('rep-end').value; const filterJenis = document.getElementById('rep-filter-jenis').value; const filterMember = document.getElementById('rep-filter-member').value;
-      const modalGas = parseCleanNumber(appData.settings.hargaModalGas); const modalTabung = parseCleanNumber(appData.settings.hargaModalTabung);
-      const jualGas = parseCleanNumber(appData.settings.hargaJualGas); const jualTabung = parseCleanNumber(appData.settings.hargaJualTabung);
-      
-      let filtered = (appData.transaksi || []).filter(row => {
-        if (start && row[1] < start) return false; if (end && row[1] > end) return false;
-        if (filterJenis !== 'semua' && row[3] !== filterJenis) return false; if (filterMember !== 'semua' && row[2] !== filterMember) return false;
-        return true;
-      });
-
-      const tbody = document.getElementById('table-laporan-body'); if (!tbody) return;
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi.</td></tr>'; }
-      
-      let totalProfitBersihAll = 0; let totalProfitBersihMember = 0; let totalVolumeAll = 0;
-      
-      (appData.transaksi || []).forEach(row => {
-         const volAll = Number(row[5]) || 0; let pSatuanAll = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung); totalProfitBersihAll += (volAll * pSatuanAll);
-      });
-      
-      let html = '';
-      filtered.forEach(row => {
-        const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
-        let profitSatuan = (row[3] === 'Penjualan Gas') ? (jualGas - modalGas) : (jualTabung - modalTabung); let profitBersihBaris = volume * profitSatuan;
-        totalProfitBersihMember += profitBersihBaris; totalVolumeAll += volume;
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">' + row[0] + '</td><td class="px-4 py-3 text-xs">' + row[1] + '</td><td class="px-4 py-3 font-semibold text-white">' + row[2] + '</td><td class="px-4 py-3 text-xs text-[#00ffaa]">' + row[3] + '</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">' + row[4] + '</span></td><td class="px-4 py-3">' + volume.toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 text-blue-400">Rp ' + totalRupiah.toLocaleString('id-ID') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ' + profitBersihBaris.toLocaleString('id-ID') + '</td></tr>';
-      });
-      if(filtered.length > 0) tbody.innerHTML = html;
-      
-      document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
-      document.getElementById('rep-member-profit').innerText = 'Rp ' + totalProfitBersihMember.toLocaleString('id-ID');
-      document.getElementById('rep-total-setoran').innerHTML = '<span id="rep-total-volume">' + totalVolumeAll.toLocaleString('id-ID') + '</span> Tabung';
-    }
-  </script>
-</body>
-</html>
+🚀 ZettBOT Idea:
+1. Modular Check: Jika aplikasi saat ini masih menggunakan *single file* `index.html`, mari pisahkan struktur UI dan fungsi *fetching* data ke dalam *Component-Based* (`js.html` dan `css.html`) agar penelusuran *bug* DOM lebih cepat dan terisolasi.
+2. ZettBOT Feature: Tambahkan fitur *Auto-Populate Data* — begitu nama member pada tujuan pengiriman terpilih, sistem otomatis memunculkan info tambahan seperti sisa saldo, kuota tabung kosong, dan alamat di bawah kolom input secara *real-time*.
