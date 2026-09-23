@@ -170,7 +170,7 @@
                   <th class="px-4 py-3">Nama Supplier</th>
                   <th class="px-4 py-3">Jumlah Tabung</th>
                   <th class="px-4 py-3">Status Persetujuan</th>
-                  <th class="px-4 py-3">Tujuan Pengiriman</th>
+                  <th class="px-4 py-3">Tujuan Pengiriman (Member)</th>
                 </tr>
               </thead>
               <tbody id="table-publik-keluar-body"></tbody>
@@ -604,7 +604,7 @@
     // ======================================================================
     // KONFIGURASI GLOBAL
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzvMzwjcXzY7_P4ZHktusUanj0tmryjXwvjaDFgqevnrzqUPjsk06-8_-8MuhMQGtm7/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxSZI02COpIhgUzKY08wZIOALB71JJwhYGK2D0bwZ7K70N4HYireplFMV0-HI4fqzjH/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -1118,9 +1118,17 @@
         let status = String(row[4] || 'Disetujui').trim(); 
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         let tanggalKeluar = row[1]; let jumlahKeluar = Number(row[3]) || 0;
-        let tujuanPengiriman = row[5] || '-';
+        let tujuanPengiriman = String(row[5] || '-').trim();
 
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">' + (tanggalKeluar||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + jumlahKeluar.toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ' + statusClass + '">' + status + '</span></td><td class="px-4 py-3 font-semibold text-[#00bfff]">' + tujuanPengiriman + '</td></tr>';
+        // 🚀 ZETTBOT: Visualisasi UI Tujuan Pengiriman (Nama Member)
+        let UI_Tujuan = '-';
+        if (status === 'Pending' || tujuanPengiriman === '-') {
+           UI_Tujuan = '<span class="text-gray-500 italic text-xs"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Menunggu</span>';
+        } else {
+           UI_Tujuan = '<div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>' + tujuanPengiriman + '</div>';
+        }
+
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">' + (tanggalKeluar||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 font-bold text-white">' + jumlahKeluar.toLocaleString('id-ID') + ' <span class="text-xs text-gray-400 font-normal">Tbg</span></td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ' + statusClass + '">' + status + '</span></td><td class="px-4 py-3">' + UI_Tujuan + '</td></tr>';
       });
       tbody.innerHTML = html;
     }
