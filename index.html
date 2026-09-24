@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ZETTBOT: Meta Tag Super Anti-Cache untuk mematikan memori Vercel -->
+  
+  <!-- ZETTBOT: Meta Tag Super Anti-Cache untuk Vercel -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -30,7 +31,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Pencatatan Transaksi <span class="text-[#00ffaa] text-[10px] ml-1">v5.3 (Multi-Input)</span></h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Pencatatan Transaksi <span class="text-[#00ffaa] text-[10px] ml-1">v5.4 (Final Fix)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -254,7 +255,7 @@
         <input type="hidden" id="tk-supplier-name">
         <div><input type="date" id="tk-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
         <div>
-          <!-- ZETTBOT: Dropdown Tujuan Pengiriman dipindah ke sini (Form Supplier) -->
+          <!-- ZETTBOT: Dropdown Tujuan Pengiriman di modal Supplier -->
           <select id="tk-tujuan" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none">
             <option value="" disabled selected>-- Pilih Tujuan (Member) --</option>
           </select>
@@ -267,6 +268,7 @@
 
   <div id="toast-notification" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300">
     <div id="toast-box" class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl max-w-md w-full mx-4">
+      <!-- ZETTBOT: Ikon Toast ini sekarang bersifat dinamis via Javascript -->
       <div id="toast-icon-container" class="w-20 h-20 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4"><i id="toast-icon" class="fa-solid fa-circle-check text-[#00ffaa] text-4xl"></i></div>
       <h3 id="toast-title" class="text-2xl font-bold tracking-wide mb-2 text-white">Notifikasi</h3>
       <p id="toast-message" class="text-base text-gray-300"></p>
@@ -277,7 +279,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz8oBqcuFEIFXfZC3B0IoMuT8uoXc-Hz-nfdRNDxXRwPhLrc5leG9m_UZb429w8gIye/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxArlNGXpiPfHTmn2D-F_iZs_PLrXVKuzyIiKsz22FelWdODa3McDFQe2x_v1kJUwB2/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -382,7 +384,29 @@
     function closePinModal() { document.getElementById('pin-auth-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); pendingTargetPage = ''; pendingAllowedRole = ''; }
     function openSupplierInputModal(supplierName) { const todayStr = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)).toISOString().slice(0,10); document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = ""; document.getElementById('tk-tujuan').value = ""; document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
     function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
-    function showToast(message, type = "success") { const toast = document.getElementById('toast-notification'); document.getElementById('toast-message').innerText = message; toast.classList.replace('opacity-0', 'opacity-100'); toast.classList.replace('pointer-events-none', 'pointer-events-auto'); setTimeout(() => { toast.classList.replace('opacity-100', 'opacity-0'); toast.classList.replace('pointer-events-auto', 'pointer-events-none'); }, 3000); }
+    
+    // ZETTBOT: Fungsi Toast UI Fix - Notifikasi akan merah menyala jika Type adalah "error"
+    function showToast(message, type = "success") { 
+      const toast = document.getElementById('toast-notification'); 
+      const icon = document.getElementById('toast-icon');
+      const iconContainer = document.getElementById('toast-icon-container');
+      
+      if(type === 'error') {
+        icon.className = "fa-solid fa-circle-xmark text-red-500 text-4xl";
+        iconContainer.className = "w-20 h-20 rounded-full bg-red-500/20 border border-red-500 flex items-center justify-center mx-auto mb-4";
+      } else {
+        icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl";
+        iconContainer.className = "w-20 h-20 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4";
+      }
+
+      document.getElementById('toast-message').innerText = message; 
+      toast.classList.replace('opacity-0', 'opacity-100'); 
+      toast.classList.replace('pointer-events-none', 'pointer-events-auto'); 
+      setTimeout(() => { 
+        toast.classList.replace('opacity-100', 'opacity-0'); 
+        toast.classList.replace('pointer-events-auto', 'pointer-events-none'); 
+      }, 4000); 
+    }
 
     function updateUIAll() {
       let totalDepositTabungLocal = 0; if (appData.deposit) appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
@@ -392,7 +416,7 @@
       
       filterTabungKeluarPublik(); renderPersetujuanTable();
       
-      // ZETTBOT: Populasikan opsi dropdown Tujuan ke form modal Supplier juga
+      // ZETTBOT: Populasikan dropdown member ke modal Supplier
       const memberSelects = ['trx-namamember', 'tk-tujuan'];
       memberSelects.forEach(selId => { 
         const sel = document.getElementById(selId); 
@@ -419,7 +443,7 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        // ZETTBOT: Tabel persetujuan kasir diubah menjadi teks statis (karena sudah dipilih oleh Supplier)
+        // ZETTBOT: Tabel persetujuan kasir diubah menjadi teks statis
         let tujuanText = row[5] && row[5] !== '-' ? row[5] : '<span class="text-gray-500 italic">Belum diisi</span>';
         
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + tujuanText + '</td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
