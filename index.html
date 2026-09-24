@@ -25,7 +25,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.3 (Final Sync)</span></h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.5 (Extreme Auto-Heal)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -266,7 +266,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwjYDxMvZJZuXYPbTlqneCA1QNncSXtZxJ-gt1qv5832kAH6qE6m-QxkLQ69NRjjuIP/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwUTibWNklO0fAYySs7MeTAARrje0cN1vK1dThnar9usxC5oq_V4CjZA1Krm65hY-bD/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -300,7 +300,15 @@
       const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'flex';
       fetchAPI('getAppData').then(res => {
         if (loader) loader.style.display = 'none';
-        if (res.success) { appData = res; updateUIAll(); } else { showToast("Gagal: " + res.message, "error"); }
+        if (res.success) { 
+          // ZETTBOT: Sistem Deteksi Versi API
+          if(res.backendVersion !== "v4.5") {
+            showToast("CRITICAL: Vercel masih pakai API lama! Ganti URL di index.html", "error");
+            alert("SISTEM MENDETEKSI API LAMA!\n\nPerubahan tidak akan tersimpan ke Kolom F karena Anda masih menggunakan URL Deployment lama.\n\nHarap buat Deployment Baru di Apps Script dan ganti URL di index.html!");
+            return;
+          }
+          appData = res; updateUIAll(); 
+        } else { showToast("Gagal: " + res.message, "error"); }
         document.getElementById('page-dashboard').classList.remove('hidden'); 
       }).catch(err => { if (loader) loader.style.display = 'none'; showToast(err.message, "error"); });
     }
@@ -401,8 +409,6 @@
         let UI_Tujuan = '-';
         if (status === 'Pending' || tujuanPengiriman === '-') {
            UI_Tujuan = '<span class="text-gray-500 italic text-xs">Menunggu</span>';
-        } else if (tujuanPengiriman.includes("DATA LAMA")) {
-           UI_Tujuan = '<span class="text-gray-500 text-xs font-bold">' + tujuanPengiriman + '</span>';
         } else {
            let waktuHtml = waktuSetuju ? `<div class="text-[10px] text-gray-500 mt-1 flex items-center"><i class="fa-regular fa-clock mr-1"></i>${waktuSetuju}</div>` : '';
            UI_Tujuan = `<div class="flex flex-col items-start"><div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>${tujuanPengiriman}</div>${waktuHtml}</div>`;
