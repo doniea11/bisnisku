@@ -25,7 +25,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.1 (Sync & Timestamp)</span></h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.2 (Auto-Heal)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -266,7 +266,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzndUUOG_gpAlSkToVMV3oe6DK4-hgWTvM88YqBOWJmiVWxXsOxISmMh5qI3Bmm9sM/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzI2nVl8gHOwNCiPJRjkJELZx8cN0HFORgPGVlfuqi24aOaBA8R8-PxpxXwRcuAaY_I/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -380,7 +380,6 @@
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
       let memberOptions = '<option value="" disabled selected>-- Pilih Tujuan --</option>';
-      // ZETTBOT: Opsi dropdown Kasir sekarang mengambil dari data Member yang di-sync
       if ((appData.members || []).length > 0) { appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; }); } 
       else { memberOptions = '<option value="" disabled selected>-- Data Tujuan Kosong --</option>'; }
 
@@ -399,7 +398,6 @@
         let status = String(row[4] || 'Disetujui').trim(); let tujuanPengiriman = String(row[5] || '-').trim(); let waktuSetuju = String(row[6] || '').trim();
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         
-        // ZETTBOT: Tambahan UI waktu dari Join Database TujuanPengiriman
         let UI_Tujuan = '-';
         if (status === 'Pending' || tujuanPengiriman === '-') {
            UI_Tujuan = '<span class="text-gray-500 italic text-xs">Menunggu</span>';
