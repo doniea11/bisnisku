@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ZETTBOT: Meta Tag Super Anti-Cache untuk mematikan memori Vercel -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
   <title>MASDONIE GROUP - Sistem Pencatatan Transaksi</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,7 +30,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Pencatatan Transaksi</h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Pencatatan Transaksi <span class="text-[#00ffaa] text-[10px] ml-1">v5.3 (Multi-Input)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -272,7 +277,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxGKylyTA1yb8lVrs3qcoVuBmTSiCdDg6-91B0iSFgRnbXaUJjKU5u0fg4IgpL-Uasj/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz8oBqcuFEIFXfZC3B0IoMuT8uoXc-Hz-nfdRNDxXRwPhLrc5leG9m_UZb429w8gIye/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -387,12 +392,12 @@
       
       filterTabungKeluarPublik(); renderPersetujuanTable();
       
-      // ZETTBOT: Populasikan dropdown member (Kasir: Trx Member, Publik: Modal Supplier)
+      // ZETTBOT: Populasikan opsi dropdown Tujuan ke form modal Supplier juga
       const memberSelects = ['trx-namamember', 'tk-tujuan'];
       memberSelects.forEach(selId => { 
         const sel = document.getElementById(selId); 
         if (sel) { 
-            let defaultLabel = selId === 'tk-tujuan' ? '-- Pilih Tujuan Pengiriman --' : '-- Pilih Member --';
+            let defaultLabel = selId === 'tk-tujuan' ? '-- Pilih Tujuan (Member) --' : '-- Pilih Member --';
             sel.innerHTML = '<option value="" disabled selected>' + defaultLabel + '</option>'; 
             if (appData.members) {
                 appData.members.forEach(m => { 
@@ -414,7 +419,7 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
-        // ZETTBOT: Tampilkan Tujuan Pengiriman secara statis (karena sudah dipilih oleh Supplier)
+        // ZETTBOT: Tabel persetujuan kasir diubah menjadi teks statis (karena sudah dipilih oleh Supplier)
         let tujuanText = row[5] && row[5] !== '-' ? row[5] : '<span class="text-gray-500 italic">Belum diisi</span>';
         
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + tujuanText + '</td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
