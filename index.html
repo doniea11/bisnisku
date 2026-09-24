@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MASDONIE GROUP - Sistem Informasi Penjualan Gas</title>
+  <title>MASDONIE GROUP - Sistem Pencatatan Transaksi</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -25,7 +25,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.7.1 (Network Fix)</span></h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Pencatatan Transaksi</h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -37,7 +37,7 @@
 
   <main class="flex-grow container mx-auto px-4 py-6 max-w-7xl relative">
     <div id="global-loader" class="fixed bottom-6 right-6 flex items-center bg-[#0f172a]/95 border border-[#00ffaa]/50 px-4 py-2.5 rounded-full z-50 shadow-[0_0_15px_rgba(0,255,170,0.3)] backdrop-blur-md transition-opacity duration-500">
-      <div class="w-4 h-4 border-2 border-[#00ffaa] border-t-transparent rounded-full animate-spin mr-2.5"></div><p class="text-[#00ffaa] text-xs font-bold tracking-wide">Menghubungkan API...</p>
+      <div class="w-4 h-4 border-2 border-[#00ffaa] border-t-transparent rounded-full animate-spin mr-2.5"></div><p class="text-[#00ffaa] text-xs font-bold tracking-wide">Koneksi ke Database.</p>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
@@ -248,6 +248,12 @@
       <form id="form-tabung-keluar" onsubmit="handleTabungKeluarSubmit(event)" class="space-y-4">
         <input type="hidden" id="tk-supplier-name">
         <div><input type="date" id="tk-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
+        <div>
+          <!-- ZETTBOT: Dropdown Tujuan Pengiriman di modal Supplier -->
+          <select id="tk-tujuan" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none">
+            <option value="" disabled selected>-- Pilih Tujuan (Member) --</option>
+          </select>
+        </div>
         <div><input type="text" id="tk-jumlah" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
         <button type="submit" id="btn-submit-tk" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl mt-2 cursor-pointer">Kirim Data</button>
       </form>
@@ -266,7 +272,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwTFJ6MsO6R7s0448ZFMR9Y6nJmPABy46Yr6wTtbhR3qsBtGpV1-2eMVpPqdjp2wbR7/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbysAO4l54-gWeDahmJsmLlqQbiNOtxEWT1Dn8cvT0j_95rqPCjlycpy0GcAqEFYZ_Yx/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -300,16 +306,9 @@
       const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'flex';
       fetchAPI('getAppData').then(res => {
         if (loader) loader.style.display = 'none';
-        if (res.success) { 
-          appData = res; updateUIAll(); 
-        } else { showToast("Gagal: " + res.message, "error"); }
+        if (res.success) { appData = res; updateUIAll(); } else { showToast("Gagal: " + res.message, "error"); }
         document.getElementById('page-dashboard').classList.remove('hidden'); 
-      }).catch(err => { 
-        if (loader) loader.style.display = 'none'; 
-        // ZETTBOT: Tambahan fallback agar layar tetap terbuka meskipun error CORS
-        showToast("Koneksi Error. Pastikan URL API sudah benar dan diset ke 'Siapa Saja'. Pesan: " + err.message, "error"); 
-        document.getElementById('page-dashboard').classList.remove('hidden'); 
-      });
+      }).catch(err => { if (loader) loader.style.display = 'none'; showToast("Koneksi Error. Pastikan URL API sudah diset 'Siapa Saja'. " + err.message, "error"); document.getElementById('page-dashboard').classList.remove('hidden'); });
     }
 
     function submitModalPin() {
@@ -332,21 +331,32 @@
       } else { showToast(msg, "error"); }
     }
 
+    // ZETTBOT: Fungsi handle approval tidak lagi mencari element dropdown dari tabel kasir
     function handleApprovalSubmit(idKeluar, newStatus, btnEl) {
-      let tujuan = '-'; let domId = String(idKeluar).trim().replace(/[^a-zA-Z0-9_-]/g, '');
-      if (newStatus === 'Disetujui') {
-        const sel = document.getElementById('tujuan-' + domId);
-        if (!sel || !sel.value.trim()) { showToast("Pilih Tujuan Pengiriman!", "error"); return; }
-        tujuan = sel.value.trim();
-      }
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus, tujuanPengiriman: tujuan }).then(res => {
+      fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus }).then(res => {
         if(res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); loadBackendData(); }
       }).catch(err => { showToast(err.message, "error"); loadBackendData(); });
     }
 
     function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async () => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) }; const res = await fetchAPI('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = "0"; } else { showToast(res.message, "error"); } }); }
-    function handleTabungKeluarSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tk', async () => { const payload = { tanggal: document.getElementById('tk-tanggal').value, namaSupplier: document.getElementById('tk-supplier-name').value, jumlahTabung: parseCleanNumber(document.getElementById('tk-jumlah').value) }; const res = await fetchAPI('saveTabungKeluar', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); closeSupplierInputModal(); } else { showToast(res.message, "error"); } }); }
+    
+    // ZETTBOT: Modifikasi saveTabungKeluar mengirim payload tujuanPengiriman dari form
+    function handleTabungKeluarSubmit(e) { 
+      e.preventDefault(); 
+      executeSafeSubmit('btn-submit-tk', async () => { 
+        const payload = { 
+          tanggal: document.getElementById('tk-tanggal').value, 
+          namaSupplier: document.getElementById('tk-supplier-name').value, 
+          jumlahTabung: parseCleanNumber(document.getElementById('tk-jumlah').value),
+          tujuanPengiriman: document.getElementById('tk-tujuan').value 
+        }; 
+        const res = await fetchAPI('saveTabungKeluar', payload); 
+        if (res.success) { showToast(res.message, "success"); loadBackendData(); closeSupplierInputModal(); } 
+        else { showToast(res.message, "error"); } 
+      }); 
+    }
+    
     function handleTransaksiMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-trx', async () => { const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) }; const res = await fetchAPI('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0"; } else { showToast(res.message, "error"); } }); }
     function handleAddMember(e) { e.preventDefault(); executeSafeSubmit('btn-submit-add-member', async () => { const payload = { namaMember: document.getElementById('add-nama-member').value, pinMember: document.getElementById('add-pin-member').value }; const res = await fetchAPI('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } }); }
     function handleAddSupplier(e) { e.preventDefault(); executeSafeSubmit('btn-submit-add-supplier', async () => { const payload = { namaSupplier: document.getElementById('add-nama-supplier').value, pinSupplier: document.getElementById('add-pin-supplier').value }; const res = await fetchAPI('addNewSupplier', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } }); }
@@ -365,7 +375,7 @@
     
     function openPinModal(title, desc) { document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = ""; document.getElementById('pin-auth-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); setTimeout(() => document.getElementById('modal-pin-input').focus(), 100); }
     function closePinModal() { document.getElementById('pin-auth-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('pin-auth-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); pendingTargetPage = ''; pendingAllowedRole = ''; }
-    function openSupplierInputModal(supplierName) { const todayStr = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)).toISOString().slice(0,10); document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = ""; document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
+    function openSupplierInputModal(supplierName) { const todayStr = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)).toISOString().slice(0,10); document.getElementById('tk-supplier-name').value = supplierName; document.getElementById('tk-tanggal').value = todayStr; document.getElementById('tk-jumlah').value = ""; document.getElementById('tk-tujuan').value = ""; document.getElementById('supplier-input-modal').classList.replace('opacity-0', 'opacity-100'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-none', 'pointer-events-auto'); }
     function closeSupplierInputModal() { document.getElementById('supplier-input-modal').classList.replace('opacity-100', 'opacity-0'); document.getElementById('supplier-input-modal').classList.replace('pointer-events-auto', 'pointer-events-none'); }
     function showToast(message, type = "success") { const toast = document.getElementById('toast-notification'); document.getElementById('toast-message').innerText = message; toast.classList.replace('opacity-0', 'opacity-100'); toast.classList.replace('pointer-events-none', 'pointer-events-auto'); setTimeout(() => { toast.classList.replace('opacity-100', 'opacity-0'); toast.classList.replace('pointer-events-auto', 'pointer-events-none'); }, 3000); }
 
@@ -377,23 +387,36 @@
       
       filterTabungKeluarPublik(); renderPersetujuanTable();
       
-      const memberSelects = ['trx-namamember'];
-      memberSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { sel.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; if (appData.members) appData.members.forEach(m => { const opt = document.createElement('option'); opt.value = m[1]; opt.innerText = m[0] + ' - ' + m[1]; sel.appendChild(opt); }); } });
+      const memberSelects = ['trx-namamember', 'tk-tujuan'];
+      memberSelects.forEach(selId => { 
+        const sel = document.getElementById(selId); 
+        if (sel) { 
+            let defaultLabel = selId === 'tk-tujuan' ? '-- Pilih Tujuan (Member) --' : '-- Pilih Member --';
+            sel.innerHTML = '<option value="" disabled selected>' + defaultLabel + '</option>'; 
+            if (appData.members) {
+                appData.members.forEach(m => { 
+                    const opt = document.createElement('option'); 
+                    opt.value = m[1]; 
+                    opt.innerText = m[0] + ' - ' + m[1]; 
+                    sel.appendChild(opt); 
+                }); 
+            }
+        } 
+      });
     }
 
     function renderPersetujuanTable() {
       const tbody = document.getElementById('table-persetujuan-body'); if (!tbody) return;
       const pendingData = (appData.tabungKeluar || []).filter(r => String(r[4] || 'Disetujui').trim() === 'Pending');
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
-      
-      let memberOptions = '<option value="" disabled selected>-- Pilih Tujuan --</option>';
-      if ((appData.members || []).length > 0) { appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; }); } 
-      else { memberOptions = '<option value="" disabled selected>-- Data Tujuan Kosong --</option>'; }
 
       let html = '';
       pendingData.forEach(row => {
-        let cleanId = String(row[0]).trim(); let domId = cleanId.replace(/[^a-zA-Z0-9_-]/g, '');
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3"><select id="tujuan-' + domId + '" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white outline-none w-full">' + memberOptions + '</select></td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
+        let cleanId = String(row[0]).trim();
+        // ZETTBOT: Tabel persetujuan kasir diubah menjadi teks statis (karena sudah dipilih oleh Supplier)
+        let tujuanText = row[5] && row[5] !== '-' ? row[5] : '<span class="text-gray-500 italic">Belum diisi</span>';
+        
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + tujuanText + '</td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
       }); tbody.innerHTML = html;
     }
 
@@ -406,10 +429,10 @@
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
         
         let UI_Tujuan = '-';
-        if (status === 'Pending' || tujuanPengiriman === '-') {
-           UI_Tujuan = '<span class="text-gray-500 italic text-xs">Menunggu</span>';
+        if (tujuanPengiriman === '-' || tujuanPengiriman === '') {
+           UI_Tujuan = '<span class="text-gray-500 italic text-xs">Belum diisi</span>';
         } else {
-           let waktuHtml = waktuSetuju ? `<div class="text-[10px] text-gray-500 mt-1 flex items-center"><i class="fa-regular fa-clock mr-1"></i>${waktuSetuju}</div>` : '';
+           let waktuHtml = (status === 'Disetujui' && waktuSetuju) ? `<div class="text-[10px] text-gray-500 mt-1 flex items-center"><i class="fa-regular fa-clock mr-1"></i>${waktuSetuju}</div>` : '';
            UI_Tujuan = `<div class="flex flex-col items-start"><div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>${tujuanPengiriman}</div>${waktuHtml}</div>`;
         }
 
