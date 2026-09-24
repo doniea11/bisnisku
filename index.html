@@ -249,7 +249,7 @@
         <input type="hidden" id="tk-supplier-name">
         <div><input type="date" id="tk-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
         <div>
-          <!-- ZETTBOT: Dropdown Tujuan Pengiriman di modal Supplier -->
+          <!-- ZETTBOT: Dropdown Tujuan Pengiriman dipindah ke sini (Form Supplier) -->
           <select id="tk-tujuan" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none">
             <option value="" disabled selected>-- Pilih Tujuan (Member) --</option>
           </select>
@@ -272,7 +272,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyJUUuI1505ymEdE0_M93mrADQFMCeRUttU3kMwyczPC0_lWvF4PWf-UEwDyk3ZTFJt/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxGKylyTA1yb8lVrs3qcoVuBmTSiCdDg6-91B0iSFgRnbXaUJjKU5u0fg4IgpL-Uasj/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -331,6 +331,7 @@
       } else { showToast(msg, "error"); }
     }
 
+    // ZETTBOT: Fungsi Persetujuan Kasir (tanpa perlu input tujuan lagi)
     function handleApprovalSubmit(idKeluar, newStatus, btnEl) {
       if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
       fetchAPI('processApprovalTabungKeluar', { idKeluar: idKeluar, status: newStatus }).then(res => {
@@ -340,6 +341,7 @@
 
     function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async () => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) }; const res = await fetchAPI('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = "0"; } else { showToast(res.message, "error"); } }); }
     
+    // ZETTBOT: Fungsi Supplier kirim data beserta tujuan pengiriman
     function handleTabungKeluarSubmit(e) { 
       e.preventDefault(); 
       executeSafeSubmit('btn-submit-tk', async () => { 
@@ -385,11 +387,12 @@
       
       filterTabungKeluarPublik(); renderPersetujuanTable();
       
+      // ZETTBOT: Populasikan dropdown member (Kasir: Trx Member, Publik: Modal Supplier)
       const memberSelects = ['trx-namamember', 'tk-tujuan'];
       memberSelects.forEach(selId => { 
         const sel = document.getElementById(selId); 
         if (sel) { 
-            let defaultLabel = selId === 'tk-tujuan' ? '-- Pilih Tujuan (Member) --' : '-- Pilih Member --';
+            let defaultLabel = selId === 'tk-tujuan' ? '-- Pilih Tujuan Pengiriman --' : '-- Pilih Member --';
             sel.innerHTML = '<option value="" disabled selected>' + defaultLabel + '</option>'; 
             if (appData.members) {
                 appData.members.forEach(m => { 
@@ -411,6 +414,7 @@
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim();
+        // ZETTBOT: Tampilkan Tujuan Pengiriman secara statis (karena sudah dipilih oleh Supplier)
         let tujuanText = row[5] && row[5] !== '-' ? row[5] : '<span class="text-gray-500 italic">Belum diisi</span>';
         
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3 font-bold text-[#00ffaa]">' + tujuanText + '</td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
