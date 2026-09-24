@@ -25,7 +25,7 @@
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.5 (Unlocked)</span></h1></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.6 (Clean Slate)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -266,7 +266,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1LN8KJgsfQv5f6qWQ4iJMisy4gQhwUa93W1q-FV7l6OdxdQtvT_ihF9OPXPnvjlox/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz5aRkek3robifkbwfzZdUaPIiQWWT5CfGczlZVJySHoBMuhqeKD7J9-OhY7NutBLRv/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -300,9 +300,7 @@
       const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'flex';
       fetchAPI('getAppData').then(res => {
         if (loader) loader.style.display = 'none';
-        if (res.success) { 
-          appData = res; updateUIAll(); 
-        } else { showToast("Gagal: " + res.message, "error"); }
+        if (res.success) { appData = res; updateUIAll(); } else { showToast("Gagal: " + res.message, "error"); }
         document.getElementById('page-dashboard').classList.remove('hidden'); 
       }).catch(err => { if (loader) loader.style.display = 'none'; showToast(err.message, "error"); });
     }
