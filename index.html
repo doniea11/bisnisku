@@ -17,20 +17,15 @@
       animation: glowingTextMove 3.5s ease-in-out infinite; text-transform: uppercase;
     }
     @keyframes glowingTextMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    .bg-nature-theme {
-      background: linear-gradient(rgba(11, 15, 25, 0.15), rgba(11, 15, 25, 0.45)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1920&q=80');
-      background-size: cover; background-position: center; background-attachment: fixed;
-    }
+    .bg-nature-theme { background: linear-gradient(rgba(11, 15, 25, 0.15), rgba(11, 15, 25, 0.45)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed; }
   </style>
 </head>
 <body class="bg-nature-theme min-h-screen flex flex-col justify-between">
 
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg">
-        <i class="fa-solid fa-leaf text-lg"></i>
-      </div>
-      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.0 (Vercel Edition)</span></h1></div>
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
+      <div><h1 class="text-xs sm:text-sm font-bold tracking-wide text-gray-200">Sistem Informasi Penjualan Gas <span class="text-[#00ffaa] text-[10px] ml-1">v4.1 (Sync & Timestamp)</span></h1></div>
     </div>
     <nav class="flex space-x-1 sm:space-x-3">
       <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"><i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">Dashboard</span></button>
@@ -42,8 +37,7 @@
 
   <main class="flex-grow container mx-auto px-4 py-6 max-w-7xl relative">
     <div id="global-loader" class="fixed bottom-6 right-6 flex items-center bg-[#0f172a]/95 border border-[#00ffaa]/50 px-4 py-2.5 rounded-full z-50 shadow-[0_0_15px_rgba(0,255,170,0.3)] backdrop-blur-md transition-opacity duration-500">
-      <div class="w-4 h-4 border-2 border-[#00ffaa] border-t-transparent rounded-full animate-spin mr-2.5"></div>
-      <p class="text-[#00ffaa] text-xs font-bold tracking-wide">Menghubungkan API...</p>
+      <div class="w-4 h-4 border-2 border-[#00ffaa] border-t-transparent rounded-full animate-spin mr-2.5"></div><p class="text-[#00ffaa] text-xs font-bold tracking-wide">Menghubungkan API...</p>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
@@ -81,9 +75,7 @@
           <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Tabung Keluar</h3>
           <div class="overflow-x-auto rounded-xl border border-gray-800">
             <table class="w-full text-left text-sm text-gray-300">
-              <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                <tr><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Supplier</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Status Persetujuan</th><th class="px-4 py-3">Tujuan Pengiriman</th></tr>
-              </thead>
+              <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Supplier</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Status Persetujuan</th><th class="px-4 py-3">Tujuan Pengiriman</th></tr></thead>
               <tbody id="table-publik-keluar-body"></tbody>
             </table>
           </div>
@@ -107,9 +99,7 @@
           <h3 class="text-lg font-semibold text-white">Persetujuan Input Tabung Keluar</h3>
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4">
             <table class="w-full text-left text-sm text-gray-300">
-              <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                <tr><th class="px-4 py-3">ID Keluar</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Supplier</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Tujuan Pengiriman</th><th class="px-4 py-3 text-center">Aksi</th></tr>
-              </thead>
+              <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Keluar</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Supplier</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Tujuan Pengiriman</th><th class="px-4 py-3 text-center">Aksi</th></tr></thead>
               <tbody id="table-persetujuan-body"></tbody>
             </table>
           </div>
@@ -209,7 +199,7 @@
       <div id="admin-auth-container" class="glass-card p-8 rounded-2xl max-w-md mx-auto text-center space-y-4 my-12">
         <div class="w-16 h-16 rounded-full bg-[#00ffaa]/10 border border-[#00ffaa]/40 flex items-center justify-center mx-auto zett-glow"><i class="fa-solid fa-lock text-[#00ffaa] text-2xl"></i></div>
         <h3 class="text-xl font-bold text-white">Autentikasi Admin</h3>
-        <input type="password" id="input-admin-auth-pin" placeholder="Masukkan PIN Admin" onkeydown="if(event.key==='Enter'){verifyAdminPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white tracking-widest focus:border-[#00ffaa] outline-none">
+        <input type="password" id="input-admin-auth-pin" placeholder="Masukkan PIN Admin" onkeydown="if(event.key==='Enter'){verifyAdminPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white tracking-widest outline-none">
         <button onclick="verifyAdminPin()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer">Masuk Panel Admin</button>
       </div>
 
@@ -219,11 +209,10 @@
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-user-plus text-[#00ffaa] mr-2"></i> Tambah Member Baru</h3>
             <form onsubmit="handleAddMember(event)" class="space-y-3">
               <div><label class="block text-xs text-gray-400 mb-1">Nama Member</label><input type="text" id="add-nama-member" required data-form-input oninput="formatNamaMemberInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white uppercase outline-none"></div>
-              <div><label class="block text-xs text-gray-400 mb-1">PIN Member</label><input type="text" id="add-pin-member" data-form-input oninput="formatPinAngkaOnly(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">PIN Member (Opsional)</label><input type="text" id="add-pin-member" data-form-input oninput="formatPinAngkaOnly(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
               <button type="submit" id="btn-submit-add-member" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm cursor-pointer mt-1">Daftarkan Member</button>
             </form>
           </div>
-          <!-- Form Tambah Supplier & Reset Pin (Disederhanakan untuk contoh, logika javascript tetap jalan) -->
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-truck-fast text-[#00ffaa] mr-2"></i> Tambah Supplier Baru</h3>
             <form onsubmit="handleAddSupplier(event)" class="space-y-3">
@@ -244,8 +233,8 @@
       <p id="modal-pin-desc" class="text-xs text-gray-300 mb-4">Masukkan PIN Akses Anda.</p>
       <input type="password" id="modal-pin-input" onkeydown="if(event.key==='Enter'){submitModalPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white mb-4 outline-none">
       <div class="flex gap-2">
-        <button onclick="closePinModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl">Batal</button>
-        <button onclick="submitModalPin()" class="w-1/2 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-xl">Masuk</button>
+        <button onclick="closePinModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl cursor-pointer">Batal</button>
+        <button onclick="submitModalPin()" class="w-1/2 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-xl cursor-pointer">Masuk</button>
       </div>
     </div>
   </div>
@@ -254,13 +243,13 @@
     <div class="glass-card p-6 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl max-w-md w-full mx-4">
       <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-4">
         <h3 class="text-lg font-bold text-[#00ffaa]">Input Tabung Keluar</h3>
-        <button onclick="closeSupplierInputModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        <button onclick="closeSupplierInputModal()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
       <form id="form-tabung-keluar" onsubmit="handleTabungKeluarSubmit(event)" class="space-y-4">
         <input type="hidden" id="tk-supplier-name">
         <div><input type="date" id="tk-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
         <div><input type="text" id="tk-jumlah" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div>
-        <button type="submit" id="btn-submit-tk" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl mt-2">Kirim Data</button>
+        <button type="submit" id="btn-submit-tk" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl mt-2 cursor-pointer">Kirim Data</button>
       </form>
     </div>
   </div>
@@ -277,7 +266,7 @@
     // ======================================================================
     // PENTING: Ganti URL di bawah dengan Web App URL Deployment Apps Script!
     // ======================================================================
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw-TPzDj39GTtyk4zeFq0FNiZJGfaX1jE29L8H5kSewoRoaQa72_yen5BrFjw0kySia/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzndUUOG_gpAlSkToVMV3oe6DK4-hgWTvM88YqBOWJmiVWxXsOxISmMh5qI3Bmm9sM/exec";
     
     let appData = {
       adminPinSet: "5001",
@@ -391,14 +380,14 @@
       if (pendingData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">Tidak ada input supplier yang perlu disetujui.</td></tr>'; return; }
       
       let memberOptions = '<option value="" disabled selected>-- Pilih Tujuan --</option>';
-      let listTujuan = (appData.tujuanPengiriman && appData.tujuanPengiriman.length > 0) ? appData.tujuanPengiriman : appData.members;
-      if ((listTujuan || []).length > 0) { listTujuan.forEach(t => { memberOptions += '<option value="' + t[1] + '">' + t[1] + '</option>'; }); } 
+      // ZETTBOT: Opsi dropdown Kasir sekarang mengambil dari data Member yang di-sync
+      if ((appData.members || []).length > 0) { appData.members.forEach(m => { memberOptions += '<option value="' + m[1] + '">' + m[1] + '</option>'; }); } 
       else { memberOptions = '<option value="" disabled selected>-- Data Tujuan Kosong --</option>'; }
 
       let html = '';
       pendingData.forEach(row => {
         let cleanId = String(row[0]).trim(); let domId = cleanId.replace(/[^a-zA-Z0-9_-]/g, '');
-        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3"><select id="tujuan-' + domId + '" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white outline-none w-full">' + memberOptions + '</select></td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs">Tolak</button></td></tr>';
+        html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono text-gray-400">' + cleanId + '</td><td class="px-4 py-3">' + row[1] + '</td><td class="px-4 py-3 font-bold text-white">' + row[2] + '</td><td class="px-4 py-3 font-black text-blue-400">' + Number(row[3]||0).toLocaleString('id-ID') + ' Tabung</td><td class="px-4 py-3"><select id="tujuan-' + domId + '" class="bg-[#161b22] border border-gray-700 rounded p-1.5 text-xs text-white outline-none w-full">' + memberOptions + '</select></td><td class="px-4 py-3 text-center flex gap-1 justify-center"><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Disetujui\', this)" class="px-2 py-1.5 bg-[#00ffaa] text-gray-900 rounded font-bold text-xs cursor-pointer">Setujui</button><button onclick="handleApprovalSubmit(\'' + cleanId + '\', \'Ditolak\', this)" class="px-2 py-1.5 bg-red-500 text-white rounded font-bold text-xs cursor-pointer">Tolak</button></td></tr>';
       }); tbody.innerHTML = html;
     }
 
@@ -407,9 +396,20 @@
       if (!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data.</td></tr>'; return; }
       let html = '';
       dataList.forEach(row => {
-        let status = String(row[4] || 'Disetujui').trim(); let tujuanPengiriman = String(row[5] || '-').trim();
+        let status = String(row[4] || 'Disetujui').trim(); let tujuanPengiriman = String(row[5] || '-').trim(); let waktuSetuju = String(row[6] || '').trim();
         let statusClass = status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : (status === 'Ditolak' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-[#00ffaa]/20 text-[#00ffaa] border-[#00ffaa]/30');
-        let UI_Tujuan = (status === 'Pending' || tujuanPengiriman === '-') ? '<span class="text-gray-500 italic text-xs">Menunggu</span>' : '<span class="text-[#00ffaa] text-xs font-bold">' + tujuanPengiriman + '</span>';
+        
+        // ZETTBOT: Tambahan UI waktu dari Join Database TujuanPengiriman
+        let UI_Tujuan = '-';
+        if (status === 'Pending' || tujuanPengiriman === '-') {
+           UI_Tujuan = '<span class="text-gray-500 italic text-xs">Menunggu</span>';
+        } else if (tujuanPengiriman.includes("DATA LAMA")) {
+           UI_Tujuan = '<span class="text-gray-500 text-xs font-bold">' + tujuanPengiriman + '</span>';
+        } else {
+           let waktuHtml = waktuSetuju ? `<div class="text-[10px] text-gray-500 mt-1 flex items-center"><i class="fa-regular fa-clock mr-1"></i>${waktuSetuju}</div>` : '';
+           UI_Tujuan = `<div class="flex flex-col items-start"><div class="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-user-check mr-1.5"></i>${tujuanPengiriman}</div>${waktuHtml}</div>`;
+        }
+
         html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3">' + (row[1]||'-') + '</td><td class="px-4 py-3 font-semibold text-white">' + (row[2]||'-') + '</td><td class="px-4 py-3 font-bold text-white">' + (Number(row[3]) || 0).toLocaleString('id-ID') + ' Tbg</td><td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs border font-semibold ' + statusClass + '">' + status + '</span></td><td class="px-4 py-3">' + UI_Tujuan + '</td></tr>';
       }); tbody.innerHTML = html;
     }
