@@ -675,7 +675,7 @@
   <script>
     // --- KONFIGURASI API APPS SCRIPT ---
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwybwWX9OSTX2hqp3AnF8BlWIWZ6Qa7mXaIwLkHQJVLCQ4D8S527DR8FsyB_Ayzlbco/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdFs5JG2i-d3kBjNOfCnTrJBGeLXKHO7P4ciNDPkK5RD-k71E4LK5YHk40vLJetsEF/exec';
 
     let appData = {
       adminPinSet: "5001",
@@ -743,7 +743,7 @@
     }
 
     function handleLiquefiedClick() {
-      switchPage('kasir');
+      switchPage('publik');
     }
 
     function openDigitalModal() {
@@ -1711,3 +1711,8 @@
   </script>
 </body>
 </html>
+```eof
+
+🚀 ZettBOT Idea
+1. Modular Check: Kode Anda saat ini masih berada dalam struktur satu file tunggal (`index.html`). Jika Anda merencanakan penambahan fitur lebih lanjut, kita bisa mempertimbangkan untuk memecah UI ini ke dalam arsitektur Component-Based (Modular), seperti `css.html` dan `js.html`, untuk kemudahan pengelolaan di masa depan.
+2. ZettBOT Feature: Untuk skala penggunaan yang lebih luas, kita dapat mempertimbangkan fitur **Cetak Struk Thermal (Bluetooth)** langsung dari halaman Kasir untuk diberikan sebagai bukti transaksi instan kepada member.
