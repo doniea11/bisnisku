@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MASDONIE GROUP - Catatan Transaksi Bisnis</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -515,7 +513,6 @@
           </div>
         </div>
 
-        <!-- SUB 4: Laporan Transaksi Gas -->
         <div id="kasir-sub-laporan" class="kasir-sub-content hidden space-y-4">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h3 class="text-lg font-semibold text-white">Laporan Transaksi & Profit Bersih Per Bulan</h3>
@@ -534,7 +531,6 @@
               <button onclick="renderLaporanTable()" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-xs cursor-pointer">Filter</button>
             </div>
           </div>
-
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
             <div class="glass-card p-4 rounded-xl bg-[#161b22]/80 border border-[#00ffaa]/30">
               <p class="text-xs text-gray-400">Total Profit Bersih (Diterima)</p>
@@ -549,7 +545,6 @@
               <h4 id="rep-total-setoran" class="text-xl font-bold text-white mt-1"><span id="rep-total-volume">0</span> Tabung</h4>
             </div>
           </div>
-
           <div class="overflow-x-auto rounded-xl border border-gray-800">
             <table class="w-full text-left text-sm text-gray-300">
               <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
@@ -637,7 +632,6 @@
     <p>@masdonie_group</p>
   </footer>
 
-  <!-- POPUP MODAL AUTENTIKASI PIN DINAMIS -->
   <div id="pin-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300">
     <div class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300">
       <div class="w-16 h-16 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4 zett-glow">
@@ -663,39 +657,17 @@
     </div>
   </div>
 
-  <!-- POPUP MODAL INFO DIGITAL -->
-  <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4">
-    <div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6">
-      <div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4">
-        <div class="flex items-center space-x-3">
-          <div class="w-12 h-12 rounded-2xl bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center zett-glow"><i class="fa-solid fa-globe text-[#00ffaa] text-2xl"></i></div>
-          <div><h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3><p class="text-xs text-gray-400">Sat-Set, Anti-Rungkad!</p></div>
-        </div>
-        <button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-[#00ffaa] flex items-center justify-center transition-all cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="space-y-4 text-sm text-gray-300 leading-relaxed"><div class="bg-[#161b22]/70 p-4 rounded-2xl border border-gray-800"><p class="font-medium text-gray-200">Capek bolak-balik pindah aplikasi cuma buat bayar tagihan atau isi kuota? Di sini, semua kebutuhan digitalmu—dari pulsa sekarat, token PLN mau habis, langganan IndiHome, hingga top-up game—bisa beres dalam hitungan detik. Tanpa ribet, tanpa drama, dan ramah di kantong!</p></div></div>
-      <div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div>
-    </div>
-  </div>
-
   <script>
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_R895l3S6eskpuXkGqq2rOwJlRHXKwSiiPdGyW_nC-WSwiMQdw8piKYTCvuvQUtNI/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOHymimpP0ibHyXoVy821bJJ6TisOuDBddVC36mokSwYDhIAGJ7RY_o-PhCOoyZiPu/exec';
 
     let appData = {
       adminPinSet: "122009", 
       settings: { hargaModalGas: 15000, hargaModalTabung: 125000, hargaJualGas: 20000, hargaJualTabung: 150000 },
-      deposit: [],
-      tabungMasuk: [],
-      members: [],
-      transaksi: [],
-      angsuran: [], 
-      detailAngsuran: [], 
+      deposit: [], tabungMasuk: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], 
       summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0 }
     };
 
-    let pendingTargetPage = '';
-    let pendingAllowedRole = '';
-    let currentLoggedInMember = '';
+    let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
 
     window.addEventListener('DOMContentLoaded', function() {
       const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'filter-start-date', 'filter-end-date', 'pay-hp-tanggal'];
@@ -709,19 +681,13 @@
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           const activeEl = document.activeElement;
-          if (activeEl && activeEl.id === 'trx-jumlahtabung') {
-            e.preventDefault(); calcTransaksiTotal(); return;
-          }
+          if (activeEl && activeEl.id === 'trx-jumlahtabung') { e.preventDefault(); calcTransaksiTotal(); return; }
           if (activeEl && activeEl.hasAttribute('data-form-input')) {
-            const form = activeEl.closest('form');
-            if (!form) return;
+            const form = activeEl.closest('form'); if (!form) return;
             const inputs = Array.from(form.querySelectorAll('[data-form-input]'));
-            const currentIndex = inputs.indexOf(activeEl);
-            let nextEmptyInput = null;
+            const currentIndex = inputs.indexOf(activeEl); let nextEmptyInput = null;
             for (let i = currentIndex + 1; i < inputs.length; i++) {
-              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') {
-                nextEmptyInput = inputs[i]; break;
-              }
+              if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { nextEmptyInput = inputs[i]; break; }
             }
             if (nextEmptyInput) { e.preventDefault(); nextEmptyInput.focus(); }
           }
@@ -731,8 +697,17 @@
 
     function handleLiquefiedClick() { switchPage('gas-portal'); }
     function handleSmartphoneClick() { switchPage('smartphone-portal'); }
-    function openDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100', 'pointer-events-auto'); } }
-    function closeDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-100', 'pointer-events-auto'); m.classList.add('opacity-0', 'pointer-events-none'); } }
+
+    function openDigitalModal() {
+      const modal = document.getElementById('digital-info-modal');
+      if (!modal) return;
+      modal.classList.remove('opacity-0', 'pointer-events-none'); modal.classList.add('opacity-100', 'pointer-events-auto');
+    }
+    function closeDigitalModal() {
+      const modal = document.getElementById('digital-info-modal');
+      if (!modal) return;
+      modal.classList.remove('opacity-100', 'pointer-events-auto'); modal.classList.add('opacity-0', 'pointer-events-none');
+    }
 
     function requestAccessPage(pageId) {
       pendingTargetPage = pageId;
@@ -745,17 +720,13 @@
 
     function openPinModal(title, desc) {
       const modal = document.getElementById('pin-auth-modal');
-      document.getElementById('modal-pin-title').innerText = title;
-      document.getElementById('modal-pin-desc').innerText = desc;
-      document.getElementById('modal-pin-input').value = "";
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modal.classList.add('opacity-100', 'pointer-events-auto');
+      document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = "";
+      modal.classList.remove('opacity-0', 'pointer-events-none'); modal.classList.add('opacity-100', 'pointer-events-auto');
       setTimeout(() => document.getElementById('modal-pin-input').focus(), 100);
     }
     function closePinModal() {
       const modal = document.getElementById('pin-auth-modal');
-      modal.classList.remove('opacity-100', 'pointer-events-auto');
-      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100', 'pointer-events-auto'); modal.classList.add('opacity-0', 'pointer-events-none');
       pendingTargetPage = ''; pendingAllowedRole = '';
     }
 
@@ -763,12 +734,9 @@
     function formatPinAngkaOnly(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
     function formatRupiahInput(input) {
       let value = input.value.replace(/[^,\d]/g, '').toString();
-      let split = value.split(',');
-      let integerPart = split[0];
+      let split = value.split(','); let integerPart = split[0];
       if (integerPart.length > 1 && integerPart.startsWith('0')) { integerPart = integerPart.replace(/^0+/, ''); if (integerPart === '') integerPart = '0'; }
-      let sisa = integerPart.length % 3;
-      let rupiah = integerPart.substr(0, sisa);
-      let ribuan = integerPart.substr(sisa).match(/\d{3}/gi);
+      let sisa = integerPart.length % 3; let rupiah = integerPart.substr(0, sisa); let ribuan = integerPart.substr(sisa).match(/\d{3}/gi);
       if (ribuan) { rupiah += (sisa ? '.' : '') + ribuan.join('.'); }
       input.value = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
     }
@@ -785,8 +753,7 @@
     async function apiCall(action, payload = null) {
       if (APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') return mockApiCall(action, payload);
       try {
-        let url = `${APPS_SCRIPT_URL}?action=${action}`;
-        let options = { method: 'GET' };
+        let url = `${APPS_SCRIPT_URL}?action=${action}`; let options = { method: 'GET' };
         if (payload) { options.method = 'POST'; options.body = JSON.stringify(payload); options.headers = { 'Content-Type': 'text/plain;charset=utf-8' }; }
         const response = await fetch(url, options);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -815,6 +782,7 @@
         });
     }
 
+    // WAJIB: Pastikan data selalu terbentuk array untuk mencegah Error
     function ensureDataArrays() {
         appData.deposit = appData.deposit || [];
         appData.tabungMasuk = appData.tabungMasuk || [];
@@ -825,39 +793,30 @@
     }
 
     async function loadBackendData() {
-        const CACHE_KEY = 'masdonie_data_v3'; // Cache key baru agar otomatis ter-reset
+        const CACHE_KEY = 'masdonie_data_v4'; // Key dinaikkan ke v4 agar reset otomatis bagi pengguna
         const cachedData = localStorage.getItem(CACHE_KEY);
         if (cachedData) {
             try {
                 let parsed = JSON.parse(cachedData);
                 if (parsed.success) {
-                    appData = parsed;
-                    ensureDataArrays();
-                    populateSettingsForm();
-                    updateUIAll();
-                    const loader = document.getElementById('global-loader');
-                    if (loader) loader.style.display = 'none'; 
+                    appData = parsed; ensureDataArrays(); populateSettingsForm(); updateUIAll();
+                    const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
                 }
             } catch (e) { console.error("Cache error", e); }
         }
 
         try {
             const res = await apiCall('getAppData');
-            const loader = document.getElementById('global-loader');
-            if (loader) loader.style.display = 'none';
+            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
 
             if (res.success) {
-                appData = res;
-                ensureDataArrays();
-                localStorage.setItem(CACHE_KEY, JSON.stringify(res)); 
-                populateSettingsForm();
-                updateUIAll();
+                appData = res; ensureDataArrays(); localStorage.setItem(CACHE_KEY, JSON.stringify(res)); 
+                populateSettingsForm(); updateUIAll();
             } else {
                 if (!cachedData) showToast("Gagal memuat data dari server: " + res.message, "error");
             }
         } catch (err) {
-            const loader = document.getElementById('global-loader');
-            if (loader) loader.style.display = 'none';
+            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
             if (!cachedData) showToast("Gagal terhubung ke Database. Pastikan URL API sudah benar.", "error");
         }
     }
@@ -869,10 +828,7 @@
           const res = await apiCall('verifyUserPinAccess', { pin: pinVal, allowedRole: pendingAllowedRole });
           if (res.success) {
               if (res.role === 'member') currentLoggedInMember = res.name;
-              const target = pendingTargetPage;
-              closePinModal();
-              showToast(res.message, "success");
-              switchPage(target);
+              const target = pendingTargetPage; closePinModal(); showToast(res.message, "success"); switchPage(target);
               if (target === 'member-smartphone') renderMemberAngsuran();
           } else { showToast(res.message, "error"); }
       } catch (err) { showToast("Error verifikasi: " + err.message, "error"); }
@@ -898,7 +854,7 @@
     function updateUIAll() {
       ensureDataArrays();
       
-      // Menggunakan try-catch agar jika satu render gagal, yang lain tetap jalan (ANTI-CRASH)
+      // Menggunakan try-catch agar jika satu render gagal, yang lain tidak ikut mati (Anti-Blank)
       try {
         let totalDepositTabungLocal = 0; appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
         let totalTabungMasukAll = 0; appData.tabungMasuk.forEach(r => totalTabungMasukAll += Number(r[2]) || 0);
@@ -926,7 +882,6 @@
             });
           }
         });
-
         const repMemberSel = document.getElementById('rep-filter-member');
         if (repMemberSel) {
           let currentSelected = repMemberSel.value;
@@ -943,70 +898,38 @@
       try { renderKasirAngsuran(); } catch(e){}
       try { renderLaporanHp(); } catch(e){}
       
-      if(currentLoggedInMember !== '') {
-          try { renderMemberAngsuran(); } catch(e){}
-      }
+      if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
     }
 
     function renderRekapDeposit() {
-      const tbody = document.getElementById('table-rekap-deposit-body');
-      if (!tbody) return;
-      if (appData.deposit.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit kontrak.</td></tr>';
-        return;
-      }
+      const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return;
+      if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit kontrak.</td></tr>'; return; }
       document.getElementById('rekap-total-deposit-count').innerText = 'Total: ' + appData.deposit.length + ' Data';
       let html = '';
       appData.deposit.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-                   <td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td>
-                   <td class="px-4 py-3">${row[1] || '-'}</td>
-                   <td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td>
-                   <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td>
-                 </tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`;
       });
       tbody.innerHTML = html;
     }
 
     function renderRekapTabungMasuk() {
-      const tbody = document.getElementById('table-rekap-tm-body');
-      if (!tbody) return;
-      if (appData.tabungMasuk.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>';
-        return;
-      }
+      const tbody = document.getElementById('table-rekap-tm-body'); if (!tbody) return;
+      if (appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>'; return; }
       document.getElementById('rekap-total-tm-count').innerText = 'Total: ' + appData.tabungMasuk.length + ' Data';
       let html = '';
       appData.tabungMasuk.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-                   <td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td>
-                   <td class="px-4 py-3">${row[1] || '-'}</td>
-                   <td class="px-4 py-3 text-white">${row[3] || '-'}</td>
-                   <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td>
-                 </tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`;
       });
       tbody.innerHTML = html;
     }
 
     function renderRekapTransaksiMember() {
-      const tbody = document.getElementById('table-rekap-trx-body');
-      if (!tbody) return;
-      if (appData.transaksi.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi member.</td></tr>';
-        return;
-      }
+      const tbody = document.getElementById('table-rekap-trx-body'); if (!tbody) return;
+      if (appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi member.</td></tr>'; return; }
       document.getElementById('rekap-total-trx-count').innerText = 'Total: ' + appData.transaksi.length + ' Data';
       let html = '';
       appData.transaksi.forEach(row => {
-        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-                   <td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td>
-                   <td class="px-4 py-3 text-xs">${row[1] || '-'}</td>
-                   <td class="px-4 py-3 font-semibold text-white">${row[2] || '-'}</td>
-                   <td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td>
-                   <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td>
-                   <td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td>
-                   <td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td>
-                 </tr>`;
+        html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2] || '-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`;
       });
       tbody.innerHTML = html;
     }
@@ -1015,18 +938,20 @@
       const sel = document.getElementById('pay-hp-id');
       if (!sel) return;
       sel.innerHTML = '<option value="" disabled selected>-- Pilih Member & Tagihan --</option>';
-      if (appData.angsuran.length > 0) {
-        appData.angsuran.forEach(a => {
-           const totalBln = Number(a[8]) || 0;
-           const terbayar = Number(a[9]) || 0;
-           if (terbayar < totalBln) {
-               const opt = document.createElement('option');
-               opt.value = a[0];
-               opt.innerText = `${a[1] || '-'} - ${a[2] || '-'} (Sisa ${totalBln - terbayar} Bln)`;
-               sel.appendChild(opt);
-           }
-        });
-      }
+      try {
+          if (appData.angsuran && appData.angsuran.length > 0) {
+            appData.angsuran.forEach(a => {
+               const totalBln = Number(a[8]) || 0;
+               const terbayar = Number(a[9]) || 0;
+               if (terbayar < totalBln) {
+                   const opt = document.createElement('option');
+                   opt.value = a[0];
+                   opt.innerText = `${a[1] || '-'} - ${a[2] || '-'} (Sisa ${totalBln - terbayar} Bln)`;
+                   sel.appendChild(opt);
+               }
+            });
+          }
+      } catch(e) { console.error("Dropdown rendering error:", e); }
     }
 
     function onPayHpChange() {
@@ -1049,96 +974,92 @@
       const tbody = document.getElementById('table-angsuran-body');
       if(!tbody) return;
       
-      if(appData.angsuran.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500">Belum ada data angsuran aktif saat ini.</td></tr>';
-          return;
+      try {
+          const dtAngsuran = appData.angsuran || [];
+          if(dtAngsuran.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-400">Data belum dimuat atau kosong. Jika merasa sudah mengisi, pastikan <strong class="text-white">Deploy New Version</strong> di Apps Script.</td></tr>';
+              return;
+          }
+          let html = '';
+          dtAngsuran.forEach(a => {
+              const nominal = Number(a[7]) || 0; const totalBulan = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0;
+              const sisaBulan = totalBulan - terbayar; const totalRp = terbayar * nominal; const sisaRp = sisaBulan * nominal;
+              
+              html += `
+                  <tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm">
+                      <td class="px-3 py-3 font-semibold text-white">${a[1] || '-'}</td>
+                      <td class="px-3 py-3 text-gray-300">${a[2] || '-'}</td>
+                      <td class="px-3 py-3 text-red-400 font-bold">${sisaBulan} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${sisaRp.toLocaleString('id-ID')}</span></td>
+                      <td class="px-3 py-3 text-[#00ffaa] font-bold">${terbayar} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${totalRp.toLocaleString('id-ID')}</span></td>
+                      <td class="px-3 py-3">
+                          <button onclick="gotoInputPembayaran('${a[0]}')" class="px-3 py-1.5 ${sisaBulan <= 0 ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-500'} text-white text-xs rounded transition-all" ${sisaBulan <= 0 ? 'disabled' : ''}>
+                              ${sisaBulan <= 0 ? 'LUNAS' : 'Bayar Angsuran'}
+                          </button>
+                      </td>
+                  </tr>
+              `;
+          });
+          tbody.innerHTML = html;
+      } catch(e) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-red-500 font-bold">Gagal render tabel. Wajib lakukan "Deploy -> New Version" di Google Apps Script!</td></tr>';
+          console.error("Render Kasir Angsuran Error:", e);
       }
-      let html = '';
-      appData.angsuran.forEach(a => {
-          const nominal = Number(a[7]) || 0;
-          const totalBulan = Number(a[8]) || 0;
-          const terbayar = Number(a[9]) || 0;
-          const sisaBulan = totalBulan - terbayar;
-          const totalRp = terbayar * nominal;
-          const sisaRp = sisaBulan * nominal;
-          
-          html += `
-              <tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm">
-                  <td class="px-3 py-3 font-semibold text-white">${a[1] || '-'}</td>
-                  <td class="px-3 py-3 text-gray-300">${a[2] || '-'}</td>
-                  <td class="px-3 py-3 text-red-400 font-bold">${sisaBulan} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${sisaRp.toLocaleString('id-ID')}</span></td>
-                  <td class="px-3 py-3 text-[#00ffaa] font-bold">${terbayar} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${totalRp.toLocaleString('id-ID')}</span></td>
-                  <td class="px-3 py-3">
-                      <button onclick="gotoInputPembayaran('${a[0]}')" class="px-3 py-1.5 ${sisaBulan <= 0 ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-500'} text-white text-xs rounded transition-all" ${sisaBulan <= 0 ? 'disabled' : ''}>
-                          ${sisaBulan <= 0 ? 'LUNAS' : 'Bayar Angsuran'}
-                      </button>
-                  </td>
-              </tr>
-          `;
-      });
-      tbody.innerHTML = html;
     }
 
     function renderLaporanHp() {
         const tbodyExcel = document.getElementById('table-hp-excel-body');
         if(!tbodyExcel) return;
         
-        let totModal = 0, totOmzet = 0, totUntung = 0;
-        let htmlExcel = '';
-        
-        if(appData.angsuran.length === 0) {
-           tbodyExcel.innerHTML = '<tr><td colspan="7" class="text-center p-4">Belum ada data</td></tr>';
-           return;
-        }
+        try {
+            let totModal = 0, totOmzet = 0, totUntung = 0; let htmlExcel = '';
+            const dtAngsuran = appData.angsuran || [];
+            if(dtAngsuran.length === 0) {
+               tbodyExcel.innerHTML = '<tr><td colspan="7" class="text-center p-4">Belum ada data atau Google Apps Script belum Deploy New Version.</td></tr>';
+               return;
+            }
 
-        appData.angsuran.forEach(a => {
-             const idTrx = a[0];
-             const nama = a[1];
-             const tipe = a[2];
-             const harga = Number(a[3]) || 0;
-             const bulanOrder = a[4];
-             const modal = Number(a[10]) || 0;
-             const untung = Number(a[11]) || 0;
-             
-             totModal += modal; totOmzet += harga; totUntung += untung;
-             
-             const myPayments = appData.detailAngsuran.filter(pay => pay[1] === idTrx);
-             myPayments.sort((x, y) => new Date(x[2]) - new Date(y[2]));
-             
-             const totalBln = Number(a[8]) || 1;
-             let totalBayar = 0;
-             
-             for(let i=1; i<=totalBln; i++) {
-                  const isFirst = (i === 1);
-                  const pay = myPayments[i-1];
-                  const nominalBayar = pay ? (Number(pay[3]) || 0) : '';
-                  const tglBayar = pay ? pay[2] : '';
-                  
-                  if(pay) totalBayar += nominalBayar;
-                  
-                  let colNama = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 align-top font-semibold">${nama || '-'}</td>` : '';
-                  let colBarang = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 align-top">${tipe || '-'}</td>` : '';
-                  let colWaktu = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 text-center align-top">${bulanOrder || '-'}</td>` : '';
-                  let colHarga = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 text-center align-top font-semibold">Rp ${harga.toLocaleString('id-ID')}</td>` : '';
-                  let textNominal = nominalBayar !== '' ? `Rp ${nominalBayar.toLocaleString('id-ID')}` : '';
-                  
-                  htmlExcel += `<tr>
-                      ${colNama}${colBarang}${colWaktu}${colHarga}
-                      <td class="border border-black p-1 text-center font-semibold">${i}</td>
-                      <td class="border border-black p-1 text-right pr-2">${textNominal}</td>
-                      <td class="border border-black p-1 text-center">${tglBayar}</td>
-                  </tr>`;
-             }
-             htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Total</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-blue-700">Rp ${totalBayar.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr>`;
-             const sisaRupiah = harga - totalBayar;
-             htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Sisa</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-red-600">Rp ${sisaRupiah.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr>`;
-             htmlExcel += `<tr class="bg-[#161b22]"><td colspan="7" class="border border-black h-3"></td></tr>`;
-        });
-        
-        tbodyExcel.innerHTML = htmlExcel;
-        document.getElementById('khp-tot-modal').innerText = 'Rp ' + totModal.toLocaleString('id-ID');
-        document.getElementById('khp-tot-omzet').innerText = 'Rp ' + totOmzet.toLocaleString('id-ID');
-        document.getElementById('khp-tot-untung').innerText = 'Rp ' + totUntung.toLocaleString('id-ID');
+            dtAngsuran.forEach(a => {
+                 const idTrx = a[0]; const nama = a[1]; const tipe = a[2]; const harga = Number(a[3]) || 0; const bulanOrder = a[4];
+                 const modal = Number(a[10]) || 0; const untung = Number(a[11]) || 0;
+                 totModal += modal; totOmzet += harga; totUntung += untung;
+                 
+                 const myPayments = (appData.detailAngsuran || []).filter(pay => pay[1] === idTrx);
+                 myPayments.sort((x, y) => new Date(x[2]) - new Date(y[2]));
+                 
+                 const totalBln = Number(a[8]) || 1; let totalBayar = 0;
+                 
+                 for(let i=1; i<=totalBln; i++) {
+                      const isFirst = (i === 1); const pay = myPayments[i-1]; const nominalBayar = pay ? (Number(pay[3]) || 0) : ''; const tglBayar = pay ? pay[2] : '';
+                      if(pay) totalBayar += nominalBayar;
+                      
+                      let colNama = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 align-top font-semibold">${nama || '-'}</td>` : '';
+                      let colBarang = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 align-top">${tipe || '-'}</td>` : '';
+                      let colWaktu = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 text-center align-top">${bulanOrder || '-'}</td>` : '';
+                      let colHarga = isFirst ? `<td rowspan="${totalBln + 2}" class="border border-black p-2 text-center align-top font-semibold">Rp ${harga.toLocaleString('id-ID')}</td>` : '';
+                      let textNominal = nominalBayar !== '' ? `Rp ${nominalBayar.toLocaleString('id-ID')}` : '';
+                      
+                      htmlExcel += `<tr>
+                          ${colNama}${colBarang}${colWaktu}${colHarga}
+                          <td class="border border-black p-1 text-center font-semibold">${i}</td>
+                          <td class="border border-black p-1 text-right pr-2">${textNominal}</td>
+                          <td class="border border-black p-1 text-center">${tglBayar}</td>
+                      </tr>`;
+                 }
+                 htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Total</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-blue-700">Rp ${totalBayar.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr>`;
+                 const sisaRupiah = harga - totalBayar;
+                 htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Sisa</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-red-600">Rp ${sisaRupiah.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr>`;
+                 htmlExcel += `<tr class="bg-[#161b22]"><td colspan="7" class="border border-black h-3"></td></tr>`;
+            });
+            
+            tbodyExcel.innerHTML = htmlExcel;
+            document.getElementById('khp-tot-modal').innerText = 'Rp ' + totModal.toLocaleString('id-ID');
+            document.getElementById('khp-tot-omzet').innerText = 'Rp ' + totOmzet.toLocaleString('id-ID');
+            document.getElementById('khp-tot-untung').innerText = 'Rp ' + totUntung.toLocaleString('id-ID');
+
+        } catch(e) {
+            tbodyExcel.innerHTML = '<tr><td colspan="7" class="text-center p-4 text-red-500 font-bold">Terjadi Kesalahan Render Laporan. Pastikan Google Apps Script sudah "Deploy New Version".</td></tr>';
+            console.error("Render Laporan HP Error:", e);
+        }
     }
 
     function gotoInputPembayaran(idAngsuran) {
@@ -1152,342 +1073,120 @@
       const container = document.getElementById('member-angsuran-content');
       container.innerHTML = '';
       
-      const myAngsuran = appData.angsuran.filter(a => a[1] === currentLoggedInMember);
-      if (myAngsuran.length === 0) {
-          container.innerHTML = '<div class="p-6 text-center text-gray-400 bg-[#161b22] border border-gray-800 rounded-xl">Belum ada data angsuran untuk akun Anda.</div>';
-          return;
-      }
-      
-      let fullHtml = '';
-      myAngsuran.forEach(a => {
-          const harga = Number(a[3]) || 0;
-          const dp = Number(a[5]) || 0;
-          const nominal = Number(a[7]) || 0;
-          const totalBulan = Number(a[8]) || 0;
-          const terbayar = Number(a[9]) || 0;
-          
-          const sisaBulan = totalBulan - terbayar;
-          const totalTerbayarRupiah = terbayar * nominal;
-          const sisaRupiah = harga - totalTerbayarRupiah; 
-          
-          let cardHtml = `
-              <div class="p-5 bg-[#161b22] border border-[#00ffaa]/30 rounded-xl mb-4 relative overflow-hidden">
-                  <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
-                      <h4 class="text-xl font-bold text-[#00ffaa] tracking-wide">${a[2]}</h4>
-                      <span class="text-xs bg-blue-900/40 text-blue-300 px-3 py-1.5 rounded-lg border border-blue-800 font-medium">Mulai Angsuran: ${a[6]}</span>
-                  </div>
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 text-sm text-gray-300">
-                      <div><span class="block text-xs text-gray-500 mb-1">Nama Member</span> <strong class="text-white">${a[1]}</strong></div>
-                      <div><span class="block text-xs text-gray-500 mb-1">Bulan Pembelian</span> <strong class="text-white">${a[4]}</strong></div>
-                      <div><span class="block text-xs text-gray-500 mb-1">Harga HP</span> <strong class="text-white">Rp ${harga.toLocaleString('id-ID')}</strong></div>
-                      <div><span class="block text-xs text-gray-500 mb-1">DP (Uang Muka)</span> <strong class="text-white">Rp ${dp.toLocaleString('id-ID')}</strong></div>
-                      
-                      <div class="md:col-span-2 p-3 bg-gray-800/40 rounded-lg border border-gray-700/50">
-                          <span class="block text-xs text-gray-400 mb-1">Nominal Angsuran per Bulan</span> 
-                          <strong class="text-xl text-[#00ffaa]">Rp ${nominal.toLocaleString('id-ID')}</strong>
-                      </div>
-                      
-                      <div class="p-3 bg-blue-900/20 rounded-lg border border-blue-900/30">
-                          <span class="block text-xs text-gray-400 mb-1">Total Sudah Dibayar</span> 
-                          <strong class="text-blue-300 text-lg">${terbayar} <span class="text-xs font-normal">Bulan</span></strong>
-                          <span class="block text-xs text-blue-400/70 mt-0.5">Rp ${totalTerbayarRupiah.toLocaleString('id-ID')}</span>
-                      </div>
-                      
-                      <div class="p-3 bg-red-900/20 rounded-lg border border-red-900/30">
-                          <span class="block text-xs text-gray-400 mb-1">Sisa Angsuran</span> 
-                          <strong class="text-red-400 text-lg">${sisaBulan} <span class="text-xs font-normal">Bulan</span></strong>
-                          <span class="block text-xs text-red-400/70 mt-0.5">Rp ${sisaRupiah.toLocaleString('id-ID')}</span>
-                      </div>
-                  </div>
-          `;
-          
-          const myHistory = appData.detailAngsuran.filter(h => h[1] === a[0]); 
-          myHistory.sort((x, y) => new Date(x[2]) - new Date(y[2]));
-          
-          if(myHistory.length > 0) {
-             let histTr = myHistory.map((h, idx) => `<tr class="border-b border-gray-800/50 hover:bg-gray-800/40">
-                          <td class="px-3 py-2 font-bold">${idx + 1}</td>
-                          <td class="px-3 py-2">${h[2]}</td>
-                          <td class="px-3 py-2 text-[#00ffaa] font-bold">Rp ${Number(h[3]).toLocaleString('id-ID')}</td>
-                          <td class="px-3 py-2 text-gray-500 font-mono">${h[0]}</td>
-                       </tr>`).join('');
-             cardHtml += `<div class="mt-4 border-t border-gray-700/50 pt-4">
-               <h5 class="text-sm font-bold text-white mb-2"><i class="fa-solid fa-clock-rotate-left mr-2 text-[#00ffaa]"></i>Riwayat Pembayaran Angsuran</h5>
-               <div class="overflow-x-auto rounded-lg border border-gray-800">
-                   <table class="w-full text-left text-xs text-gray-300">
-                     <thead class="bg-[#161b22]"><tr class="text-gray-400 border-b border-gray-800"><th class="px-3 py-2">Angsuran Ke-</th><th class="px-3 py-2">Tanggal Bayar</th><th class="px-3 py-2">Nominal Setoran</th><th class="px-3 py-2">ID Ref Pembayaran</th></tr></thead>
-                     <tbody>${histTr}</tbody>
-                   </table>
-               </div>
-             </div>`;
-          } else {
-             cardHtml += `<div class="mt-4 border-t border-gray-700/50 pt-4 text-xs text-gray-500 italic">Belum ada riwayat pembayaran yang tercatat.</div>`;
+      try {
+          const dtAngsuran = appData.angsuran || [];
+          const myAngsuran = dtAngsuran.filter(a => a[1] === currentLoggedInMember);
+          if (myAngsuran.length === 0) {
+              container.innerHTML = '<div class="p-6 text-center text-gray-400 bg-[#161b22] border border-gray-800 rounded-xl">Belum ada data angsuran untuk akun Anda.</div>';
+              return;
           }
           
-          cardHtml += `</div>`;
-          fullHtml += cardHtml;
-      });
-      container.innerHTML = fullHtml;
+          let fullHtml = '';
+          myAngsuran.forEach(a => {
+              const harga = Number(a[3]) || 0; const dp = Number(a[5]) || 0; const nominal = Number(a[7]) || 0; const totalBulan = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0;
+              const sisaBulan = totalBulan - terbayar; const totalTerbayarRupiah = terbayar * nominal; const sisaRupiah = harga - totalTerbayarRupiah; 
+              
+              let cardHtml = `
+                  <div class="p-5 bg-[#161b22] border border-[#00ffaa]/30 rounded-xl mb-4 relative overflow-hidden">
+                      <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                          <h4 class="text-xl font-bold text-[#00ffaa] tracking-wide">${a[2]}</h4>
+                          <span class="text-xs bg-blue-900/40 text-blue-300 px-3 py-1.5 rounded-lg border border-blue-800 font-medium">Mulai Angsuran: ${a[6]}</span>
+                      </div>
+                      <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 text-sm text-gray-300">
+                          <div><span class="block text-xs text-gray-500 mb-1">Nama Member</span> <strong class="text-white">${a[1]}</strong></div>
+                          <div><span class="block text-xs text-gray-500 mb-1">Bulan Pembelian</span> <strong class="text-white">${a[4]}</strong></div>
+                          <div><span class="block text-xs text-gray-500 mb-1">Harga HP</span> <strong class="text-white">Rp ${harga.toLocaleString('id-ID')}</strong></div>
+                          <div><span class="block text-xs text-gray-500 mb-1">DP (Uang Muka)</span> <strong class="text-white">Rp ${dp.toLocaleString('id-ID')}</strong></div>
+                          
+                          <div class="md:col-span-2 p-3 bg-gray-800/40 rounded-lg border border-gray-700/50">
+                              <span class="block text-xs text-gray-400 mb-1">Nominal Angsuran per Bulan</span> 
+                              <strong class="text-xl text-[#00ffaa]">Rp ${nominal.toLocaleString('id-ID')}</strong>
+                          </div>
+                          
+                          <div class="p-3 bg-blue-900/20 rounded-lg border border-blue-900/30">
+                              <span class="block text-xs text-gray-400 mb-1">Total Sudah Dibayar</span> 
+                              <strong class="text-blue-300 text-lg">${terbayar} <span class="text-xs font-normal">Bulan</span></strong>
+                              <span class="block text-xs text-blue-400/70 mt-0.5">Rp ${totalTerbayarRupiah.toLocaleString('id-ID')}</span>
+                          </div>
+                          
+                          <div class="p-3 bg-red-900/20 rounded-lg border border-red-900/30">
+                              <span class="block text-xs text-gray-400 mb-1">Sisa Angsuran</span> 
+                              <strong class="text-red-400 text-lg">${sisaBulan} <span class="text-xs font-normal">Bulan</span></strong>
+                              <span class="block text-xs text-red-400/70 mt-0.5">Rp ${sisaRupiah.toLocaleString('id-ID')}</span>
+                          </div>
+                      </div>
+              `;
+              
+              const myHistory = (appData.detailAngsuran || []).filter(h => h[1] === a[0]); 
+              myHistory.sort((x, y) => new Date(x[2]) - new Date(y[2]));
+              
+              if(myHistory.length > 0) {
+                 let histTr = myHistory.map((h, idx) => `<tr class="border-b border-gray-800/50 hover:bg-gray-800/40"><td class="px-3 py-2 font-bold">${idx + 1}</td><td class="px-3 py-2">${h[2]}</td><td class="px-3 py-2 text-[#00ffaa] font-bold">Rp ${Number(h[3]).toLocaleString('id-ID')}</td><td class="px-3 py-2 text-gray-500 font-mono">${h[0]}</td></tr>`).join('');
+                 cardHtml += `<div class="mt-4 border-t border-gray-700/50 pt-4">
+                   <h5 class="text-sm font-bold text-white mb-2"><i class="fa-solid fa-clock-rotate-left mr-2 text-[#00ffaa]"></i>Riwayat Pembayaran Angsuran</h5>
+                   <div class="overflow-x-auto rounded-lg border border-gray-800">
+                       <table class="w-full text-left text-xs text-gray-300"><thead class="bg-[#161b22]"><tr class="text-gray-400 border-b border-gray-800"><th class="px-3 py-2">Angsuran Ke-</th><th class="px-3 py-2">Tanggal Bayar</th><th class="px-3 py-2">Nominal Setoran</th><th class="px-3 py-2">ID Ref Pembayaran</th></tr></thead><tbody>${histTr}</tbody></table>
+                   </div>
+                 </div>`;
+              } else { cardHtml += `<div class="mt-4 border-t border-gray-700/50 pt-4 text-xs text-gray-500 italic">Belum ada riwayat pembayaran yang tercatat.</div>`; }
+              
+              cardHtml += `</div>`;
+              fullHtml += cardHtml;
+          });
+          container.innerHTML = fullHtml;
+      } catch(e) {
+          container.innerHTML = '<div class="p-6 text-center text-red-500 bg-[#161b22] border border-gray-800 rounded-xl">Error memuat data member. Refresh aplikasi.</div>';
+          console.error("Render Member Error:", e);
+      }
     }
 
     function switchPage(pageId) {
       const pages = ['dashboard', 'publik', 'kasir', 'admin', 'gas-portal', 'smartphone-portal', 'member-smartphone', 'kasir-smartphone'];
       pages.forEach(p => {
-        const pageEl = document.getElementById('page-' + p);
-        if (pageEl) { pageEl.classList.add('hidden'); }
-        const navBtn = document.getElementById('nav-' + p);
-        if (navBtn) { navBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-gray-800 hover:text-white cursor-pointer"; }
+        const pageEl = document.getElementById('page-' + p); if (pageEl) { pageEl.classList.add('hidden'); }
+        const navBtn = document.getElementById('nav-' + p); if (navBtn) { navBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-gray-800 hover:text-white cursor-pointer"; }
       });
-      const targetPage = document.getElementById('page-' + pageId);
-      if (targetPage) targetPage.classList.remove('hidden');
-      const activeNav = document.getElementById('nav-' + pageId);
-      if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer";
+      const targetPage = document.getElementById('page-' + pageId); if (targetPage) targetPage.classList.remove('hidden');
+      const activeNav = document.getElementById('nav-' + pageId); if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer";
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function switchKasirSub(subId) {
       const subs = ['deposit', 'harga', 'masuk', 'member', 'laporan'];
       subs.forEach(s => {
-        const subEl = document.getElementById('kasir-sub-' + s);
-        if (subEl) subEl.classList.add('hidden');
-        const btn = document.getElementById('ksub-' + s);
-        if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
+        const subEl = document.getElementById('kasir-sub-' + s); if (subEl) subEl.classList.add('hidden');
+        const btn = document.getElementById('ksub-' + s); if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
       });
-      const targetSub = document.getElementById('kasir-sub-' + subId);
-      if (targetSub) targetSub.classList.remove('hidden');
-      const activeBtn = document.getElementById('ksub-' + subId);
-      if (activeBtn) activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
+      const targetSub = document.getElementById('kasir-sub-' + subId); if (targetSub) targetSub.classList.remove('hidden');
+      const activeBtn = document.getElementById('ksub-' + subId); if (activeBtn) activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
     }
 
     function switchKasirHpSub(subId) {
       const subs = ['baru', 'bayar', 'laporan'];
       subs.forEach(s => {
-        const subEl = document.getElementById('kasir-hp-' + s);
-        if (subEl) subEl.classList.add('hidden');
-        const btn = document.getElementById('btn-khp-' + s);
-        if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
+        const subEl = document.getElementById('kasir-hp-' + s); if (subEl) subEl.classList.add('hidden');
+        const btn = document.getElementById('btn-khp-' + s); if (btn) btn.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer";
       });
-      const targetSub = document.getElementById('kasir-hp-' + subId);
-      if (targetSub) targetSub.classList.remove('hidden');
-      const activeBtn = document.getElementById('btn-khp-' + subId);
-      if (activeBtn) activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
-    }
-
-    function calcDepositTabung() {
-      const nominal = parseCleanNumber(document.getElementById('dep-nominal').value);
-      const hargaModalGas = appData.settings ? parseCleanNumber(appData.settings.hargaModalGas) : 0;
-      const totalTabung = hargaModalGas > 0 ? Math.floor(nominal / hargaModalGas) : 0;
-      const totalTabungInput = document.getElementById('dep-totaltabung');
-      if (totalTabungInput) totalTabungInput.value = totalTabung.toLocaleString('id-ID');
-    }
-
-    function onJenisTransaksiChange() { calcTransaksiTotal(); }
-
-    async function calcTransaksiTotal() {
-      const jenis = document.getElementById('trx-jenis').value;
-      const jumlahTabung = parseCleanNumber(document.getElementById('trx-jumlahtabung').value);
-      let hargaSatuan = 0;
-      if (appData && appData.settings) {
-        if (jenis === 'Penjualan Gas') hargaSatuan = parseCleanNumber(appData.settings.hargaJualGas);
-        else if (jenis === 'Penjualan Tabung Kosong') hargaSatuan = parseCleanNumber(appData.settings.hargaJualTabung);
-      }
-      if (hargaSatuan === 0) return;
-      let totalRupiah = jumlahTabung * hargaSatuan;
-      const rupiahInput = document.getElementById('trx-jumlahrupiah');
-      if (rupiahInput) rupiahInput.value = totalRupiah.toLocaleString('id-ID');
-    }
-
-    function filterTabungMasukPublik() {
-      const startEl = document.getElementById('filter-start-date'); const endEl = document.getElementById('filter-end-date');
-      const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
-      let filteredTM = appData.tabungMasuk;
-
-      if (start && end) {
-        filteredTM = appData.tabungMasuk.filter(row => {
-          const tgl = row[1];
-          if (start && tgl < start) return false;
-          if (end && tgl > end) return false;
-          return true;
-        });
-      }
-
-      const tbody = document.getElementById('table-publik-masuk-body');
-      if (tbody) {
-          tbody.innerHTML = '';
-          if (filteredTM.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Silakan pilih rentang tanggal atau belum ada data.</td></tr>';
-          } else {
-              filteredTM.forEach(row => {
-                const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-                tr.innerHTML = `<td class="px-4 py-3 text-xs text-gray-400">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td>`;
-                tbody.appendChild(tr);
-              });
-          }
-      }
-
-      let sumFilteredTabungMasuk = 0; filteredTM.forEach(r => sumFilteredTabungMasuk += Number(r[2]) || 0);
-      let totalDepositTabungLocal = 0; appData.deposit.forEach(r => totalDepositTabungLocal += Number(r[3]) || 0);
-      let sisaTabungAvailable = totalDepositTabungLocal - sumFilteredTabungMasuk;
-      const pubTabungMasukEl = document.getElementById('pub-tabung-masuk'); if (pubTabungMasukEl) pubTabungMasukEl.innerText = sumFilteredTabungMasuk.toLocaleString('id-ID');
-      const pubSisa = document.getElementById('pub-sisa-tabung'); if (pubSisa) pubSisa.innerText = sisaTabungAvailable.toLocaleString('id-ID');
-    }
-
-    function resetFilterPublik() {
-      const startEl = document.getElementById('filter-start-date'); const endEl = document.getElementById('filter-end-date');
-      if (startEl) startEl.value = ''; if (endEl) endEl.value = '';
-      filterTabungMasukPublik();
-    }
-
-    function renderLaporanTable() {
-      const startEl = document.getElementById('rep-start'); const endEl = document.getElementById('rep-end');
-      const filterJenisEl = document.getElementById('rep-filter-jenis'); const filterMemberEl = document.getElementById('rep-filter-member');
-      const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
-      const filterJenis = filterJenisEl ? filterJenisEl.value : 'semua'; const filterMember = filterMemberEl ? filterMemberEl.value : 'semua';
-
-      const modalGas = appData.settings ? parseCleanNumber(appData.settings.hargaModalGas) : 0;
-      const modalTabung = appData.settings ? parseCleanNumber(appData.settings.hargaModalTabung) : 0;
-      const jualGas = appData.settings ? parseCleanNumber(appData.settings.hargaJualGas) : 0;
-      const jualTabung = appData.settings ? parseCleanNumber(appData.settings.hargaJualTabung) : 0;
-
-      const baseFiltered = appData.transaksi.filter(row => {
-        const tgl = row[1]; const jenisTrx = row[3];
-        if (start && tgl < start) return false;
-        if (end && tgl > end) return false;
-        if (filterJenis !== 'semua' && jenisTrx !== filterJenis) return false;
-        return true;
-      });
-
-      let totalProfitBersihAll = 0;
-      baseFiltered.forEach(row => {
-        const jenis = row[3]; const volume = Number(row[5]) || 0; let profitSatuan = 0;
-        if (jenis === 'Penjualan Gas') profitSatuan = jualGas - modalGas;
-        else if (jenis === 'Penjualan Tabung Kosong') profitSatuan = jualTabung - modalTabung;
-        totalProfitBersihAll += (volume * profitSatuan);
-      });
-
-      const tableFiltered = baseFiltered.filter(row => {
-        const namaMember = row[2];
-        if (filterMember !== 'semua' && namaMember !== filterMember) return false;
-        return true;
-      });
-
-      const tbody = document.getElementById('table-laporan-body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      let totalProfitBersihMember = 0; let totalVolumeAll = 0;
-      if (tableFiltered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi ditemukan pada filter ini.</td></tr>';
-      }
-
-      tableFiltered.forEach(row => {
-        const namaMember = row[2]; const jenis = row[3]; const metode = row[4]; const volume = Number(row[5]) || 0; const totalRupiah = Number(row[6]) || 0;
-        let profitSatuan = 0;
-        if (jenis === 'Penjualan Gas') profitSatuan = jualGas - modalGas;
-        else if (jenis === 'Penjualan Tabung Kosong') profitSatuan = jualTabung - modalTabung;
-        
-        let profitBersihBaris = volume * profitSatuan;
-        totalProfitBersihMember += profitBersihBaris; totalVolumeAll += volume;
-
-        const tr = document.createElement('tr'); tr.className = 'border-b border-gray-800 hover:bg-gray-800/40';
-        tr.innerHTML = `<td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${namaMember}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${metode}</span></td><td class="px-4 py-3">${volume.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${totalRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profitBersihBaris.toLocaleString('id-ID')}</td>`;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('rep-total-profit').innerText = 'Rp ' + totalProfitBersihAll.toLocaleString('id-ID');
-      document.getElementById('rep-member-profit').innerText = 'Rp ' + totalProfitBersihMember.toLocaleString('id-ID');
-      document.getElementById('rep-total-setoran').innerHTML = `<span id="rep-total-volume">${totalVolumeAll.toLocaleString('id-ID')}</span> Tabung`;
+      const targetSub = document.getElementById('kasir-hp-' + subId); if (targetSub) targetSub.classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-khp-' + subId); if (activeBtn) activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
     }
 
     function executeSafeSubmit(btnId, submitFunction) {
       const btn = document.getElementById(btnId);
       if (!btn || btn.disabled) return;
-      btn.disabled = true;
-      const originalText = btn.innerText; btn.innerText = "Memproses...";
+      btn.disabled = true; const originalText = btn.innerText; btn.innerText = "Memproses...";
       submitFunction(() => { btn.disabled = false; btn.innerText = originalText; });
-    }
-
-    async function handleHargaSubmit(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-harga', async (done) => {
-        const payload = { hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), hargaModalTabung: parseCleanNumber(document.getElementById('hrg-modal-tabung').value), hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) };
-        try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); }
-        } catch (err) { showToast("Error: " + err.message, "error"); } finally { done(); }
-      });
-    }
-
-    function handleHargaUpdate(e) { handleHargaSubmit(e); }
-
-    async function handleDepositSubmit(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-dep', async (done) => {
-        const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) };
-        try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); document.getElementById('dep-id').value = ""; document.getElementById('btn-update-dep').classList.add('hidden'); document.getElementById('btn-submit-dep').classList.remove('hidden'); e.target.reset(); document.getElementById('dep-totaltabung').value = "0"; } else { showToast(res.message, "error"); }
-        } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); }
-      });
-    }
-
-    function handleDepositUpdate(e) { handleDepositSubmit(e); }
-    function editDepositData() {
-      if (!appData.deposit || appData.deposit.length === 0) return;
-      let lastDep = appData.deposit[0]; 
-      document.getElementById('dep-id').value = lastDep[0]; document.getElementById('dep-tanggal').value = lastDep[1]; document.getElementById('dep-nominal').value = Number(lastDep[2] || 0).toLocaleString('id-ID');
-      calcDepositTabung();
-      document.getElementById('btn-submit-dep').classList.add('hidden'); document.getElementById('btn-update-dep').classList.remove('hidden');
-      showToast("Form diisi dengan data deposit terakhir untuk diperbarui.", "success");
-    }
-
-    async function handleTabungMasukSubmit(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-tm', async (done) => {
-        const payload = { idMasuk: document.getElementById('tm-id').value, tanggal: document.getElementById('tm-tanggal').value, tujuan: document.getElementById('tm-tujuan').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value) };
-        try { const res = await apiCall('saveTabungMasuk', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); document.getElementById('tm-id').value = ""; document.getElementById('btn-update-tm').classList.add('hidden'); document.getElementById('btn-submit-tm').classList.remove('hidden'); e.target.reset(); } else { showToast(res.message, "error"); }
-        } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); }
-      });
-    }
-
-    function handleTabungMasukUpdate(e) { handleTabungMasukSubmit(e); }
-    function editTabungMasukData() {
-      if (!appData.tabungMasuk || appData.tabungMasuk.length === 0) return;
-      let lastTm = appData.tabungMasuk[0]; 
-      document.getElementById('tm-id').value = lastTm[0]; document.getElementById('tm-tanggal').value = lastTm[1]; document.getElementById('tm-jumlah').value = Number(lastTm[2] || 0).toLocaleString('id-ID'); document.getElementById('tm-tujuan').value = lastTm[3] || '';
-      document.getElementById('btn-submit-tm').classList.add('hidden'); document.getElementById('btn-update-tm').classList.remove('hidden');
-      showToast("Form diisi dengan data tabung keluar terakhir untuk diperbarui.", "success");
-    }
-
-    async function handleTransaksiMemberSubmit(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-trx', async (done) => {
-        const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) };
-        try { const res = await apiCall('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); document.getElementById('trx-id').value = ""; document.getElementById('btn-update-trx').classList.add('hidden'); document.getElementById('btn-submit-trx').classList.remove('hidden'); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = "0"; } else { showToast(res.message, "error"); }
-        } catch (err) { showToast("Error: " + err.message, "error"); } finally { done(); }
-      });
-    }
-
-    function handleTransaksiMemberUpdate(e) { handleTransaksiMemberSubmit(e); }
-    function editTransaksiData() {
-      if (!appData.transaksi || appData.transaksi.length === 0) return;
-      let lastTrx = appData.transaksi[0];
-      document.getElementById('trx-id').value = lastTrx[0]; document.getElementById('trx-tanggal').value = lastTrx[1]; document.getElementById('trx-namamember').value = lastTrx[2]; document.getElementById('trx-jenis').value = lastTrx[3]; document.getElementById('trx-metode').value = lastTrx[4]; document.getElementById('trx-jumlahtabung').value = Number(lastTrx[5] || 0).toLocaleString('id-ID');
-      calcTransaksiTotal();
-      document.getElementById('btn-submit-trx').classList.add('hidden'); document.getElementById('btn-update-trx').classList.remove('hidden');
-      showToast("Form diisi dengan data transaksi terakhir untuk diperbarui.", "success");
     }
 
     async function handleAngsuranSubmit(e) {
       e.preventDefault();
       executeSafeSubmit('btn-submit-angsuran', async (done) => {
         const payload = {
-          namaMember: document.getElementById('ang-member').value,
-          tipeHp: document.getElementById('ang-tipe').value,
-          hargaModal: parseCleanNumber(document.getElementById('ang-modal').value),
-          hargaHp: parseCleanNumber(document.getElementById('ang-harga').value),
-          keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value),
-          bulanPembelian: document.getElementById('ang-bulan').value,
-          dp: parseCleanNumber(document.getElementById('ang-dp').value),
-          tglAngsuran: document.getElementById('ang-tgl').value,
-          nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value),
-          totalBulan: parseInt(document.getElementById('ang-totalbulan').value)
+          namaMember: document.getElementById('ang-member').value, tipeHp: document.getElementById('ang-tipe').value,
+          hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value),
+          keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value,
+          dp: parseCleanNumber(document.getElementById('ang-dp').value), tglAngsuran: document.getElementById('ang-tgl').value,
+          nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value)
         };
         try {
             const res = await apiCall('saveAngsuranBaru', payload);
