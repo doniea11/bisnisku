@@ -155,7 +155,6 @@
          <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
            <i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Kasir Angsuran Smartphone
          </h2>
-         <!-- Form Input Angsuran -->
          <form id="form-angsuran" onsubmit="handleAngsuranSubmit(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 border-b border-gray-800 pb-6">
            <div class="md:col-span-2">
              <label class="block text-xs text-gray-400 mb-1">Nama Member (Input Manual)</label>
@@ -194,7 +193,6 @@
            </div>
          </form>
          
-         <!-- Table Rekap Angsuran Kasir -->
          <h3 class="text-lg font-semibold text-white mb-3">Tabel Angsuran Aktif</h3>
          <div class="overflow-x-auto rounded-xl border border-gray-800">
             <table class="w-full text-left text-sm text-gray-300">
@@ -247,7 +245,6 @@
           </div>
         </div>
 
-        <!-- Tabel Riwayat Tabung Keluar -->
         <div class="mb-8">
           <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Tabung Keluar</h3>
           <div class="overflow-x-auto rounded-xl border border-gray-800">
@@ -556,7 +553,6 @@
                 <option value="Penjualan Gas">Penjualan Gas</option>
                 <option value="Penjualan Tabung Kosong">Penjualan Tabung Kosong</option>
               </select>
-              <!-- Dropdown Filter Member Baru -->
               <select id="rep-filter-member" class="bg-[#161b22] border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white">
                 <option value="semua">Semua Member</option>
               </select>
@@ -737,7 +733,7 @@
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxppbc5ipuc0_CCNFQ4lCJvI9SwZ0eAWYR8J99G3OWvojFWdhb9DN7AiBFC3PJ34m8/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB_HLNd0qfa2Pu4Ki_BxXGvL4CMw19TM5EifGH99a3lZTxF2d5xD2QgRR0PT3IinCc/exec';
 
     let appData = {
       adminPinSet: "122009", 
@@ -764,11 +760,6 @@
       setupSmartEnterNavigation();
       switchPage('dashboard');
       loadBackendData();
-      
-      setTimeout(() => {
-        const loader = document.getElementById('global-loader');
-        if (loader && loader.style.display !== 'none') loader.style.display = 'none';
-      }, 15000);
     });
 
     function setupSmartEnterNavigation() {
@@ -951,6 +942,21 @@
     }
 
     async function loadBackendData() {
+        // 1. BACA CACHE LOKAL (Tampil Secepat Kilat / 0 Detik)
+        const cachedData = localStorage.getItem('masdonie_data_cache');
+        if (cachedData) {
+            try {
+                appData = JSON.parse(cachedData);
+                populateSettingsForm();
+                updateUIAll();
+                const loader = document.getElementById('global-loader');
+                if (loader) loader.style.display = 'none'; // Matikan loading spinner instan
+            } catch (e) {
+                console.error("Cache error", e);
+            }
+        }
+
+        // 2. SINKRONISASI DATA TERBARU DARI DATABASE DI BACKGROUND
         try {
             const res = await apiCall('getAppData');
             const loader = document.getElementById('global-loader');
@@ -958,15 +964,17 @@
 
             if (res.success) {
                 appData = res;
+                // Update Cache Lokal dengan data paling baru dari server
+                localStorage.setItem('masdonie_data_cache', JSON.stringify(res)); 
                 populateSettingsForm();
                 updateUIAll();
             } else {
-                showToast("Gagal memuat data: " + res.message, "error");
+                if (!cachedData) showToast("Gagal memuat data: " + res.message, "error");
             }
         } catch (err) {
             const loader = document.getElementById('global-loader');
             if (loader) loader.style.display = 'none';
-            showToast("Error koneksi server: " + err.message, "error");
+            if (!cachedData) showToast("Gagal terhubung ke Database. Pastikan URL API sudah benar.", "error");
         }
     }
 
@@ -1049,7 +1057,7 @@
       renderRekapTabungMasuk();
       renderRekapTransaksiMember();
 
-      // ang-member dihapus dari daftar karena merupakan text input untuk smartphone
+      // Setup dropdown select options (tanpa ang-member)
       const memberSelects = ['trx-namamember', 'reset-id-member', 'tm-tujuan'];
       memberSelects.forEach(selId => {
         const sel = document.getElementById(selId);
