@@ -349,7 +349,12 @@
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <div class="flex justify-between items-start">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-key text-[#00ffaa] mr-2"></i> Ubah Password Super Admin</h3>
-              <button type="button" id="btn-tog-admin" onclick="handleTogglePinReq('REQ_PIN_ADMIN')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+              <div class="flex items-center gap-2">
+                <span id="text-tog-admin" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MEMUAT...</span>
+                <button type="button" id="btn-tog-admin" onclick="handleTogglePinReq('REQ_PIN_ADMIN')" class="relative inline-flex h-6 w-12 items-center rounded-full bg-gray-700 transition-colors duration-300 focus:outline-none cursor-pointer shadow-inner border border-gray-600">
+                  <span id="dot-tog-admin" class="inline-block h-4 w-4 transform rounded-full bg-gray-400 transition-transform duration-300 translate-x-1"></span>
+                </button>
+              </div>
             </div>
             <form onsubmit="handleUpdateAdminPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="adm-new-pin1" required placeholder="Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="adm-new-pin2" required placeholder="Konfirmasi Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-adm-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Baru</button></form>
           </div>
@@ -357,7 +362,12 @@
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <div class="flex justify-between items-start">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-fire-flame-curved text-[#00ffaa] mr-2"></i> Reset Password Kasir Gas</h3>
-              <button type="button" id="btn-tog-kgas" onclick="handleTogglePinReq('REQ_PIN_KASIR_GAS')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+              <div class="flex items-center gap-2">
+                <span id="text-tog-kgas" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MEMUAT...</span>
+                <button type="button" id="btn-tog-kgas" onclick="handleTogglePinReq('REQ_PIN_KASIR_GAS')" class="relative inline-flex h-6 w-12 items-center rounded-full bg-gray-700 transition-colors duration-300 focus:outline-none cursor-pointer shadow-inner border border-gray-600">
+                  <span id="dot-tog-kgas" class="inline-block h-4 w-4 transform rounded-full bg-gray-400 transition-transform duration-300 translate-x-1"></span>
+                </button>
+              </div>
             </div>
             <form onsubmit="handleResetKasirGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="kg-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="kg-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-kg-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir Gas</button></form>
           </div>
@@ -365,7 +375,12 @@
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <div class="flex justify-between items-start">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-mobile-screen text-[#00ffaa] mr-2"></i> Reset Password Kasir Smartphone</h3>
-              <button type="button" id="btn-tog-khp" onclick="handleTogglePinReq('REQ_PIN_KASIR_HP')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+              <div class="flex items-center gap-2">
+                <span id="text-tog-khp" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MEMUAT...</span>
+                <button type="button" id="btn-tog-khp" onclick="handleTogglePinReq('REQ_PIN_KASIR_HP')" class="relative inline-flex h-6 w-12 items-center rounded-full bg-gray-700 transition-colors duration-300 focus:outline-none cursor-pointer shadow-inner border border-gray-600">
+                  <span id="dot-tog-khp" class="inline-block h-4 w-4 transform rounded-full bg-gray-400 transition-transform duration-300 translate-x-1"></span>
+                </button>
+              </div>
             </div>
             <form onsubmit="handleResetKasirHpPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="khp-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="khp-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-khp-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir HP</button></form>
           </div>
@@ -373,7 +388,12 @@
           <div class="glass-card p-6 rounded-2xl space-y-4">
             <div class="flex justify-between items-start">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-pie text-[#00ffaa] mr-2"></i> Reset PIN Informasi Gas</h3>
-              <button type="button" id="btn-tog-igas" onclick="handleTogglePinReq('REQ_PIN_INFO_GAS')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+              <div class="flex items-center gap-2">
+                <span id="text-tog-igas" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MEMUAT...</span>
+                <button type="button" id="btn-tog-igas" onclick="handleTogglePinReq('REQ_PIN_INFO_GAS')" class="relative inline-flex h-6 w-12 items-center rounded-full bg-gray-700 transition-colors duration-300 focus:outline-none cursor-pointer shadow-inner border border-gray-600">
+                  <span id="dot-tog-igas" class="inline-block h-4 w-4 transform rounded-full bg-gray-400 transition-transform duration-300 translate-x-1"></span>
+                </button>
+              </div>
             </div>
             <form onsubmit="handleResetInfoGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">PIN Baru</label><input type="password" id="ig-new-pin1" required placeholder="PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi PIN Baru</label><input type="password" id="ig-new-pin2" required placeholder="Konfirmasi PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-ig-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan PIN Informasi Gas</button></form>
           </div>
@@ -569,16 +589,29 @@
       const elModalContent = document.getElementById('digital-modal-content');
       if (elModalContent) elModalContent.innerHTML = appData.settings.digitalNarasi || '<p class="text-center text-gray-500">Narasi belum diatur.</p>';
       
-      const setToggle = (id, isActive) => {
-         const btn = document.getElementById(id);
-         if(!btn) return;
-         if(isActive) { btn.innerText = "AKTIF"; btn.className = "px-3 py-1 rounded text-xs font-bold bg-[#00ffaa] text-gray-900 border border-transparent shadow-lg cursor-pointer"; }
-         else { btn.innerText = "NONAKTIF"; btn.className = "px-3 py-1 rounded text-xs font-bold bg-red-500 text-white border border-transparent shadow-lg cursor-pointer"; }
+      const setToggle = (baseId, isActive) => {
+         const btn = document.getElementById('btn-tog-' + baseId);
+         const dot = document.getElementById('dot-tog-' + baseId);
+         const txt = document.getElementById('text-tog-' + baseId);
+         if(!btn || !dot || !txt) return;
+
+         if(isActive) {
+             txt.innerText = "AKTIF";
+             txt.className = "text-[10px] font-bold text-[#00ffaa] uppercase tracking-wider";
+             btn.className = "relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none cursor-pointer shadow-[0_0_10px_rgba(0,255,170,0.3)] bg-[#00ffaa]";
+             dot.className = "inline-block h-4 w-4 transform rounded-full bg-gray-900 transition duration-300 translate-x-7";
+         } else {
+             txt.innerText = "NONAKTIF";
+             txt.className = "text-[10px] font-bold text-red-500 uppercase tracking-wider";
+             btn.className = "relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none cursor-pointer shadow-none bg-gray-600";
+             dot.className = "inline-block h-4 w-4 transform rounded-full bg-gray-300 transition duration-300 translate-x-1";
+         }
       };
-      setToggle('btn-tog-admin', appData.settings.reqPinAdmin);
-      setToggle('btn-tog-kgas', appData.settings.reqPinKasirGas);
-      setToggle('btn-tog-khp', appData.settings.reqPinKasirHp);
-      setToggle('btn-tog-igas', appData.settings.reqPinInfoGas);
+
+      setToggle('admin', appData.settings.reqPinAdmin);
+      setToggle('kgas', appData.settings.reqPinKasirGas);
+      setToggle('khp', appData.settings.reqPinKasirHp);
+      setToggle('igas', appData.settings.reqPinInfoGas);
     }
 
     async function handleTogglePinReq(targetKey) {
