@@ -437,7 +437,7 @@
     // ==========================================
     // GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzUuIB8KZdI2KPsAkmkKBupJmJpvrXQq1HsB_ze93BopjA1-lRZKCi8L0PpTcUUanYP/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzgPlh_1rd0uNfTuS57sH8NsmBkPbGZbqMiKGZja82gl3WywfKdFty_59ZC3q23OYw_/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -1277,4 +1277,54 @@
     async function handleUpdateAdminPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-pin', async (done) => { const payload = { targetKey: 'ADMIN_PIN', newPin1: document.getElementById('adm-new-pin1').value, newPin2: document.getElementById('adm-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-kg-pin', async (done) => { const payload = { targetKey: 'KASIR_GAS_PIN', newPin1: document.getElementById('kg-new-pin1').value, newPin2: document.getElementById('kg-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirHpPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-khp-pin', async (done) => { const payload = { targetKey: 'KASIR_HP_PIN', newPin1: document.getElementById('khp-new-pin1').value, newPin2: document.getElementById('khp-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success
+    async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    
+    async function handleUpdateNarasi(e) {
+      e.preventDefault();
+      executeSafeSubmit('btn-submit-adm-narasi', async (done) => {
+        const payload = { narasi: document.getElementById('adm-narasi-digital').value };
+        try {
+          const res = await apiCall('saveDigitalNarasi', payload);
+          if (res.success) { showToast(res.message, "success"); loadBackendData(); }
+          else { showToast(res.message, "error"); }
+        } catch(err) { showToast("Error: " + err.message, "error"); }
+        finally { done(); }
+      });
+    }
+
+    async function handleAddMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-add-member-gas', async (done) => { const payload = { namaMember: document.getElementById('add-nama-member-gas').value, pinMember: document.getElementById('add-pin-member-gas').value }; try { const res = await apiCall('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleResetMemberPinGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin', async (done) => { const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleResetMemberPinHp(event) { 
+      event.preventDefault(); 
+      executeSafeSubmit('btn-submit-reset-pin-hp', async (done) => { 
+        const idMemberInput = document.getElementById('reset-id-member-hp').value;
+        const newPinInput = document.getElementById('reset-new-pin-hp').value.trim();
+        
+        const isIdTaken = appData.members.some(m => {
+            const mId = (m[2] || '').toString().trim();
+            const mMemberId = (m[0] || '').toString().trim();
+            return mId === newPinInput && mMemberId !== idMemberInput;
+        });
+        
+        if (isIdTaken) {
+            showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error");
+            done();
+            return;
+        }
+
+        const payload = { idMember: idMemberInput, newPIN: newPinInput }; 
+        try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } 
+      }); 
+    }
+
+    function showToast(message, type = "success") {
+      const toast = document.getElementById('toast-notification'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message'); const icon = document.getElementById('toast-icon'); const title = document.getElementById('toast-title');
+      if (!toast || !msg || !icon) return; msg.innerText = message;
+      if (type === "success") { title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; } 
+      else { title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; }
+      toast.classList.remove('opacity-0', 'pointer-events-none'); toast.classList.add('opacity-100', 'pointer-events-auto');
+      setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
+    }
+  </script>
+</body>
+</html>
