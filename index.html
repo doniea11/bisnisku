@@ -346,10 +346,37 @@
       <div id="admin-panel-content" class="block space-y-6">
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="glass-card p-6 rounded-2xl space-y-4"><h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-key text-[#00ffaa] mr-2"></i> Ubah Password Super Admin</h3><form onsubmit="handleUpdateAdminPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="adm-new-pin1" required placeholder="Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="adm-new-pin2" required placeholder="Konfirmasi Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-adm-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Baru</button></form></div>
-          <div class="glass-card p-6 rounded-2xl space-y-4"><h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-fire-flame-curved text-[#00ffaa] mr-2"></i> Reset Password Kasir Gas</h3><form onsubmit="handleResetKasirGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="kg-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="kg-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-kg-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir Gas</button></form></div>
-          <div class="glass-card p-6 rounded-2xl space-y-4"><h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-mobile-screen text-[#00ffaa] mr-2"></i> Reset Password Kasir Smartphone</h3><form onsubmit="handleResetKasirHpPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="khp-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="khp-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-khp-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir HP</button></form></div>
-          <div class="glass-card p-6 rounded-2xl space-y-4"><h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-pie text-[#00ffaa] mr-2"></i> Reset PIN Informasi Gas</h3><form onsubmit="handleResetInfoGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">PIN Baru</label><input type="password" id="ig-new-pin1" required placeholder="PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi PIN Baru</label><input type="password" id="ig-new-pin2" required placeholder="Konfirmasi PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-ig-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan PIN Informasi Gas</button></form></div>
+          <div class="glass-card p-6 rounded-2xl space-y-4">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-key text-[#00ffaa] mr-2"></i> Ubah Password Super Admin</h3>
+              <button type="button" id="btn-tog-admin" onclick="handleTogglePinReq('REQ_PIN_ADMIN')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+            </div>
+            <form onsubmit="handleUpdateAdminPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="adm-new-pin1" required placeholder="Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="adm-new-pin2" required placeholder="Konfirmasi Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-adm-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Baru</button></form>
+          </div>
+          
+          <div class="glass-card p-6 rounded-2xl space-y-4">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-fire-flame-curved text-[#00ffaa] mr-2"></i> Reset Password Kasir Gas</h3>
+              <button type="button" id="btn-tog-kgas" onclick="handleTogglePinReq('REQ_PIN_KASIR_GAS')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+            </div>
+            <form onsubmit="handleResetKasirGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="kg-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="kg-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-kg-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir Gas</button></form>
+          </div>
+          
+          <div class="glass-card p-6 rounded-2xl space-y-4">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-mobile-screen text-[#00ffaa] mr-2"></i> Reset Password Kasir Smartphone</h3>
+              <button type="button" id="btn-tog-khp" onclick="handleTogglePinReq('REQ_PIN_KASIR_HP')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+            </div>
+            <form onsubmit="handleResetKasirHpPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="khp-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="khp-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-khp-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Password Kasir HP</button></form>
+          </div>
+          
+          <div class="glass-card p-6 rounded-2xl space-y-4">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-pie text-[#00ffaa] mr-2"></i> Reset PIN Informasi Gas</h3>
+              <button type="button" id="btn-tog-igas" onclick="handleTogglePinReq('REQ_PIN_INFO_GAS')" class="px-3 py-1 rounded text-xs font-bold bg-gray-500 text-white cursor-pointer shadow-lg">MEMUAT...</button>
+            </div>
+            <form onsubmit="handleResetInfoGasPin(event)" class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">PIN Baru</label><input type="password" id="ig-new-pin1" required placeholder="PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi PIN Baru</label><input type="password" id="ig-new-pin2" required placeholder="Konfirmasi PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-ig-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan PIN Informasi Gas</button></form>
+          </div>
         </div>
 
         <div class="glass-card p-6 rounded-2xl mt-6">
@@ -408,32 +435,24 @@
     });
 
     // ==========================================
-    // GANTI URL DI BAWAH INI DENGAN WEB APP URL 
-    // DARI GOOGLE APPS SCRIPT ANDA
+    // GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbx2jC-EGaEXhCH4N4KrqmJRlroWYuu96lwlTjtUWls-Z1anYvAJH6Ald3UxrYKZML-3/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzUuIB8KZdI2KPsAkmkKBupJmJpvrXQq1HsB_ze93BopjA1-lRZKCi8L0PpTcUUanYP/exec"; 
 
-    // Fungsi apiCall disesuaikan untuk Vercel (menggunakan Fetch API)
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
         try {
           let payloadString = payload ? JSON.stringify(payload) : null;
-          
           let response = await fetch(GAS_URL, {
             method: 'POST',
             body: JSON.stringify({ action: action, payload: payloadString }),
             headers: { 'Content-Type': 'text/plain;charset=utf-8' }
           });
-          
           let result = await response.json();
           resolve(result);
-        } catch (error) {
-          console.error("API Error:", error);
-          reject(error);
-        }
+        } catch (error) { console.error("API Error:", error); reject(error); }
       });
     }
-    // ==========================================
 
     async function logVisit() {
         if (sessionStorage.getItem('visit_logged')) return;
@@ -476,11 +495,25 @@
 
     function requestAccessPage(pageId) { 
       pendingTargetPage = pageId; 
-      if (pageId === 'kasir') { pendingAllowedRole = 'kasir_gas'; openPinModal("Autentikasi Kasir Gas", "Silahkan masukkan Password", "Masukkan Password"); } 
-      else if (pageId === 'kasir-smartphone') { pendingAllowedRole = 'kasir_hp'; openPinModal("Kasir Smartphone", "Silahkan masukkan Password", "Masukkan Password"); } 
-      else if (pageId === 'member-smartphone') { pendingAllowedRole = 'member'; openPinModal("Login Khusus Pembeli", "Silahkan masukkan ID Pembelian Anda 😊", "Masukkan ID Pembelian"); } 
-      else if (pageId === 'publik') { pendingAllowedRole = 'info_gas'; openPinModal("Akses Informasi Gas", "Silahkan masukkan PIN Informasi Gas", "Masukkan PIN"); } 
-      else if (pageId === 'admin') { pendingAllowedRole = 'admin'; openPinModal("Super Admin", "Silahkan masukkan Password Super Admin", "Masukkan Password"); }
+      if (pageId === 'kasir') { 
+          if(appData.settings.reqPinKasirGas === false) { switchPage(pageId); return; }
+          pendingAllowedRole = 'kasir_gas'; openPinModal("Autentikasi Kasir Gas", "Silahkan masukkan Password", "Masukkan Password"); 
+      } 
+      else if (pageId === 'kasir-smartphone') { 
+          if(appData.settings.reqPinKasirHp === false) { switchPage(pageId); return; }
+          pendingAllowedRole = 'kasir_hp'; openPinModal("Kasir Smartphone", "Silahkan masukkan Password", "Masukkan Password"); 
+      } 
+      else if (pageId === 'member-smartphone') { 
+          pendingAllowedRole = 'member'; openPinModal("Login Khusus Pembeli", "Silahkan masukkan ID Pembelian Anda 😊", "Masukkan ID Pembelian"); 
+      } 
+      else if (pageId === 'publik') { 
+          if(appData.settings.reqPinInfoGas === false) { switchPage(pageId); return; }
+          pendingAllowedRole = 'info_gas'; openPinModal("Akses Informasi Gas", "Silahkan masukkan PIN Informasi Gas", "Masukkan PIN"); 
+      } 
+      else if (pageId === 'admin') { 
+          if(appData.settings.reqPinAdmin === false) { document.getElementById('admin-panel-content').classList.remove('hidden'); switchPage(pageId); return; }
+          pendingAllowedRole = 'admin'; openPinModal("Super Admin", "Silahkan masukkan Password Super Admin", "Masukkan Password"); 
+      }
       else { switchPage(pageId); } 
     }
     
@@ -491,9 +524,7 @@
     function closePinModal() { document.getElementById('pin-auth-modal').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('pin-auth-modal').classList.add('opacity-0', 'pointer-events-none'); pendingTargetPage = ''; pendingAllowedRole = ''; }
 
     function formatNamaMemberInput(input) { input.value = input.value.replace(/[^A-Za-z\s\-']/g, '').toUpperCase(); }
-    
     function formatIdPembelianInput(input) { input.value = input.value.replace(/\s/g, ''); }
-    
     function formatPinAngkaOnly(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
     function formatRupiahInput(input) { let v = input.value.replace(/[^,\d]/g, '').toString(); let s = v.split(','); let i = s[0]; if (i.length > 1 && i.startsWith('0')) { i = i.replace(/^0+/, ''); if (i === '') i = '0'; } let r = i.length % 3; let rp = i.substr(0, r); let rb = i.substr(r).match(/\d{3}/gi); if (rb) { rp += (r ? '.' : '') + rb.join('.'); } input.value = s[1] !== undefined ? rp + ',' + s[1] : rp; }
     function parseCleanNumber(val) { return parseFloat((val||"").toString().replace(/\./g, '').replace(/,/g, '.')) || 0; }
@@ -537,6 +568,36 @@
       if (elNarasi) elNarasi.value = appData.settings.digitalNarasi || '';
       const elModalContent = document.getElementById('digital-modal-content');
       if (elModalContent) elModalContent.innerHTML = appData.settings.digitalNarasi || '<p class="text-center text-gray-500">Narasi belum diatur.</p>';
+      
+      const setToggle = (id, isActive) => {
+         const btn = document.getElementById(id);
+         if(!btn) return;
+         if(isActive) { btn.innerText = "AKTIF"; btn.className = "px-3 py-1 rounded text-xs font-bold bg-[#00ffaa] text-gray-900 border border-transparent shadow-lg cursor-pointer"; }
+         else { btn.innerText = "NONAKTIF"; btn.className = "px-3 py-1 rounded text-xs font-bold bg-red-500 text-white border border-transparent shadow-lg cursor-pointer"; }
+      };
+      setToggle('btn-tog-admin', appData.settings.reqPinAdmin);
+      setToggle('btn-tog-kgas', appData.settings.reqPinKasirGas);
+      setToggle('btn-tog-khp', appData.settings.reqPinKasirHp);
+      setToggle('btn-tog-igas', appData.settings.reqPinInfoGas);
+    }
+
+    async function handleTogglePinReq(targetKey) {
+       let currentStatus = true;
+       if (targetKey === 'REQ_PIN_ADMIN') currentStatus = appData.settings.reqPinAdmin;
+       if (targetKey === 'REQ_PIN_KASIR_GAS') currentStatus = appData.settings.reqPinKasirGas;
+       if (targetKey === 'REQ_PIN_KASIR_HP') currentStatus = appData.settings.reqPinKasirHp;
+       if (targetKey === 'REQ_PIN_INFO_GAS') currentStatus = appData.settings.reqPinInfoGas;
+
+       const newStatus = !currentStatus;
+       if (targetKey === 'REQ_PIN_ADMIN' && newStatus === false) {
+           if(!confirm("PERINGATAN: Menonaktifkan Keamanan Super Admin akan membuat siapa saja bisa mengubah data rahasia. Yakin lanjutkan?")) return;
+       }
+
+       try {
+           const res = await apiCall('togglePinStatus', { targetKey: targetKey, status: newStatus });
+           if(res.success) { showToast(res.message, "success"); await loadBackendData(); }
+           else { showToast(res.message, "error"); }
+       } catch(e) { showToast("Error koneksi saat mengubah status PIN", "error"); }
     }
 
     function updateUIAll() {
@@ -1216,54 +1277,4 @@
     async function handleUpdateAdminPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-pin', async (done) => { const payload = { targetKey: 'ADMIN_PIN', newPin1: document.getElementById('adm-new-pin1').value, newPin2: document.getElementById('adm-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-kg-pin', async (done) => { const payload = { targetKey: 'KASIR_GAS_PIN', newPin1: document.getElementById('kg-new-pin1').value, newPin2: document.getElementById('kg-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirHpPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-khp-pin', async (done) => { const payload = { targetKey: 'KASIR_HP_PIN', newPin1: document.getElementById('khp-new-pin1').value, newPin2: document.getElementById('khp-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    
-    async function handleUpdateNarasi(e) {
-      e.preventDefault();
-      executeSafeSubmit('btn-submit-adm-narasi', async (done) => {
-        const payload = { narasi: document.getElementById('adm-narasi-digital').value };
-        try {
-          const res = await apiCall('saveDigitalNarasi', payload);
-          if (res.success) { showToast(res.message, "success"); loadBackendData(); }
-          else { showToast(res.message, "error"); }
-        } catch(err) { showToast("Error: " + err.message, "error"); }
-        finally { done(); }
-      });
-    }
-
-    async function handleAddMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-add-member-gas', async (done) => { const payload = { namaMember: document.getElementById('add-nama-member-gas').value, pinMember: document.getElementById('add-pin-member-gas').value }; try { const res = await apiCall('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetMemberPinGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin', async (done) => { const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetMemberPinHp(event) { 
-      event.preventDefault(); 
-      executeSafeSubmit('btn-submit-reset-pin-hp', async (done) => { 
-        const idMemberInput = document.getElementById('reset-id-member-hp').value;
-        const newPinInput = document.getElementById('reset-new-pin-hp').value.trim();
-        
-        const isIdTaken = appData.members.some(m => {
-            const mId = (m[2] || '').toString().trim();
-            const mMemberId = (m[0] || '').toString().trim();
-            return mId === newPinInput && mMemberId !== idMemberInput;
-        });
-        
-        if (isIdTaken) {
-            showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error");
-            done();
-            return;
-        }
-
-        const payload = { idMember: idMemberInput, newPIN: newPinInput }; 
-        try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } 
-      }); 
-    }
-
-    function showToast(message, type = "success") {
-      const toast = document.getElementById('toast-notification'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message'); const icon = document.getElementById('toast-icon'); const title = document.getElementById('toast-title');
-      if (!toast || !msg || !icon) return; msg.innerText = message;
-      if (type === "success") { title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; } 
-      else { title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; }
-      toast.classList.remove('opacity-0', 'pointer-events-none'); toast.classList.add('opacity-100', 'pointer-events-auto');
-      setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
-    }
-  </script>
-</body>
-</html>
+    async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success
