@@ -248,6 +248,7 @@
                               <th class="px-4 py-3">Jual Gas</th>
                               <th class="px-4 py-3">Modal Tabung</th>
                               <th class="px-4 py-3">Jual Tabung</th>
+                              <th class="px-4 py-3">Tgl Update</th>
                           </tr>
                       </thead>
                       <tbody id="table-rekap-harga-body"></tbody>
@@ -431,6 +432,26 @@
     let appData = { settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], accessLogs: [], summary: {} };
     let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
 
+    // PEMBARUAN: Fungsi Utilitas untuk konversi serentak ke format dd-mm-yyyy
+    function fDate(val) {
+        if (!val) return '-';
+        let str = String(val).trim();
+        let parts = str.split(' ');
+        let d = parts[0];
+        let time = parts[1] ? ' ' + parts[1] : '';
+
+        // Jika format yyyy-mm-dd
+        if (d.includes('-') && d.split('-')[0].length === 4) {
+            let p = d.split('-');
+            d = p[2] + '-' + p[1] + '-' + p[0];
+        } 
+        // Jika format dd/mm/yyyy
+        else if (d.includes('/')) {
+            d = d.replace(/\//g, '-');
+        }
+        return d + time;
+    }
+
     window.addEventListener('DOMContentLoaded', async function() {
       const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
@@ -441,7 +462,7 @@
     // ==========================================
     // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbworZYCNeWw1154h6y7z-3rbfKZqDVgalOjrXHNr_ci7CZTFEn0Zq1U6PMBJlBBci2h/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbw0MoPbMjj11-hKkMHQzcOiu92_C1J2CN1xid7jaSsM3X3asFRV8PBvIP_zUt1lucaw/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -708,7 +729,7 @@
       if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
     }
 
-    // PEMBARUAN: Fungsi Render Rekap Harga Member
+    // PEMBARUAN: Fungsi Render Rekap Harga Member (Ditambahkan Tanggal Update)
     function renderRekapHargaMember() {
         const tbody = document.getElementById('table-rekap-harga-body'); 
         if (!tbody) return;
@@ -723,6 +744,7 @@
             const modTab = Number(m[6]) || 0;
             const jualGas = Number(m[7]) || 0; 
             const jualTab = Number(m[8]) || 0;
+            const tglUpdate = m[9] ? fDate(m[9]) : '-'; // Render format serentak
             
             const isBelumAtur = (modGas === 0 && jualGas === 0 && modTab === 0 && jualTab === 0);
             const badge = isBelumAtur ? `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-triangle-exclamation"></i> BELUM ATUR</span>` : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-check"></i> AKTIF</span>`;
@@ -733,14 +755,15 @@
                 <td class="px-4 py-3 text-[#00ffaa] font-bold">Rp ${jualGas.toLocaleString('id-ID')}</td>
                 <td class="px-4 py-3 text-gray-400">Rp ${modTab.toLocaleString('id-ID')}</td>
                 <td class="px-4 py-3 text-blue-400 font-bold">Rp ${jualTab.toLocaleString('id-ID')}</td>
+                <td class="px-4 py-3 text-gray-400 text-xs">${tglUpdate}</td>
             </tr>`;
         });
-        if(html === '') html = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
+        if(html === '') html = '<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
         tbody.innerHTML = html;
     }
 
-    function renderRekapDeposit() { const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return; if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; return; } let html = ''; appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
-    function renderRekapTabungMasuk() { const tbody = document.getElementById('table-rekap-tm-body'); if (!tbody) return; if (appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>'; return; } let html = ''; appData.tabungMasuk.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
+    function renderRekapDeposit() { const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return; if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; return; } let html = ''; appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
+    function renderRekapTabungMasuk() { const tbody = document.getElementById('table-rekap-tm-body'); if (!tbody) return; if (appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>'; return; } let html = ''; appData.tabungMasuk.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
     
     function renderRekapTransaksiMember() { 
         const tbody = document.getElementById('table-rekap-trx-body'); if (!tbody) return; 
@@ -749,7 +772,7 @@
         appData.transaksi.forEach(row => { 
             const isKhusus = (row[7] || '') === 'Khusus';
             const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0 (CEK MODAL)</span>`;
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
+            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
         }); 
         tbody.innerHTML = html; 
     }
@@ -808,7 +831,7 @@
           const isKhusus = (row[7] || '') === 'Khusus';
           const infoBadge = isKhusus ? `<span class="text-[9px] text-blue-400 ml-1" title="Khusus"><i class="fa-solid fa-tag"></i></span>` : `<span class="text-[9px] text-yellow-400 ml-1" title="Harga 0"><i class="fa-solid fa-triangle-exclamation"></i></span>`;
           
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
       html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
@@ -844,7 +867,7 @@
                     deviceInfo = `<div class="flex flex-col"><span class="text-white font-bold text-sm"><i class="fa-solid ${iconDev} text-[#00ffaa] mr-1 w-4"></i> ${devType.toUpperCase()} - ${hardware}</span><span class="text-xs text-blue-300 mt-0.5"><i class="${iconOS} mr-1 w-4"></i> ${osName} ${osVer} &nbsp;|&nbsp; <i class="fa-solid fa-globe mr-1 w-4"></i> ${browser}</span><span class="text-[10px] text-gray-500 mt-1 truncate max-w-sm cursor-help" title="${rawUA}">Raw: ${rawUA.substring(0,40)}...</span></div>`;
                 }
             } catch(e) { deviceInfo = `<span class="text-gray-400 text-xs truncate max-w-xs" title="${rawUA}">${rawUA}</span>`; }
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-4 py-3 font-mono text-xs text-gray-400">${row[0]}</td><td class="px-4 py-3">${row[1]}</td><td class="px-4 py-3 text-[#00ffaa] font-bold">${row[2]}</td><td class="px-4 py-3">${deviceInfo}</td></tr>`;
+            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-4 py-3 font-mono text-xs text-gray-400">${row[0]}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-[#00ffaa] font-bold">${row[2]}</td><td class="px-4 py-3">${deviceInfo}</td></tr>`;
         });
         tbody.innerHTML = html;
     }
@@ -856,7 +879,7 @@
       const filtered = appData.tabungMasuk.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Tidak ada data tabung keluar.</td></tr>'; document.getElementById('pub-tabung-masuk').innerText = '0'; return; }
       let html = ''; let totalMasuk = 0;
-      filtered.forEach(row => { totalMasuk += Number(row[2]) || 0; html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; });
+      filtered.forEach(row => { totalMasuk += Number(row[2]) || 0; html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; });
       tbody.innerHTML = html; document.getElementById('pub-tabung-masuk').innerText = totalMasuk.toLocaleString('id-ID');
     }
     
@@ -895,7 +918,7 @@
           let html = '';
           activeAngsuran.forEach(a => {
               const nominal = Number(a[7]) || 0; const totalBulan = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0; const sisaBulan = totalBulan - terbayar; const totalRp = terbayar * nominal; const sisaRp = sisaBulan * nominal;
-              const tempatBeli = a[12] || '-'; const tglInvoice = a[13] || '-'; 
+              const tempatBeli = a[12] || '-'; const tglInvoice = fDate(a[13]); 
               let actionBtn = '';
               if (sisaBulan <= 0) { actionBtn = `<button id="btn-archive-${a[0]}" onclick="archiveAngsuran('${a[0]}')" class="px-3 py-1.5 bg-[#00ffaa] hover:bg-[#00cc88] text-gray-900 font-bold text-xs rounded transition-all shadow-[0_0_10px_rgba(0,255,170,0.4)]"><i class="fa-solid fa-box-archive mr-1"></i> LUNAS (Arsipkan)</button>`; } 
               else { actionBtn = `<div class="flex flex-col sm:flex-row gap-2 justify-center"><button onclick="gotoInputPembayaran('${a[0]}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded transition-all">Bayar Angsuran</button></div>`; }
@@ -913,13 +936,13 @@
                 let sortedLaporanAngsuran = [...appData.angsuran].sort((a, b) => { let dateA = (a[4] || '') + (a[13] || ''); let dateB = (b[4] || '') + (b[13] || ''); return dateA.localeCompare(dateB); });
                 sortedLaporanAngsuran.forEach(a => {
                      const isLunas = a[14] === "Selesai"; const nama = a[1] || '-'; const nameTag = isLunas ? `${nama} <span class="bg-gray-200 text-gray-800 text-[10px] px-1 rounded ml-1">LUNAS</span>` : nama;
-                     const idTrx = a[0]; const tipe = a[2]; const harga = Number(a[3]) || 0; const bulanOrder = a[4]; const dp = Number(a[5]) || 0; const modal = Number(a[10]) || 0; const untung = Number(a[11]) || 0; const tglInvoice = a[13] || '-';
+                     const idTrx = a[0]; const tipe = a[2]; const harga = Number(a[3]) || 0; const bulanOrder = a[4]; const dp = Number(a[5]) || 0; const modal = Number(a[10]) || 0; const untung = Number(a[11]) || 0; const tglInvoice = fDate(a[13]);
                      totModal += modal; totOmzet += harga; totUntung += untung;
                      const myPayments = (appData.detailAngsuran || []).filter(pay => pay[1] === idTrx); myPayments.sort((x, y) => new Date(x[2]) - new Date(y[2]));
                      const totalBln = Number(a[8]) || 1; let totalBayar = 0;
                      let rowspanVal = totalBln + 3; let colNama = `<td rowspan="${rowspanVal}" class="border border-black p-2 align-top font-semibold">${nameTag}</td>`; let colBarang = `<td rowspan="${rowspanVal}" class="border border-black p-2 align-top">${tipe || '-'}</td>`; let colWaktu = `<td rowspan="${rowspanVal}" class="border border-black p-2 text-center align-top">${bulanOrder || '-'}</td>`; let colHarga = `<td rowspan="${rowspanVal}" class="border border-black p-2 text-center align-top font-semibold">Rp ${harga.toLocaleString('id-ID')}</td>`; 
                      htmlExcel += `<tr>${colNama}${colBarang}${colWaktu}${colHarga}<td class="border border-black p-1 text-center font-semibold bg-gray-100">DP Awal</td><td class="border border-black p-1 text-right pr-2 bg-gray-100 font-semibold">Rp ${dp.toLocaleString('id-ID')}</td><td class="border border-black p-1 text-center bg-gray-100">${tglInvoice}</td></tr>`;
-                     for(let i=1; i<=totalBln; i++) { const pay = myPayments[i-1]; const nominalBayar = pay ? (Number(pay[3]) || 0) : ''; const tglBayar = pay ? pay[2] : ''; if(pay) totalBayar += nominalBayar; let textNominal = nominalBayar !== '' ? `Rp ${nominalBayar.toLocaleString('id-ID')}` : ''; htmlExcel += `<tr><td class="border border-black p-1 text-center font-semibold">${i}</td><td class="border border-black p-1 text-right pr-2">${textNominal}</td><td class="border border-black p-1 text-center">${tglBayar}</td></tr>`; }
+                     for(let i=1; i<=totalBln; i++) { const pay = myPayments[i-1]; const nominalBayar = pay ? (Number(pay[3]) || 0) : ''; const tglBayar = pay ? fDate(pay[2]) : ''; if(pay) totalBayar += nominalBayar; let textNominal = nominalBayar !== '' ? `Rp ${nominalBayar.toLocaleString('id-ID')}` : ''; htmlExcel += `<tr><td class="border border-black p-1 text-center font-semibold">${i}</td><td class="border border-black p-1 text-right pr-2">${textNominal}</td><td class="border border-black p-1 text-center">${tglBayar}</td></tr>`; }
                      const totalTerkumpul = dp + totalBayar; const sisaRupiah = harga - totalTerkumpul; let untungBerjalan = 0; if (harga > 0) { untungBerjalan = (totalTerkumpul / harga) * untung; }
                      if(!memberProfitHp[nama]) memberProfitHp[nama] = { untung: 0, untungBerjalan: 0, trx: 0 }; memberProfitHp[nama].untung += untung; memberProfitHp[nama].untungBerjalan += untungBerjalan; memberProfitHp[nama].trx += 1;
                      htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Total Terbayar</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-blue-700">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr><tr><td class="border border-black p-1 text-right font-bold italic">Sisa Angsuran</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-red-600">Rp ${sisaRupiah.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr><tr class="bg-[#161b22]"><td colspan="7" class="border border-black h-3"></td></tr>`;
@@ -937,7 +960,7 @@
             if(tbodyLunas) {
                 let htmlLunas = ''; const lunasData = appData.angsuran.filter(a => a[14] === "Selesai"); lunasData.sort((a, b) => a[1].localeCompare(b[1])); let currentName = ''; let trxCount = 0;
                 if(lunasData.length === 0) { htmlLunas = '<tr><td colspan="5" class="text-center py-4 text-gray-500">Belum ada transaksi lunas.</td></tr>'; }
-                else { lunasData.forEach(a => { if(a[1] !== currentName) { currentName = a[1]; trxCount = 1; } else { trxCount++; } htmlLunas += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-3 py-3 font-semibold text-[#00ffaa]">${a[1]} <span class="bg-blue-900/50 text-blue-300 text-[10px] px-1.5 py-0.5 rounded ml-1 font-bold">Trx Ke-${trxCount}</span></td><td class="px-3 py-3 text-white">${a[2]}</td><td class="px-3 py-3 text-gray-400">${a[13] || '-'}</td><td class="px-3 py-3 text-gray-400 font-medium">Rp ${Number(a[3]).toLocaleString('id-ID')}</td><td class="px-3 py-3 text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</td></tr>`; }); }
+                else { lunasData.forEach(a => { if(a[1] !== currentName) { currentName = a[1]; trxCount = 1; } else { trxCount++; } htmlLunas += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-3 py-3 font-semibold text-[#00ffaa]">${a[1]} <span class="bg-blue-900/50 text-blue-300 text-[10px] px-1.5 py-0.5 rounded ml-1 font-bold">Trx Ke-${trxCount}</span></td><td class="px-3 py-3 text-white">${a[2]}</td><td class="px-3 py-3 text-gray-400">${fDate(a[13])}</td><td class="px-3 py-3 text-gray-400 font-medium">Rp ${Number(a[3]).toLocaleString('id-ID')}</td><td class="px-3 py-3 text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</td></tr>`; }); }
                 tbodyLunas.innerHTML = htmlLunas;
             }
         } catch(e) { console.error(e); }
@@ -963,7 +986,7 @@
               let totalBayarRp = dp; let tableRows = `<tr class="border-b border-gray-700 bg-gray-800/30"><td class="p-3 text-white font-medium">DP (Uang Muka)</td><td class="p-3 text-white font-medium">Rp ${dp.toLocaleString('id-ID')}</td><td class="p-3 text-gray-400 text-center">Saat Pembelian</td><td class="p-3 text-center text-[#00ffaa] font-bold"><i class="fa-solid fa-check"></i> Lunas</td></tr>`;
               for(let i=1; i<=totalBln; i++) {
                   const pay = myPayments[i-1]; 
-                  if(pay) { const nominalBayar = Number(pay[3]) || 0; totalBayarRp += nominalBayar; tableRows += `<tr class="border-b border-gray-700"><td class="p-3 text-gray-300">Angsuran Ke-${i}</td><td class="p-3 text-white font-medium">Rp ${nominalBayar.toLocaleString('id-ID')}</td><td class="p-3 text-gray-400 text-center">${pay[2]}</td><td class="p-3 text-center text-[#00ffaa] font-bold"><i class="fa-solid fa-check"></i> Lunas</td></tr>`; } 
+                  if(pay) { const nominalBayar = Number(pay[3]) || 0; totalBayarRp += nominalBayar; tableRows += `<tr class="border-b border-gray-700"><td class="p-3 text-gray-300">Angsuran Ke-${i}</td><td class="p-3 text-white font-medium">Rp ${nominalBayar.toLocaleString('id-ID')}</td><td class="p-3 text-gray-400 text-center">${fDate(pay[2])}</td><td class="p-3 text-center text-[#00ffaa] font-bold"><i class="fa-solid fa-check"></i> Lunas</td></tr>`; } 
                   else { tableRows += `<tr class="border-b border-gray-800 opacity-60"><td class="p-3 text-gray-400">Angsuran Ke-${i}</td><td class="p-3 text-gray-400">Rp ${nominalBulan.toLocaleString('id-ID')}</td><td class="p-3 text-gray-500 text-center">-</td><td class="p-3 text-center text-red-400 font-medium">Belum Bayar</td></tr>`; }
               }
               const sisaRp = harga - totalBayarRp; let bulanTeks = bulanOrder; if (bulanOrder.includes('-')) { const p = bulanOrder.split('-'); bulanTeks = monthNames[parseInt(p[1]) - 1] + ' ' + p[0]; }
