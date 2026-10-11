@@ -606,9 +606,29 @@
       const elTot = document.getElementById('pub-total-tabung'); 
       const elSisa = document.getElementById('pub-sisa-tabung');
       
-      if(elTotKes) elTotKes.innerText = Number(appData.summary.totalTabung || 0).toLocaleString('id-ID');
-      if(elTot) elTot.innerText = Number(appData.summary.totalTabung || 0).toLocaleString('id-ID'); 
-      if(elSisa) elSisa.innerText = Number(appData.summary.sisaTabung || 0).toLocaleString('id-ID');
+      let totalDepositKeseluruhan = Number(appData.summary.totalTabung || 0);
+      let currentSisa = Number(appData.summary.sisaTabung || 0);
+      
+      let calcDepBaruSisaLama = currentSisa;
+      
+      if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
+          const latestDepDate = appData.deposit[0][1] || ''; // Tanggal truk deposit terakhir datang
+          let keluarSejakDeposit = 0;
+          
+          if (appData.tabungMasuk && latestDepDate !== '') {
+              appData.tabungMasuk.forEach(row => {
+                  if (row[1] >= latestDepDate) {
+                      keluarSejakDeposit += (Number(row[2]) || 0);
+                  }
+              });
+          }
+          // Stok Awal = Sisa Gudang Sekarang + Tabung yang sudah terjual sejak truk terakhir datang
+          calcDepBaruSisaLama = currentSisa + keluarSejakDeposit;
+      }
+
+      if(elTotKes) elTotKes.innerText = totalDepositKeseluruhan.toLocaleString('id-ID');
+      if(elTot) elTot.innerText = calcDepBaruSisaLama.toLocaleString('id-ID'); 
+      if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
 
       try { filterTabungMasukPublik(); } catch(e){} try { renderRekapDeposit(); } catch(e){} try { renderRekapTabungMasuk(); } catch(e){} try { renderRekapTransaksiMember(); } catch(e){}
       
