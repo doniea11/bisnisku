@@ -168,7 +168,6 @@
           </div>
         </div>
         
-        <!-- PEMBARUAN: 4 KOLOM DASHBOARD LPG -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
             <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Total Tabung Keseluruhan</p>
@@ -270,11 +269,30 @@
               <button onclick="renderLaporanTable()" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-xs cursor-pointer">Filter</button>
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-             <div class="glass-card p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400">Total Terjual</span><h4 id="lap-tot-tabung" class="text-2xl font-bold text-white mt-1">0 Tabung</h4></div>
-             <div class="glass-card p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400">Total Omzet Pendapatan</span><h4 id="lap-tot-omzet" class="text-xl font-bold text-gray-300 mt-1">Rp 0</h4></div>
-             <div class="glass-card p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400">Total Profit Bersih</span><h4 id="lap-tot-profit" class="text-xl font-bold text-[#00ffaa] mt-1">Rp 0</h4></div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
+                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Terjual</span>
+                <h4 id="lap-tot-tabung" class="text-lg font-bold text-white mt-1">0</h4>
+             </div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
+                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Omzet</span>
+                <h4 id="lap-tot-omzet" class="text-lg font-bold text-gray-300 mt-1">Rp 0</h4>
+             </div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
+                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" title="Menggunakan perhitungan dari modal master">Profit (Lama)</span>
+                <h4 id="lap-tot-profit-lama" class="text-lg font-bold text-yellow-400 mt-1">Rp 0</h4>
+             </div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
+                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" title="Menggunakan perhitungan tersimpan statis">Profit (Baru)</span>
+                <h4 id="lap-tot-profit-baru" class="text-lg font-bold text-blue-400 mt-1">Rp 0</h4>
+             </div>
+             <div class="glass-card p-4 rounded-xl border border-emerald-900/50 bg-[#00ffaa]/5 flex flex-col justify-center shadow-inner">
+                <span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-black">Total Keseluruhan</span>
+                <h4 id="lap-tot-profit" class="text-xl font-bold text-[#00ffaa] mt-1">Rp 0</h4>
+             </div>
           </div>
+
           <div class="glass-card p-4 rounded-xl border border-gray-800">
              <h4 class="text-sm font-semibold text-white mb-3"><i class="fa-solid fa-users text-[#00ffaa] mr-2"></i>Rincian Profit per Member</h4>
              <div id="lap-profit-member" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs"></div>
@@ -404,7 +422,7 @@
     // ==========================================
     // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzwvd8673tBfWKlQiybAzo_wRVMeU03jN-RhLYxv7PIt5tBrkhzOzURMkxfpnEHxOs/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5Q4Mez6gaok312LgVy1kllV5A_mPmLSn9FKromAEzmAjyZrfDnw3goLgO3uzQGar/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -468,7 +486,6 @@
         
         let hrgGas = 0; let hrgTabung = 0;
 
-        // Mencari member berdasarkan nama, mengambil harga jual spesifik mereka
         if (namaMember && appData.members) {
             const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
             if (member) {
@@ -612,7 +629,7 @@
       let calcDepBaruSisaLama = currentSisa;
       
       if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
-          const latestDepDate = appData.deposit[0][1] || ''; // Tanggal truk deposit terakhir datang
+          const latestDepDate = appData.deposit[0][1] || '';
           let keluarSejakDeposit = 0;
           
           if (appData.tabungMasuk && latestDepDate !== '') {
@@ -622,7 +639,6 @@
                   }
               });
           }
-          // Stok Awal = Sisa Gudang Sekarang + Tabung yang sudah terjual sejak truk terakhir datang
           calcDepBaruSisaLama = currentSisa + keluarSejakDeposit;
       }
 
@@ -685,37 +701,66 @@
       const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
       const baseFiltered = appData.transaksi.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
       const tbody = document.getElementById('table-laporan-body'); if (!tbody) return; tbody.innerHTML = '';
-      let html = ''; let sumTabung = 0; let sumRupiah = 0; let sumProfit = 0; let memberProfit = {};
+      
+      let html = ''; let sumTabung = 0; let sumRupiah = 0; 
+      let sumProfitLama = 0; let sumProfitBaru = 0; let sumProfit = 0; 
+      let memberProfit = {};
 
       if (baseFiltered.length === 0) { 
           tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi gas.</td></tr>'; 
-          document.getElementById('lap-tot-tabung').innerText = '0 Tabung'; document.getElementById('lap-tot-omzet').innerText = 'Rp 0'; document.getElementById('lap-tot-profit').innerText = 'Rp 0'; document.getElementById('lap-profit-member').innerHTML = '<span class="text-gray-500 col-span-full">Belum ada data.</span>'; return; 
+          document.getElementById('lap-tot-tabung').innerText = '0'; 
+          document.getElementById('lap-tot-omzet').innerText = 'Rp 0'; 
+          document.getElementById('lap-tot-profit-lama').innerText = 'Rp 0'; 
+          document.getElementById('lap-tot-profit-baru').innerText = 'Rp 0'; 
+          document.getElementById('lap-tot-profit').innerText = 'Rp 0'; 
+          document.getElementById('lap-profit-member').innerHTML = '<span class="text-gray-500 col-span-full">Belum ada data.</span>'; 
+          return; 
       }
 
       baseFiltered.forEach(row => { 
-          const memberName = row[2] || '-'; const jenis = row[3] || '-'; const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
-          let modalSatuan = 0;
-          const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === memberName.toUpperCase());
-          if (memberData) {
-              if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
-              else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
+          const memberName = row[2] || '-'; const jenis = row[3] || '-'; 
+          const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
+          let profit = 0;
+          let badgeSistem = '';
+
+          // CEK APAKAH INI TRANSAKSI BARU (Sudah punya kolom profit di index 10) atau LAMA (Belum punya)
+          if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
+              // Sistem Baru (Statis Terkunci)
+              profit = Number(row[10]) || 0;
+              sumProfitBaru += profit;
+              badgeSistem = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Pengaturan Baru">SISTEM BARU</span>`;
+          } else {
+              // Sistem Lama (Hitung manual dari modal master saat ini)
+              let modalSatuan = 0;
+              const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === memberName.toUpperCase());
+              if (memberData) {
+                  if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
+                  else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
+              }
+              profit = hargaJualTotal - (qty * modalSatuan);
+              sumProfitLama += profit;
+              badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Pengaturan Lama">SISTEM LAMA</span>`;
           }
           
-          const profit = hargaJualTotal - (qty * modalSatuan);
           sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
           
           if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
           memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
 
           const isKhusus = (row[7] || '') === 'Khusus';
-          const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0</span>`;
+          const infoBadge = isKhusus ? `<span class="text-[9px] text-blue-400 ml-1" title="Khusus"><i class="fa-solid fa-tag"></i></span>` : `<span class="text-[9px] text-yellow-400 ml-1" title="Harga 0"><i class="fa-solid fa-triangle-exclamation"></i></span>`;
           
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
-      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
+      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
       tbody.innerHTML = html;
-      document.getElementById('lap-tot-tabung').innerText = sumTabung.toLocaleString('id-ID') + ' Tabung'; document.getElementById('lap-tot-omzet').innerText = 'Rp ' + sumRupiah.toLocaleString('id-ID'); document.getElementById('lap-tot-profit').innerText = 'Rp ' + sumProfit.toLocaleString('id-ID');
+      
+      document.getElementById('lap-tot-tabung').innerText = sumTabung.toLocaleString('id-ID'); 
+      document.getElementById('lap-tot-omzet').innerText = 'Rp ' + sumRupiah.toLocaleString('id-ID'); 
+      document.getElementById('lap-tot-profit-lama').innerText = 'Rp ' + sumProfitLama.toLocaleString('id-ID');
+      document.getElementById('lap-tot-profit-baru').innerText = 'Rp ' + sumProfitBaru.toLocaleString('id-ID');
+      document.getElementById('lap-tot-profit').innerText = 'Rp ' + sumProfit.toLocaleString('id-ID');
       
       let memberHtml = '';
       for (const [name, data] of Object.entries(memberProfit)) { memberHtml += `<div class="bg-[#161b22] p-2 rounded border border-gray-800"><strong class="text-white block truncate">${name}</strong><span class="text-gray-400 block">${data.qty.toLocaleString('id-ID')} Tabung</span><span class="text-[#00ffaa] font-bold">Rp ${data.profit.toLocaleString('id-ID')}</span></div>`; }
