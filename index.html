@@ -167,11 +167,27 @@
             <button onclick="resetFilterPublik()" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg text-xs hover:bg-gray-700 cursor-pointer">Reset Filter</button>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="glass-card p-6 rounded-xl border border-gray-800 text-center"><p class="text-sm text-gray-400 mb-1">Total Kapasitas Tabung</p><h3 id="pub-total-tabung" class="text-4xl font-black text-white">0</h3></div>
-          <div class="glass-card p-6 rounded-xl border border-gray-800 text-center"><p class="text-sm text-gray-400 mb-1">Tabung Keluar (Rentang Terpilih)</p><h3 id="pub-tabung-masuk" class="text-4xl font-black text-blue-400">0</h3></div>
-          <div class="glass-card p-6 rounded-xl border border-gray-800 text-center"><p class="text-sm text-gray-400 mb-1">Sisa Tabung Tersedia</p><h3 id="pub-sisa-tabung" class="text-4xl font-black text-[#00ffaa]">0</h3></div>
+        
+        <!-- PEMBARUAN: 4 KOLOM DASHBOARD LPG -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Total Tabung Keseluruhan</p>
+            <h3 id="pub-total-keseluruhan" class="text-4xl font-black text-white drop-shadow-md">0</h3>
+          </div>
+          <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider leading-tight font-semibold">Deposit Baru + Sisa Lama</p>
+            <h3 id="pub-total-tabung" class="text-4xl font-black text-blue-400 drop-shadow-md">0</h3>
+          </div>
+          <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Tabung Keluar (Terfilter)</p>
+            <h3 id="pub-tabung-masuk" class="text-4xl font-black text-yellow-400 drop-shadow-md">0</h3>
+          </div>
+          <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Sisa Tabung Tersedia</p>
+            <h3 id="pub-sisa-tabung" class="text-4xl font-black text-[#00ffaa] drop-shadow-md">0</h3>
+          </div>
         </div>
+        
         <div class="mb-8">
           <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Tabung Keluar</h3>
           <div class="overflow-x-auto rounded-xl border border-gray-800"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Keluar</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Tujuan Pengiriman</th><th class="px-4 py-3">Jumlah Tabung</th></tr></thead><tbody id="table-publik-masuk-body"></tbody></table></div>
@@ -585,8 +601,14 @@
 
     function updateUIAll() {
       ensureDataArrays();
-      const elTot = document.getElementById('pub-total-tabung'); const elSisa = document.getElementById('pub-sisa-tabung');
-      if(elTot) elTot.innerText = Number(appData.summary.totalTabung || 0).toLocaleString('id-ID'); if(elSisa) elSisa.innerText = Number(appData.summary.sisaTabung || 0).toLocaleString('id-ID');
+      
+      const elTotKes = document.getElementById('pub-total-keseluruhan');
+      const elTot = document.getElementById('pub-total-tabung'); 
+      const elSisa = document.getElementById('pub-sisa-tabung');
+      
+      if(elTotKes) elTotKes.innerText = Number(appData.summary.totalTabung || 0).toLocaleString('id-ID');
+      if(elTot) elTot.innerText = Number(appData.summary.totalTabung || 0).toLocaleString('id-ID'); 
+      if(elSisa) elSisa.innerText = Number(appData.summary.sisaTabung || 0).toLocaleString('id-ID');
 
       try { filterTabungMasukPublik(); } catch(e){} try { renderRekapDeposit(); } catch(e){} try { renderRekapTabungMasuk(); } catch(e){} try { renderRekapTransaksiMember(); } catch(e){}
       
