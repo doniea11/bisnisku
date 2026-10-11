@@ -20,7 +20,6 @@
 </head>
 <body class="bg-nature-theme min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER -->
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
@@ -185,50 +184,41 @@
         <h2 class="text-2xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Panel Kasir Gas & Transaksi</h2>
         <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-4 mb-6">
           <button onclick="switchKasirSub('deposit')" id="ksub-deposit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer">Deposit Kontrak</button>
-          <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Pengaturan Harga</button>
+          <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Pengaturan Harga Member</button>
           <button onclick="switchKasirSub('masuk')" id="ksub-masuk" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Tabung Keluar</button>
           <button onclick="switchKasirSub('member')" id="ksub-member" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Transaksi Member</button>
           <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Laporan Transaksi</button>
           <button onclick="switchKasirSub('memberbaru')" id="ksub-memberbaru" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Kelola Member</button>
         </div>
 
-        <!-- DEPOSIT -->
         <div id="kasir-sub-deposit" class="kasir-sub-content space-y-4">
           <form id="form-deposit" onsubmit="handleDepositSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="hidden" id="dep-id" value="">
             <div><label class="block text-xs text-gray-400 mb-1">Tanggal</label><input type="date" id="dep-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Nominal Deposit (Rp)</label><input type="text" id="dep-nominal" required placeholder="Masukkan Nominal Deposit" data-form-input oninput="formatRupiahInput(this); calcDepositTabung();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Total Tabung Gas Didapat (Auto)</label><input type="text" id="dep-totaltabung" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
+            <div><label class="block text-xs text-gray-400 mb-1">Nominal Deposit (Rp)</label><input type="text" id="dep-nominal" required placeholder="Masukkan Nominal Deposit" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+            <div><label class="block text-xs text-gray-400 mb-1">Total Tabung Gas Didapat (Input Manual)</label><input type="text" id="dep-totaltabung" required placeholder="Masukkan Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
             <div class="md:col-span-2 pt-2 flex gap-3"><button type="submit" id="btn-submit-dep" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Deposit Kontrak</button></div>
           </form>
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-6"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Deposit</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nominal (Rp)</th><th class="px-4 py-3">Total Tabung</th></tr></thead><tbody id="table-rekap-deposit-body"></tbody></table></div>
         </div>
 
-        <!-- HARGA MULTI TARGET (GLOBAL / KHUSUS MEMBER) -->
         <div id="kasir-sub-harga" class="kasir-sub-content hidden space-y-4">
-          <form id="form-harga" onsubmit="handleHargaSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="md:col-span-2">
-                <label class="block text-xs text-gray-400 mb-1">Target Pengaturan Harga (Global / Member Khusus)</label>
+          <form id="form-harga" onsubmit="handleHargaSubmit(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs text-gray-400 mb-1">Pilih Member Target Pengaturan Harga</label>
                 <select id="hrg-target" required onchange="onTargetHargaChange()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer">
-                    <option value="GLOBAL">-- HARGA GLOBAL (DEFAULT) --</option>
+                    <option value="" disabled selected>-- Pilih Member --</option>
                 </select>
-                <p class="text-[10px] text-gray-500 mt-1">*Pilih nama member jika ingin membuat Harga Jual (Gas/Tabung) khusus. Isi dengan 0 jika ingin kembali mengikuti Harga Global.</p>
+                <p class="text-[10px] text-gray-500 mt-1">*Pilih nama member untuk menentukan Harga Modal dan Harga Jual spesifik keagenan mereka.</p>
             </div>
-            <div id="wrap-mod-gas"><label class="block text-xs text-gray-400 mb-1">Harga Modal Gas (Rp)</label><input type="text" id="hrg-modal-gas" required placeholder="Harga Modal Gas" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div id="wrap-mod-tab"><label class="block text-xs text-gray-400 mb-1">Harga Modal Tabung (Rp)</label><input type="text" id="hrg-modal-tabung" required placeholder="Harga Modal Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Gas (Rp)</label><input type="text" id="hrg-jual-gas" required placeholder="Harga Jual Gas" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Tabung (Rp)</label><input type="text" id="hrg-jual-tabung" required placeholder="Harga Jual Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div class="md:col-span-2 pt-2 flex gap-3"><button type="submit" id="btn-submit-harga" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Pengaturan Harga</button></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label class="block text-xs text-gray-400 mb-1">Harga Modal Gas (Rp)</label><input type="text" id="hrg-modal-gas" required placeholder="Harga Modal Gas Khusus Member" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">Harga Modal Tabung (Rp)</label><input type="text" id="hrg-modal-tabung" required placeholder="Harga Modal Tabung Khusus Member" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Gas (Rp)</label><input type="text" id="hrg-jual-gas" required placeholder="Harga Jual Gas Khusus Member" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Tabung (Rp)</label><input type="text" id="hrg-jual-tabung" required placeholder="Harga Jual Tabung Khusus Member" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+            </div>
+            <div class="pt-2 flex gap-3"><button type="submit" id="btn-submit-harga" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Harga Member</button></div>
           </form>
-          <div class="mt-8 pt-6 border-t border-gray-800 space-y-4">
-            <h4 class="text-sm font-semibold text-white mb-2"><i class="fa-solid fa-earth-americas text-[#00ffaa] mr-1"></i> Informasi Harga Global Saat Ini</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              <div class="glass-card p-4 rounded-xl border border-gray-800 text-center bg-[#161b22]"><p class="text-xs text-gray-400 mb-1">Harga Modal Gas</p><h5 id="disp-hrg-mod-gas" class="text-xl font-bold text-white">Rp 0</h5></div>
-              <div class="glass-card p-4 rounded-xl border border-gray-800 text-center bg-[#161b22]"><p class="text-xs text-gray-400 mb-1">Harga Modal Tabung</p><h5 id="disp-hrg-mod-tab" class="text-xl font-bold text-white">Rp 0</h5></div>
-              <div class="glass-card p-4 rounded-xl border border-gray-800 text-center bg-[#161b22]"><p class="text-xs text-gray-400 mb-1">Harga Jual Gas</p><h5 id="disp-hrg-jual-gas" class="text-xl font-bold text-[#00ffaa]">Rp 0</h5></div>
-              <div class="glass-card p-4 rounded-xl border border-gray-800 text-center bg-[#161b22]"><p class="text-xs text-gray-400 mb-1">Harga Jual Tabung</p><h5 id="disp-hrg-jual-tab" class="text-xl font-bold text-[#00ffaa]">Rp 0</h5></div>
-            </div>
-          </div>
         </div>
 
         <div id="kasir-sub-masuk" class="kasir-sub-content hidden space-y-4">
@@ -250,7 +240,7 @@
             <div><label class="block text-xs text-gray-400 mb-1">Jenis Transaksi</label><select id="trx-jenis" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none" onchange="calcTransaksiTotal()"><option value="" disabled selected>-- Pilih Jenis --</option><option value="Penjualan Gas">Penjualan Gas</option><option value="Penjualan Tabung Kosong">Penjualan Tabung Kosong</option></select></div>
             <div><label class="block text-xs text-gray-400 mb-1">Metode Setoran</label><select id="trx-metode" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"><option value="" disabled selected>-- Pilih Metode --</option><option value="Tunai">Tunai</option><option value="Transfer">Transfer</option></select></div>
             <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung</label><input type="text" id="trx-jumlahtabung" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this); calcTransaksiTotal();" onclick="calcTransaksiTotal()" onblur="calcTransaksiTotal()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Jumlah Rupiah (Auto Hitung)</label><input type="text" id="trx-jumlahrupiah" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
+            <div><label class="block text-xs text-gray-400 mb-1">Jumlah Rupiah (Auto Calculate)</label><input type="text" id="trx-jumlahrupiah" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
             <div class="md:col-span-3 pt-2 flex gap-3"><button type="submit" id="btn-submit-trx" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Transaksi Member</button></div>
           </form>
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-6"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Trx</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Jenis Trx</th><th class="px-4 py-3">Metode</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Jumlah Rupiah (Rp)</th></tr></thead><tbody id="table-rekap-trx-body"></tbody></table></div>
@@ -396,18 +386,19 @@
     });
 
     // ==========================================
-    // GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA
+    // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbworZYCNeWw1154h6y7z-3rbfKZqDVgalOjrXHNr_ci7CZTFEn0Zq1U6PMBJlBBci2h/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyDMEEvvpB-htqyrP8C0D49rSq7aC5wvN0oEmogthOEOUihyvG-0aE2HLeleMjfNSfF/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
-        if (!GAS_URL.startsWith("http") || GAS_URL.includes("YOUR_WEB_APP_URL_HERE")) {
-          return resolve({ success: false, message: "Sistem belum terhubung. Silakan masukkan Web App URL Apps Script Anda di dalam kode HTML." });
-        }
         try {
+          if (GAS_URL === "YOUR_WEB_APP_URL_HERE" || !GAS_URL.startsWith("http")) {
+              resolve({success: false, message: "URL Deployment Apps Script (GAS_URL) belum diisi di kode!"}); return;
+          }
           let payloadString = payload ? JSON.stringify(payload) : null;
           let response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: action, payload: payloadString }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+          if (!response.ok) throw new Error("Gagal menghubungi server (HTTP " + response.status + ")");
           let result = await response.json(); resolve(result);
         } catch (error) { console.error("API Error:", error); reject(error); }
       });
@@ -427,31 +418,30 @@
     function handleLiquefiedClick() { switchPage('gas-portal'); } function handleSmartphoneClick() { switchPage('smartphone-portal'); }
     function openDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100', 'pointer-events-auto'); } }
     function closeDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-100', 'pointer-events-auto'); m.classList.add('opacity-0', 'pointer-events-none'); } }
-    function calcDepositTabung() { const nominal = parseCleanNumber(document.getElementById('dep-nominal').value); const hrgModalGas = Number(appData.settings.hargaModalGas) || 0; let total = 0; if(hrgModalGas > 0) total = Math.floor(nominal / hrgModalGas); const el = document.getElementById('dep-totaltabung'); if(el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0'; }
     
     function onTargetHargaChange() {
         const target = document.getElementById('hrg-target').value;
-        const gasInput = document.getElementById('hrg-jual-gas');
-        const tabInput = document.getElementById('hrg-jual-tabung');
-        const modGasWrap = document.getElementById('wrap-mod-gas');
-        const modTabWrap = document.getElementById('wrap-mod-tab');
         const modGasInput = document.getElementById('hrg-modal-gas');
         const modTabInput = document.getElementById('hrg-modal-tabung');
+        const gasInput = document.getElementById('hrg-jual-gas');
+        const tabInput = document.getElementById('hrg-jual-tabung');
 
-        if (target === 'GLOBAL') {
-            gasInput.value = appData.settings.hargaJualGas ? appData.settings.hargaJualGas.toLocaleString('id-ID') : '';
-            tabInput.value = appData.settings.hargaJualTabung ? appData.settings.hargaJualTabung.toLocaleString('id-ID') : '';
-            modGasWrap.classList.remove('hidden'); modTabWrap.classList.remove('hidden');
-            modGasInput.required = true; modTabInput.required = true;
-        } else {
-            const member = appData.members.find(m => m[0] === target);
-            if (member) {
-                const mGas = Number(member[5]) || 0; const mTab = Number(member[6]) || 0;
-                gasInput.value = mGas > 0 ? mGas.toLocaleString('id-ID') : '';
-                tabInput.value = mTab > 0 ? mTab.toLocaleString('id-ID') : '';
-            } else { gasInput.value = ''; tabInput.value = ''; }
-            modGasWrap.classList.add('hidden'); modTabWrap.classList.add('hidden');
-            modGasInput.required = false; modTabInput.required = false;
+        if (!target) {
+            modGasInput.value = ''; modTabInput.value = ''; gasInput.value = ''; tabInput.value = '';
+            return;
+        }
+
+        const member = appData.members.find(m => m[0] === target);
+        if (member) {
+            const mModGas = Number(member[5]) || 0;
+            const mModTab = Number(member[6]) || 0;
+            const mJualGas = Number(member[7]) || 0;
+            const mJualTab = Number(member[8]) || 0;
+
+            modGasInput.value = mModGas > 0 ? mModGas.toLocaleString('id-ID') : '';
+            modTabInput.value = mModTab > 0 ? mModTab.toLocaleString('id-ID') : '';
+            gasInput.value = mJualGas > 0 ? mJualGas.toLocaleString('id-ID') : '';
+            tabInput.value = mJualTab > 0 ? mJualTab.toLocaleString('id-ID') : '';
         }
     }
 
@@ -460,14 +450,13 @@
         const jumlah = parseCleanNumber(document.getElementById('trx-jumlahtabung').value); 
         const namaMember = document.getElementById('trx-namamember').value;
         
-        let hrgGas = Number(appData.settings.hargaJualGas) || 0;
-        let hrgTabung = Number(appData.settings.hargaJualTabung) || 0;
+        let hrgGas = 0; let hrgTabung = 0;
 
         if (namaMember && appData.members) {
             const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
             if (member) {
-                const specGas = Number(member[5]) || 0; const specTab = Number(member[6]) || 0;
-                if (specGas > 0) hrgGas = specGas; if (specTab > 0) hrgTabung = specTab;
+                hrgGas = Number(member[7]) || 0; 
+                hrgTabung = Number(member[8]) || 0;
             }
         }
 
@@ -480,7 +469,6 @@
         if(el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0'; 
     }
 
-    function onJenisTransaksiChange() { calcTransaksiTotal(); }
     function toggleTempatOffline() { const val = document.getElementById('ang-tempat-beli').value; const container = document.getElementById('container-tempat-offline'); const input = document.getElementById('ang-tempat-offline'); if (val === 'Toko Offline') { container.classList.remove('hidden'); input.required = true; } else { container.classList.add('hidden'); input.required = false; input.value = ''; } }
 
     function requestAccessPage(pageId) { 
@@ -518,8 +506,12 @@
         try {
             const res = await apiCall('getAppData');
             const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
-            if (res.success) { appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); } else { showToast("Gagal memuat data: " + res.message, "error"); }
-        } catch (err) { const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; showToast("Server Error: " + (err.message || err), "error"); }
+            if (res && res.success) { appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); } 
+            else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
+        } catch (err) { 
+            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
+            showToast("Server Error. Pastikan URL sudah benar. " + (err.message || err), "error"); 
+        }
     }
 
     async function submitModalPin() {
@@ -537,10 +529,6 @@
 
     function populateSettingsForm() {
       if (!appData.settings) return;
-      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ? val.toLocaleString('id-ID') : ''; };
-      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = 'Rp ' + (val || 0).toLocaleString('id-ID'); };
-      setVal('hrg-modal-gas', appData.settings.hargaModalGas); setVal('hrg-modal-tabung', appData.settings.hargaModalTabung); setVal('hrg-jual-gas', appData.settings.hargaJualGas); setVal('hrg-jual-tabung', appData.settings.hargaJualTabung);
-      setTxt('disp-hrg-mod-gas', appData.settings.hargaModalGas); setTxt('disp-hrg-mod-tab', appData.settings.hargaModalTabung); setTxt('disp-hrg-jual-gas', appData.settings.hargaJualGas); setTxt('disp-hrg-jual-tab', appData.settings.hargaJualTabung);
       
       const elNarasi = document.getElementById('adm-narasi-digital'); if (elNarasi) elNarasi.value = appData.settings.digitalNarasi || '';
       const elModalContent = document.getElementById('digital-modal-content'); if (elModalContent) elModalContent.innerHTML = appData.settings.digitalNarasi || '<p class="text-center text-gray-500">Narasi belum diatur.</p>';
@@ -566,8 +554,6 @@
       setToggle('kgas', appData.settings.reqPinKasirGas);
       setToggle('khp', appData.settings.reqPinKasirHp);
       setToggle('igas', appData.settings.reqPinInfoGas);
-      
-      if(document.getElementById('hrg-target')) onTargetHargaChange();
     }
 
     async function handleTogglePinReq(targetKey) {
@@ -582,7 +568,6 @@
            if(!confirm("PERINGATAN: Menonaktifkan Keamanan Super Admin akan membuat siapa saja bisa mengubah data rahasia. Yakin lanjutkan?")) return;
        }
 
-       // Optimistic UI Update
        let baseId = '';
        if (targetKey === 'REQ_PIN_ADMIN') { appData.settings.reqPinAdmin = newStatus; baseId = 'admin'; }
        if (targetKey === 'REQ_PIN_KASIR_GAS') { appData.settings.reqPinKasirGas = newStatus; baseId = 'kgas'; }
@@ -612,8 +597,8 @@
         gasSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; });
         hpSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Pembeli --</option>'; });
         
-        let currTargetHarga = 'GLOBAL';
-        if(targetHarga) { currTargetHarga = targetHarga.value; targetHarga.innerHTML = '<option value="GLOBAL">-- HARGA GLOBAL (DEFAULT) --</option>'; }
+        let currTargetHarga = '';
+        if(targetHarga) { currTargetHarga = targetHarga.value; targetHarga.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; }
 
         appData.members.forEach(m => {
            const mId = (m[0] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); const mKat = (m[4] || '').toString().toUpperCase().trim();
@@ -628,7 +613,8 @@
            }
            if (isHp) { hpSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); }
         });
-        if(targetHarga && currTargetHarga) targetHarga.value = currTargetHarga;
+
+        if(targetHarga && currTargetHarga) { targetHarga.value = currTargetHarga; onTargetHargaChange(); }
       } catch(e) {}
 
       try { renderLaporanTable(); } catch(e){} try { renderKasirAngsuranDropdown(); } catch(e){} try { renderKasirAngsuran(); } catch(e){} try { renderLaporanHp(); } catch(e){} try { renderAccessLogs(); } catch(e){}
@@ -643,7 +629,8 @@
         if (appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; return; } 
         let html = ''; 
         appData.transaksi.forEach(row => { 
-            const infoBadge = row[7] === 'Khusus' ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : '';
+            const isKhusus = (row[7] || '') === 'Khusus';
+            const infoBadge = isKhusus ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Khusus Agen"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : ``;
             html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
         }); 
         tbody.innerHTML = html; 
@@ -664,7 +651,11 @@
       baseFiltered.forEach(row => { 
           const memberName = row[2] || '-'; const jenis = row[3] || '-'; const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
           let modalSatuan = 0;
-          if(jenis === 'Penjualan Gas') modalSatuan = Number(appData.settings.hargaModalGas) || 0; else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(appData.settings.hargaModalTabung) || 0;
+          const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === memberName.toUpperCase());
+          if (memberData) {
+              if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
+              else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
+          }
           
           const profit = hargaJualTotal - (qty * modalSatuan);
           sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
@@ -672,7 +663,9 @@
           if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
           memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
 
-          const infoBadge = row[7] === 'Khusus' ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : '';
+          const isKhusus = (row[7] || '') === 'Khusus';
+          const infoBadge = isKhusus ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Khusus Agen"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : ``;
+          
           html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
@@ -853,26 +846,14 @@
 
     function executeSafeSubmit(btnId, submitFunction) { const btn = document.getElementById(btnId); if (!btn || btn.disabled) return; btn.disabled = true; const originalText = btn.innerText; btn.innerText = "Memproses..."; submitFunction(() => { btn.disabled = false; btn.innerText = originalText; }); }
 
-    async function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async (done) => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) }; try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleHargaSubmit(e) { 
-        e.preventDefault(); 
-        executeSafeSubmit('btn-submit-harga', async (done) => { 
-            const targetMember = document.getElementById('hrg-target') ? document.getElementById('hrg-target').value : 'GLOBAL';
-            const payload = { 
-                targetMember: targetMember,
-                hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), 
-                hargaModalTabung: parseCleanNumber(document.getElementById('hrg-modal-tabung').value), 
-                hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), 
-                hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) 
-            }; 
-            try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } 
-        }); 
-    }
+    async function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async (done) => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value), totalTabung: parseCleanNumber(document.getElementById('dep-totaltabung').value) }; try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = ''; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleHargaSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-harga', async (done) => { const targetMember = document.getElementById('hrg-target').value; const payload = { targetMember: targetMember, hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), hargaModalTabung: parseCleanNumber(document.getElementById('hrg-modal-tabung').value), hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) }; try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleTabungMasukSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tm', async (done) => { const payload = { idMasuk: document.getElementById('tm-id').value, tanggal: document.getElementById('tm-tanggal').value, tujuan: document.getElementById('tm-tujuan').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value) }; try { const res = await apiCall('saveTabungMasuk', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleTransaksiMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-trx', async (done) => { const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) }; try { const res = await apiCall('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleAngsuranSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-angsuran', async (done) => { const namaMemberInput = document.getElementById('ang-member').value.toUpperCase().trim(); const idPembelianInput = document.getElementById('ang-idpembelian').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); return mId === idPembelianInput && mName !== namaMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } let tempatBeli = document.getElementById('ang-tempat-beli').value; if(tempatBeli === 'Toko Offline') { tempatBeli = "Offline - " + document.getElementById('ang-tempat-offline').value; } const payload = { namaMember: namaMemberInput, idPembelian: idPembelianInput, tipeHp: document.getElementById('ang-tipe').value, hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value), keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value, dp: parseCleanNumber(document.getElementById('ang-dp').value), nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value), tempatPembelian: tempatBeli, tglInvoice: document.getElementById('ang-tgl-invoice').value }; try { const res = await apiCall('saveAngsuranBaru', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('container-tempat-offline').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handlePayHpSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-pay-hp', async (done) => { const payload = { idAngsuran: document.getElementById('pay-hp-id').value, tanggalBayar: document.getElementById('pay-hp-tanggal').value, nominalBayar: parseCleanNumber(document.getElementById('pay-hp-nominal').value) }; try { const res = await apiCall('savePembayaranAngsuran', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('pay-hp-info').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function verifyAdminPin() { const pin = document.getElementById('input-admin-auth-pin').value; try { const res = await apiCall('verifyUserPinAccess', { pin: pin, allowedRole: 'admin' }); if (res.success && res.role === 'admin') { document.getElementById('admin-auth-container').style.display = 'none'; document.getElementById('admin-panel-content').classList.remove('hidden'); showToast("Autentikasi berhasil!", "success"); } else { showToast(res.message, "error"); } } catch (e) { showToast("Server Error", "error"); } }
+    
     async function handleUpdateAdminPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-pin', async (done) => { const payload = { targetKey: 'ADMIN_PIN', newPin1: document.getElementById('adm-new-pin1').value, newPin2: document.getElementById('adm-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-kg-pin', async (done) => { const payload = { targetKey: 'KASIR_GAS_PIN', newPin1: document.getElementById('kg-new-pin1').value, newPin2: document.getElementById('kg-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetKasirHpPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-khp-pin', async (done) => { const payload = { targetKey: 'KASIR_HP_PIN', newPin1: document.getElementById('khp-new-pin1').value, newPin2: document.getElementById('khp-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
