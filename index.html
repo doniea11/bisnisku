@@ -388,7 +388,7 @@
     // ==========================================
     // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyDMEEvvpB-htqyrP8C0D49rSq7aC5wvN0oEmogthOEOUihyvG-0aE2HLeleMjfNSfF/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzwvd8673tBfWKlQiybAzo_wRVMeU03jN-RhLYxv7PIt5tBrkhzOzURMkxfpnEHxOs/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -452,6 +452,7 @@
         
         let hrgGas = 0; let hrgTabung = 0;
 
+        // Mencari member berdasarkan nama, mengambil harga jual spesifik mereka
         if (namaMember && appData.members) {
             const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
             if (member) {
@@ -591,7 +592,8 @@
       
       try {
         const spNames = appData.angsuran.map(a => (a[1] || '').toString().toUpperCase().trim());
-        const gasSelects = ['trx-namamember', 'reset-id-member', 'tm-tujuan']; const hpSelects = ['reset-id-member-hp'];
+        const gasSelects = ['trx-namamember', 'reset-id-member', 'tm-tujuan']; 
+        const hpSelects = ['reset-id-member-hp'];
         const targetHarga = document.getElementById('hrg-target');
 
         gasSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; });
@@ -630,7 +632,7 @@
         let html = ''; 
         appData.transaksi.forEach(row => { 
             const isKhusus = (row[7] || '') === 'Khusus';
-            const infoBadge = isKhusus ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Khusus Agen"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : ``;
+            const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0 (CEK MODAL)</span>`;
             html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
         }); 
         tbody.innerHTML = html; 
@@ -664,7 +666,7 @@
           memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
 
           const isKhusus = (row[7] || '') === 'Khusus';
-          const infoBadge = isKhusus ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Khusus Agen"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : ``;
+          const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0</span>`;
           
           html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
