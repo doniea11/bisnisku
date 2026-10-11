@@ -168,6 +168,7 @@
           </div>
         </div>
         
+        <!-- PEMBARUAN: 4 KOLOM DASHBOARD LPG -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
             <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Total Tabung Keseluruhan</p>
@@ -234,6 +235,26 @@
             </div>
             <div class="pt-2 flex gap-3"><button type="submit" id="btn-submit-harga" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Harga Member</button></div>
           </form>
+          
+          <!-- TABEL RIWAYAT HARGA MEMBER -->
+          <div class="mt-8 border-t border-gray-800 pt-6">
+              <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Pengaturan Harga Member</h3>
+              <div class="overflow-x-auto rounded-xl border border-gray-800">
+                  <table class="w-full text-left text-sm text-gray-300">
+                      <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
+                          <tr>
+                              <th class="px-4 py-3">Nama Member</th>
+                              <th class="px-4 py-3">Modal Gas</th>
+                              <th class="px-4 py-3">Jual Gas</th>
+                              <th class="px-4 py-3">Modal Tabung</th>
+                              <th class="px-4 py-3">Jual Tabung</th>
+                          </tr>
+                      </thead>
+                      <tbody id="table-rekap-harga-body"></tbody>
+                  </table>
+              </div>
+          </div>
+          
         </div>
 
         <div id="kasir-sub-masuk" class="kasir-sub-content hidden space-y-4">
@@ -269,7 +290,6 @@
               <button onclick="renderLaporanTable()" class="px-3 py-1.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-xs cursor-pointer">Filter</button>
             </div>
           </div>
-          
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
              <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
                 <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Terjual</span>
@@ -292,7 +312,6 @@
                 <h4 id="lap-tot-profit" class="text-xl font-bold text-[#00ffaa] mt-1">Rp 0</h4>
              </div>
           </div>
-
           <div class="glass-card p-4 rounded-xl border border-gray-800">
              <h4 class="text-sm font-semibold text-white mb-3"><i class="fa-solid fa-users text-[#00ffaa] mr-2"></i>Rincian Profit per Member</h4>
              <div id="lap-profit-member" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs"></div>
@@ -422,7 +441,7 @@
     // ==========================================
     // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5Q4Mez6gaok312LgVy1kllV5A_mPmLSn9FKromAEzmAjyZrfDnw3goLgO3uzQGar/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbworZYCNeWw1154h6y7z-3rbfKZqDVgalOjrXHNr_ci7CZTFEn0Zq1U6PMBJlBBci2h/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -486,6 +505,7 @@
         
         let hrgGas = 0; let hrgTabung = 0;
 
+        // Mencari member berdasarkan nama, mengambil harga jual spesifik mereka
         if (namaMember && appData.members) {
             const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
             if (member) {
@@ -629,7 +649,7 @@
       let calcDepBaruSisaLama = currentSisa;
       
       if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
-          const latestDepDate = appData.deposit[0][1] || '';
+          const latestDepDate = appData.deposit[0][1] || ''; // Tanggal truk deposit terakhir datang
           let keluarSejakDeposit = 0;
           
           if (appData.tabungMasuk && latestDepDate !== '') {
@@ -639,6 +659,7 @@
                   }
               });
           }
+          // Stok Awal = Sisa Gudang Sekarang + Tabung yang sudah terjual sejak truk terakhir datang
           calcDepBaruSisaLama = currentSisa + keluarSejakDeposit;
       }
 
@@ -677,8 +698,45 @@
         if(targetHarga && currTargetHarga) { targetHarga.value = currTargetHarga; onTargetHargaChange(); }
       } catch(e) {}
 
-      try { renderLaporanTable(); } catch(e){} try { renderKasirAngsuranDropdown(); } catch(e){} try { renderKasirAngsuran(); } catch(e){} try { renderLaporanHp(); } catch(e){} try { renderAccessLogs(); } catch(e){}
+      try { renderLaporanTable(); } catch(e){} 
+      try { renderRekapHargaMember(); } catch(e){} 
+      try { renderKasirAngsuranDropdown(); } catch(e){} 
+      try { renderKasirAngsuran(); } catch(e){} 
+      try { renderLaporanHp(); } catch(e){} 
+      try { renderAccessLogs(); } catch(e){}
+      
       if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
+    }
+
+    // PEMBARUAN: Fungsi Render Rekap Harga Member
+    function renderRekapHargaMember() {
+        const tbody = document.getElementById('table-rekap-harga-body'); 
+        if (!tbody) return;
+        
+        let html = '';
+        appData.members.forEach(m => {
+            const kat = (m[4] || '').toString().toUpperCase();
+            if(kat === 'SMARTPHONE') return; // Lewati member smartphone
+            
+            const nama = m[1] || '-';
+            const modGas = Number(m[5]) || 0; 
+            const modTab = Number(m[6]) || 0;
+            const jualGas = Number(m[7]) || 0; 
+            const jualTab = Number(m[8]) || 0;
+            
+            const isBelumAtur = (modGas === 0 && jualGas === 0 && modTab === 0 && jualTab === 0);
+            const badge = isBelumAtur ? `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-triangle-exclamation"></i> BELUM ATUR</span>` : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-check"></i> AKTIF</span>`;
+            
+            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+                <td class="px-4 py-3 font-semibold text-white flex items-center">${nama} ${badge}</td>
+                <td class="px-4 py-3 text-gray-400">Rp ${modGas.toLocaleString('id-ID')}</td>
+                <td class="px-4 py-3 text-[#00ffaa] font-bold">Rp ${jualGas.toLocaleString('id-ID')}</td>
+                <td class="px-4 py-3 text-gray-400">Rp ${modTab.toLocaleString('id-ID')}</td>
+                <td class="px-4 py-3 text-blue-400 font-bold">Rp ${jualTab.toLocaleString('id-ID')}</td>
+            </tr>`;
+        });
+        if(html === '') html = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
+        tbody.innerHTML = html;
     }
 
     function renderRekapDeposit() { const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return; if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; return; } let html = ''; appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
