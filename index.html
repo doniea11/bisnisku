@@ -20,7 +20,7 @@
 </head>
 <body class="bg-nature-theme min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER STREAMING_CHUNK:Header navigation -->
+  <!-- HEADER -->
   <header class="glass-card sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-[#00ffaa]/30">
     <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard')">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ffaa] to-emerald-900 border border-[#00ffaa]/60 flex items-center justify-center zett-glow text-gray-900 shadow-lg"><i class="fa-solid fa-leaf text-lg"></i></div>
@@ -38,7 +38,7 @@
       <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">memuat sistem pencatatan bisnis masdonie...</p>
     </div>
 
-    <!-- 1. HALAMAN DASHBOARD STREAMING_CHUNK:Dashboard UI -->
+    <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="page-view hidden space-y-8">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none"><i class="fa-solid fa-leaf text-[250px] text-[#00ffaa]"></i></div>
@@ -77,7 +77,7 @@
        </div>
     </section>
 
-    <!-- HALAMAN KASIR SMARTPHONE STREAMING_CHUNK:Kasir Smartphone Form -->
+    <!-- HALAMAN KASIR SMARTPHONE -->
     <section id="page-kasir-smartphone" class="page-view hidden space-y-6">
        <div class="glass-card p-6 rounded-2xl">
          <h2 class="text-2xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Kasir Angsuran Smartphone</h2>
@@ -157,7 +157,7 @@
        </div>
     </section>
 
-    <!-- 2. HALAMAN PUBLIK GAS & 3. HALAMAN KASIR GAS STREAMING_CHUNK:Kasir Gas Info & UI -->
+    <!-- 2. HALAMAN PUBLIK GAS & 3. HALAMAN KASIR GAS -->
     <section id="page-publik" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -204,7 +204,7 @@
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-6"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Deposit</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nominal (Rp)</th><th class="px-4 py-3">Total Tabung</th></tr></thead><tbody id="table-rekap-deposit-body"></tbody></table></div>
         </div>
 
-        <!-- HARGA MULTI TARGET STREAMING_CHUNK:Harga Settings -->
+        <!-- HARGA MULTI TARGET (GLOBAL / KHUSUS MEMBER) -->
         <div id="kasir-sub-harga" class="kasir-sub-content hidden space-y-4">
           <form id="form-harga" onsubmit="handleHargaSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="md:col-span-2">
@@ -212,14 +212,12 @@
                 <select id="hrg-target" required onchange="onTargetHargaChange()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer">
                     <option value="GLOBAL">-- HARGA GLOBAL (DEFAULT) --</option>
                 </select>
-                <p class="text-[10px] text-gray-500 mt-1">*Pilih nama member jika ingin membuat margin Harga Jual (Gas/Tabung) yang khusus / berbeda. Isi dengan 0 jika ingin kembali mengikuti harga Global.</p>
+                <p class="text-[10px] text-gray-500 mt-1">*Pilih nama member jika ingin membuat Harga Jual (Gas/Tabung) khusus. Isi dengan 0 jika ingin kembali mengikuti Harga Global.</p>
             </div>
-            
             <div id="wrap-mod-gas"><label class="block text-xs text-gray-400 mb-1">Harga Modal Gas (Rp)</label><input type="text" id="hrg-modal-gas" required placeholder="Harga Modal Gas" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
             <div id="wrap-mod-tab"><label class="block text-xs text-gray-400 mb-1">Harga Modal Tabung (Rp)</label><input type="text" id="hrg-modal-tabung" required placeholder="Harga Modal Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
             <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Gas (Rp)</label><input type="text" id="hrg-jual-gas" required placeholder="Harga Jual Gas" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
             <div><label class="block text-xs text-gray-400 mb-1">Harga Jual Tabung (Rp)</label><input type="text" id="hrg-jual-tabung" required placeholder="Harga Jual Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-            
             <div class="md:col-span-2 pt-2 flex gap-3"><button type="submit" id="btn-submit-harga" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Pengaturan Harga</button></div>
           </form>
           <div class="mt-8 pt-6 border-t border-gray-800 space-y-4">
@@ -301,7 +299,7 @@
       </div>
     </section>
 
-    <!-- 4. HALAMAN SUPER ADMIN STREAMING_CHUNK:Super Admin Settings -->
+    <!-- 4. HALAMAN SUPER ADMIN -->
     <section id="page-admin" class="page-view hidden space-y-6">
       <div id="admin-panel-content" class="block space-y-6">
         
@@ -381,12 +379,11 @@
     </section>
   </main>
 
-  <!-- MODALS & NOTIFICATIONS STREAMING_CHUNK:Global Components -->
+  <!-- MODALS & NOTIFICATIONS -->
   <div id="pin-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300"><div class="w-16 h-16 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4 zett-glow"><i class="fa-solid fa-lock text-[#00ffaa] text-2xl"></i></div><h3 id="modal-pin-title" class="text-xl font-bold tracking-wide mb-1 text-white">Autentikasi</h3><p id="modal-pin-desc" class="text-xs text-gray-300 mb-4">Masukkan data keamanan Anda.</p><input type="password" id="modal-pin-input" placeholder="Masukkan" onkeydown="if(event.key==='Enter'){submitModalPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white tracking-widest focus:border-[#00ffaa] outline-none mb-4 uppercase"><div class="flex gap-2"><button onclick="closePinModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl hover:bg-gray-700 text-sm cursor-pointer">Batal</button><button onclick="submitModalPin()" class="w-1/2 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] text-sm cursor-pointer">Masuk</button></div></div></div>
   <div id="toast-notification" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div id="toast-box" class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-95 transition-transform duration-300"><div id="toast-icon-container" class="w-20 h-20 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4 zett-glow"><i id="toast-icon" class="fa-solid fa-circle-check text-[#00ffaa] text-4xl"></i></div><h3 id="toast-title" class="text-2xl font-bold tracking-wide mb-2 text-white">Notifikasi Sistem</h3><p id="toast-message" class="text-base text-gray-300">Pesan notifikasi berhasil muncul di sini.</p></div></div>
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4"><div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6"><div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 rounded-2xl bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center zett-glow"><i class="fa-solid fa-globe text-[#00ffaa] text-2xl"></i></div><div><h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3></div></div><button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-[#00ffaa] flex items-center justify-center transition-all cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="digital-modal-content" class="text-gray-300 space-y-4 text-sm sm:text-base leading-relaxed py-2"></div><div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div></div></div>
 
-  <!-- JS LOGIC STREAMING_CHUNK:Javascript Application Start -->
   <script>
     let appData = { settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], accessLogs: [], summary: {} };
     let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
@@ -401,12 +398,11 @@
     // ==========================================
     // GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyO9IedE2j2ObVgD7f0l781ipmxnUa35rP5AbHlReB8Bokgox-GEGE6a7O4r9vae0Qd/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbworZYCNeWw1154h6y7z-3rbfKZqDVgalOjrXHNr_ci7CZTFEn0Zq1U6PMBJlBBci2h/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
         if (!GAS_URL.startsWith("http") || GAS_URL.includes("YOUR_WEB_APP_URL_HERE")) {
-          console.warn("Peringatan: GAS_URL belum dikonfigurasi dengan URL yang valid.");
           return resolve({ success: false, message: "Sistem belum terhubung. Silakan masukkan Web App URL Apps Script Anda di dalam kode HTML." });
         }
         try {
@@ -431,9 +427,34 @@
     function handleLiquefiedClick() { switchPage('gas-portal'); } function handleSmartphoneClick() { switchPage('smartphone-portal'); }
     function openDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100', 'pointer-events-auto'); } }
     function closeDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-100', 'pointer-events-auto'); m.classList.add('opacity-0', 'pointer-events-none'); } }
-    
     function calcDepositTabung() { const nominal = parseCleanNumber(document.getElementById('dep-nominal').value); const hrgModalGas = Number(appData.settings.hargaModalGas) || 0; let total = 0; if(hrgModalGas > 0) total = Math.floor(nominal / hrgModalGas); const el = document.getElementById('dep-totaltabung'); if(el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0'; }
     
+    function onTargetHargaChange() {
+        const target = document.getElementById('hrg-target').value;
+        const gasInput = document.getElementById('hrg-jual-gas');
+        const tabInput = document.getElementById('hrg-jual-tabung');
+        const modGasWrap = document.getElementById('wrap-mod-gas');
+        const modTabWrap = document.getElementById('wrap-mod-tab');
+        const modGasInput = document.getElementById('hrg-modal-gas');
+        const modTabInput = document.getElementById('hrg-modal-tabung');
+
+        if (target === 'GLOBAL') {
+            gasInput.value = appData.settings.hargaJualGas ? appData.settings.hargaJualGas.toLocaleString('id-ID') : '';
+            tabInput.value = appData.settings.hargaJualTabung ? appData.settings.hargaJualTabung.toLocaleString('id-ID') : '';
+            modGasWrap.classList.remove('hidden'); modTabWrap.classList.remove('hidden');
+            modGasInput.required = true; modTabInput.required = true;
+        } else {
+            const member = appData.members.find(m => m[0] === target);
+            if (member) {
+                const mGas = Number(member[5]) || 0; const mTab = Number(member[6]) || 0;
+                gasInput.value = mGas > 0 ? mGas.toLocaleString('id-ID') : '';
+                tabInput.value = mTab > 0 ? mTab.toLocaleString('id-ID') : '';
+            } else { gasInput.value = ''; tabInput.value = ''; }
+            modGasWrap.classList.add('hidden'); modTabWrap.classList.add('hidden');
+            modGasInput.required = false; modTabInput.required = false;
+        }
+    }
+
     function calcTransaksiTotal() { 
         const jenis = document.getElementById('trx-jenis').value; 
         const jumlah = parseCleanNumber(document.getElementById('trx-jumlahtabung').value); 
@@ -442,14 +463,11 @@
         let hrgGas = Number(appData.settings.hargaJualGas) || 0;
         let hrgTabung = Number(appData.settings.hargaJualTabung) || 0;
 
-        // Ambil harga spesifik member jika ada
         if (namaMember && appData.members) {
             const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
             if (member) {
-                const specGas = Number(member[5]) || 0;
-                const specTab = Number(member[6]) || 0;
-                if (specGas > 0) hrgGas = specGas;
-                if (specTab > 0) hrgTabung = specTab;
+                const specGas = Number(member[5]) || 0; const specTab = Number(member[6]) || 0;
+                if (specGas > 0) hrgGas = specGas; if (specTab > 0) hrgTabung = specTab;
             }
         }
 
@@ -461,7 +479,8 @@
         const el = document.getElementById('trx-jumlahrupiah'); 
         if(el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0'; 
     }
-    
+
+    function onJenisTransaksiChange() { calcTransaksiTotal(); }
     function toggleTempatOffline() { const val = document.getElementById('ang-tempat-beli').value; const container = document.getElementById('container-tempat-offline'); const input = document.getElementById('ang-tempat-offline'); if (val === 'Toko Offline') { container.classList.remove('hidden'); input.required = true; } else { container.classList.add('hidden'); input.required = false; input.value = ''; } }
 
     function requestAccessPage(pageId) { 
@@ -516,39 +535,6 @@
       } catch (err) { showToast("Error verifikasi: " + (err.message || err), "error"); }
     }
 
-    function onTargetHargaChange() {
-        const target = document.getElementById('hrg-target').value;
-        const gasInput = document.getElementById('hrg-jual-gas');
-        const tabInput = document.getElementById('hrg-jual-tabung');
-        const modGasWrap = document.getElementById('wrap-mod-gas');
-        const modTabWrap = document.getElementById('wrap-mod-tab');
-        const modGasInput = document.getElementById('hrg-modal-gas');
-        const modTabInput = document.getElementById('hrg-modal-tabung');
-
-        if (target === 'GLOBAL') {
-            gasInput.value = appData.settings.hargaJualGas ? appData.settings.hargaJualGas.toLocaleString('id-ID') : '';
-            tabInput.value = appData.settings.hargaJualTabung ? appData.settings.hargaJualTabung.toLocaleString('id-ID') : '';
-            modGasWrap.classList.remove('hidden');
-            modTabWrap.classList.remove('hidden');
-            modGasInput.required = true;
-            modTabInput.required = true;
-        } else {
-            const member = appData.members.find(m => m[0] === target);
-            if (member) {
-                const mGas = Number(member[5]) || 0;
-                const mTab = Number(member[6]) || 0;
-                gasInput.value = mGas > 0 ? mGas.toLocaleString('id-ID') : '';
-                tabInput.value = mTab > 0 ? mTab.toLocaleString('id-ID') : '';
-            } else {
-                gasInput.value = ''; tabInput.value = '';
-            }
-            modGasWrap.classList.add('hidden');
-            modTabWrap.classList.add('hidden');
-            modGasInput.required = false;
-            modTabInput.required = false;
-        }
-    }
-
     function populateSettingsForm() {
       if (!appData.settings) return;
       const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ? val.toLocaleString('id-ID') : ''; };
@@ -581,7 +567,7 @@
       setToggle('khp', appData.settings.reqPinKasirHp);
       setToggle('igas', appData.settings.reqPinInfoGas);
       
-      onTargetHargaChange(); // init dropdown
+      if(document.getElementById('hrg-target')) onTargetHargaChange();
     }
 
     async function handleTogglePinReq(targetKey) {
@@ -596,7 +582,7 @@
            if(!confirm("PERINGATAN: Menonaktifkan Keamanan Super Admin akan membuat siapa saja bisa mengubah data rahasia. Yakin lanjutkan?")) return;
        }
 
-       // Optimistic UI Update (berubah seketika sebelum nunggu loading)
+       // Optimistic UI Update
        let baseId = '';
        if (targetKey === 'REQ_PIN_ADMIN') { appData.settings.reqPinAdmin = newStatus; baseId = 'admin'; }
        if (targetKey === 'REQ_PIN_KASIR_GAS') { appData.settings.reqPinKasirGas = newStatus; baseId = 'kgas'; }
@@ -626,12 +612,8 @@
         gasSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; });
         hpSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Pembeli --</option>'; });
         
-        // Simpan nilai dropdown target harga
         let currTargetHarga = 'GLOBAL';
-        if(targetHarga) {
-            currTargetHarga = targetHarga.value;
-            targetHarga.innerHTML = '<option value="GLOBAL">-- HARGA GLOBAL (DEFAULT) --</option>';
-        }
+        if(targetHarga) { currTargetHarga = targetHarga.value; targetHarga.innerHTML = '<option value="GLOBAL">-- HARGA GLOBAL (DEFAULT) --</option>'; }
 
         appData.members.forEach(m => {
            const mId = (m[0] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); const mKat = (m[4] || '').toString().toUpperCase().trim();
@@ -641,7 +623,7 @@
            if(isHp) isGas = false;
 
            if (isGas) { 
-               gasSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = (selId === 'reset-id-member') ? mId : mName; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } });
+               gasSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = (selId === 'reset-id-member') ? mId : mName; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); 
                if (targetHarga) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; targetHarga.appendChild(opt); }
            }
            if (isHp) { hpSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); }
@@ -655,7 +637,17 @@
 
     function renderRekapDeposit() { const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return; if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; return; } let html = ''; appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
     function renderRekapTabungMasuk() { const tbody = document.getElementById('table-rekap-tm-body'); if (!tbody) return; if (appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>'; return; } let html = ''; appData.tabungMasuk.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${row[1] || '-'}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
-    function renderRekapTransaksiMember() { const tbody = document.getElementById('table-rekap-trx-body'); if (!tbody) return; if (appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; return; } let html = ''; appData.transaksi.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white">${row[2] || '-'}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; }); tbody.innerHTML = html; }
+    
+    function renderRekapTransaksiMember() { 
+        const tbody = document.getElementById('table-rekap-trx-body'); if (!tbody) return; 
+        if (appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; return; } 
+        let html = ''; 
+        appData.transaksi.forEach(row => { 
+            const infoBadge = row[7] === 'Khusus' ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : '';
+            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${row[1] || '-'}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
+        }); 
+        tbody.innerHTML = html; 
+    }
 
     function renderLaporanTable() {
       const startEl = document.getElementById('rep-start'); const endEl = document.getElementById('rep-end');
@@ -674,14 +666,14 @@
           let modalSatuan = 0;
           if(jenis === 'Penjualan Gas') modalSatuan = Number(appData.settings.hargaModalGas) || 0; else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(appData.settings.hargaModalTabung) || 0;
           
-          // Keuntungan = Total Harga (berdasarkan harga global / harga member di DB transaksi) dikurangi Harga Modal (Global)
           const profit = hargaJualTotal - (qty * modalSatuan);
           sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
           
           if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
           memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
 
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white">${memberName}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
+          const infoBadge = row[7] === 'Khusus' ? `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : '';
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${row[1]}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
       html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tabung</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
@@ -862,11 +854,10 @@
     function executeSafeSubmit(btnId, submitFunction) { const btn = document.getElementById(btnId); if (!btn || btn.disabled) return; btn.disabled = true; const originalText = btn.innerText; btn.innerText = "Memproses..."; submitFunction(() => { btn.disabled = false; btn.innerText = originalText; }); }
 
     async function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async (done) => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value) }; try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    
     async function handleHargaSubmit(e) { 
         e.preventDefault(); 
         executeSafeSubmit('btn-submit-harga', async (done) => { 
-            const targetMember = document.getElementById('hrg-target').value;
+            const targetMember = document.getElementById('hrg-target') ? document.getElementById('hrg-target').value : 'GLOBAL';
             const payload = { 
                 targetMember: targetMember,
                 hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), 
@@ -874,15 +865,9 @@
                 hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), 
                 hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) 
             }; 
-            try { 
-                const res = await apiCall('savePengaturanHarga', payload); 
-                if (res.success) { showToast(res.message, "success"); loadBackendData(); } 
-                else { showToast(res.message, "error"); } 
-            } catch(err) { showToast("Error: " + err.message, "error"); } 
-            finally { done(); } 
+            try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } 
         }); 
     }
-    
     async function handleTabungMasukSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tm', async (done) => { const payload = { idMasuk: document.getElementById('tm-id').value, tanggal: document.getElementById('tm-tanggal').value, tujuan: document.getElementById('tm-tujuan').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value) }; try { const res = await apiCall('saveTabungMasuk', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleTransaksiMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-trx', async (done) => { const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) }; try { const res = await apiCall('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleAngsuranSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-angsuran', async (done) => { const namaMemberInput = document.getElementById('ang-member').value.toUpperCase().trim(); const idPembelianInput = document.getElementById('ang-idpembelian').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); return mId === idPembelianInput && mName !== namaMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } let tempatBeli = document.getElementById('ang-tempat-beli').value; if(tempatBeli === 'Toko Offline') { tempatBeli = "Offline - " + document.getElementById('ang-tempat-offline').value; } const payload = { namaMember: namaMemberInput, idPembelian: idPembelianInput, tipeHp: document.getElementById('ang-tipe').value, hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value), keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value, dp: parseCleanNumber(document.getElementById('ang-dp').value), nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value), tempatPembelian: tempatBeli, tglInvoice: document.getElementById('ang-tgl-invoice').value }; try { const res = await apiCall('saveAngsuranBaru', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('container-tempat-offline').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
