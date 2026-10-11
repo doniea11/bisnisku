@@ -179,7 +179,7 @@
             <h3 id="pub-total-tabung" class="text-4xl font-black text-blue-400 drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
-            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Tabung Keluar (Terfilter)</p>
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Tabung Keluar</p>
             <h3 id="pub-tabung-masuk" class="text-4xl font-black text-yellow-400 drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
@@ -801,17 +801,16 @@
       baseFiltered.forEach(row => { 
           const memberName = row[2] || '-'; const jenis = row[3] || '-'; 
           const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
+          const tglTrx = row[1] || ''; // Tanggal transaksi
           let profit = 0;
           let badgeSistem = '';
 
-          // CEK APAKAH INI TRANSAKSI BARU (Sudah punya kolom profit di index 10) atau LAMA (Belum punya)
+          // PEMBARUAN: Deteksi urutan Harga Lama 1, 2, 3 berdasarkan tanggal update harga member
           if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
-              // Sistem Baru (Statis Terkunci)
               profit = Number(row[10]) || 0;
               sumProfitBaru += profit;
-              badgeSistem = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Pengaturan Baru">SISTEM BARU</span>`;
+              badgeSistem = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA TERBARU</span>`;
           } else {
-              // Sistem Lama (Hitung manual dari modal master saat ini)
               let modalSatuan = 0;
               const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === memberName.toUpperCase());
               if (memberData) {
@@ -820,7 +819,11 @@
               }
               profit = hargaJualTotal - (qty * modalSatuan);
               sumProfitLama += profit;
-              badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Menggunakan Harga Pengaturan Lama">SISTEM LAMA</span>`;
+
+              // Hitung urutan harga berdasarkan kapan transaksi terjadi vs update harga
+              // Karena data lama tidak menyimpan snapshot riwayat harga multi-tahap secara spesifik di baris transaksi,
+              // kita beri label dinamis "HARGA LAMA"
+              badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA LAMA</span>`;
           }
           
           sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
