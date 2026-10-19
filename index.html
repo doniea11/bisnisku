@@ -175,7 +175,7 @@
             <h3 id="pub-total-keseluruhan" class="text-4xl font-black text-white drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
-            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider leading-tight font-semibold">Deposit Baru + Sisa Lama</p>
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider leading-tight font-semibold">Deposit Baru</p>
             <h3 id="pub-total-tabung" class="text-4xl font-black text-blue-400 drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
@@ -858,22 +858,17 @@
       let totalDepositKeseluruhan = Number(appData.summary.totalTabung || 0);
       let currentSisa = Number(appData.summary.sisaTabung || 0);
       
-      let calcDepBaruSisaLama = currentSisa;
-      
+      // Mengambil jumlah dari deposit kontrak terbaru yang diinput saja
+      let latestDepositTabung = 0;
       if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
-          const latestDepDate = appData.deposit[0][1] || '';
-          let keluarSejakDeposit = 0;
-          
-          if (appData.tabungMasuk && latestDepDate !== '') {
-              appData.tabungMasuk.forEach(row => {
-                  if (row[1] >= latestDepDate) {
-                      keluarSejakDeposit += (Number(row[2]) || 0);
-                  }
-              });
-          }
-          calcDepBaruSisaLama = currentSisa + keluarSejakDeposit;
+          latestDepositTabung = Number(appData.deposit[0][3]) || 0;
       }
 
+      if(elTotKes) elTotKes.innerText = totalDepositKeseluruhan.toLocaleString('id-ID');
+      if(elTot) elTot.innerText = latestDepositTabung.toLocaleString('id-ID'); 
+      if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
+
+      try { filterTabungMasukPublik(); } catch(e){} try { renderRekapDeposit(); } catch(e){} try { renderRekapTabungMasuk(); } catch(e){} try { renderRekapTransaksiMember(); } catch(e){}
       if(elTotKes) elTotKes.innerText = totalDepositKeseluruhan.toLocaleString('id-ID');
       if(elTot) elTot.innerText = calcDepBaruSisaLama.toLocaleString('id-ID'); 
       if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
@@ -936,7 +931,6 @@
       if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
     }
 
-    // Fungsi Render Tabel Jumlah Tabung Member (Nama Otomatis, Alamat Otomatis, Jumlah Tabung Manual)
     function renderJumlahTabungMember() {
         const tbody = document.getElementById('table-tabung-member-body');
         if (!tbody) return;
@@ -978,7 +972,6 @@
         tbody.innerHTML = html;
     }
 
-    // Fungsi Render Riwayat Update Jumlah Tabung Member (Penambahan & Pengurangan)
     function renderRiwayatTabungMember() {
         const tbody = document.getElementById('table-riwayat-tabung-member-body');
         if (!tbody) return;
