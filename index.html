@@ -200,6 +200,7 @@
         <h2 class="text-2xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Panel Kasir Gas & Transaksi</h2>
         <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-4 mb-6">
           <button onclick="switchKasirSub('deposit')" id="ksub-deposit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer">Deposit Kontrak</button>
+          <button onclick="switchKasirSub('tabungmember')" id="ksub-tabungmember" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Jumlah Tabung Member</button>
           <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Pengaturan Harga Member</button>
           <button onclick="switchKasirSub('masuk')" id="ksub-masuk" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Tabung Keluar</button>
           <button onclick="switchKasirSub('member')" id="ksub-member" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Transaksi Member</button>
@@ -216,6 +217,27 @@
             <div class="md:col-span-2 pt-2 flex gap-3"><button type="submit" id="btn-submit-dep" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Deposit Kontrak</button></div>
           </form>
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-6"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Deposit</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nominal (Rp)</th><th class="px-4 py-3">Total Tabung</th></tr></thead><tbody id="table-rekap-deposit-body"></tbody></table></div>
+        </div>
+
+        <!-- SUB KASIR GAS: JUMLAH TABUNG MEMBER -->
+        <div id="kasir-sub-tabungmember" class="kasir-sub-content hidden space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <h3 class="text-lg font-semibold text-white"><i class="fa-solid fa-boxes-stacked text-[#00ffaa] mr-2"></i>Data Jumlah Tabung Member</h3>
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-800">
+            <table class="w-full text-left text-sm text-gray-300">
+              <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
+                <tr>
+                  <th class="px-4 py-3">ID Member</th>
+                  <th class="px-4 py-3">Nama Member</th>
+                  <th class="px-4 py-3">Alamat</th>
+                  <th class="px-4 py-3">Total Tabung Keluar</th>
+                  <th class="px-4 py-3">Total Transaksi Tabung</th>
+                </tr>
+              </thead>
+              <tbody id="table-tabung-member-body"></tbody>
+            </table>
+          </div>
         </div>
 
         <div id="kasir-sub-harga" class="kasir-sub-content hidden space-y-4">
@@ -320,24 +342,15 @@
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Trx</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Jenis Trx</th><th class="px-4 py-3">Metode</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Jumlah Rupiah (Rp)</th><th class="px-4 py-3">Profit (Rp)</th></tr></thead><tbody id="table-laporan-body"></tbody></table></div>
         </div>
 
+        <!-- SUB KASIR GAS: KELOLA MEMBER (PIN MEMBER DIGANTI ALAMAT, RESET PIN DIHAPUS) -->
         <div id="kasir-sub-memberbaru" class="kasir-sub-content hidden space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="glass-card p-6 rounded-2xl space-y-4">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-user-plus text-[#00ffaa] mr-2"></i> Tambah Member Gas Baru</h3>
-              <form onsubmit="handleAddMemberGas(event)" class="space-y-3">
-                <div><label class="block text-xs text-gray-400 mb-1">Nama Member</label><input type="text" id="add-nama-member-gas" required placeholder="Masukkan Nama" data-form-input oninput="formatNamaMemberInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none uppercase"></div>
-                <div><label class="block text-xs text-gray-400 mb-1">PIN Member (Hanya Angka)</label><input type="text" id="add-pin-member-gas" required placeholder="PIN Angka" data-form-input value="" oninput="formatPinAngkaOnly(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-                <button type="submit" id="btn-submit-add-member-gas" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Daftarkan Member</button>
-              </form>
-            </div>
-            <div class="glass-card p-6 rounded-2xl space-y-4">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-rotate-right text-[#00ffaa] mr-2"></i> Reset PIN Member Gas</h3>
-              <form onsubmit="handleResetMemberPinGas(event)" class="space-y-3">
-                <div><label class="block text-xs text-gray-400 mb-1">Pilih Member</label><select id="reset-id-member" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"><option value="" disabled selected>-- Pilih Member --</option></select></div>
-                <div><label class="block text-xs text-gray-400 mb-1">PIN Baru Member (Hanya Angka)</label><input type="text" id="reset-new-pin" required placeholder="PIN Baru Angka" data-form-input oninput="formatPinAngkaOnly(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-                <button type="submit" id="btn-submit-reset-pin" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Reset PIN Member</button>
-              </form>
-            </div>
+          <div class="glass-card p-6 rounded-2xl space-y-4 max-w-xl mx-auto">
+            <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-user-plus text-[#00ffaa] mr-2"></i> Tambah Member Gas Baru</h3>
+            <form onsubmit="handleAddMemberGas(event)" class="space-y-3">
+              <div><label class="block text-xs text-gray-400 mb-1">Nama Member</label><input type="text" id="add-nama-member-gas" required placeholder="Masukkan Nama" data-form-input oninput="formatNamaMemberInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none uppercase"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">Alamat</label><input type="text" id="add-alamat-member-gas" required placeholder="Masukkan Alamat" data-form-input value="" oninput="this.value = this.value.toUpperCase();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none uppercase"></div>
+              <button type="submit" id="btn-submit-add-member-gas" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Daftarkan Member</button>
+            </form>
           </div>
         </div>
       </div>
@@ -462,7 +475,7 @@
     // ==========================================
     // PENTING: GANTI URL DI BAWAH INI DENGAN WEB APP URL ANDA!
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbw0MoPbMjj11-hKkMHQzcOiu92_C1J2CN1xid7jaSsM3X3asFRV8PBvIP_zUt1lucaw/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxnBrxEXrrelFxm-opm9s52V76GGZNtxYwf6vQ35NeP9w_g0wkchEIW6EPqJ_w20ABp/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -688,11 +701,11 @@
       if(elTot) elTot.innerText = calcDepBaruSisaLama.toLocaleString('id-ID'); 
       if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
 
-      try { filterTabungMasukPublik(); } catch(e){} try { renderRekapDeposit(); } catch(e){} try { renderRekapTabungMasuk(); } catch(e){} try { renderRekapTransaksiMember(); } catch(e){}
+      try { filterTabungMasukPublik(); } catch(e){} try { renderRekapDeposit(); } catch(e){} try { renderJumlahTabungMember(); } catch(e){} try { renderRekapTabungMasuk(); } catch(e){} try { renderRekapTransaksiMember(); } catch(e){}
       
       try {
         const spNames = appData.angsuran.map(a => (a[1] || '').toString().toUpperCase().trim());
-        const gasSelects = ['trx-namamember', 'reset-id-member', 'tm-tujuan']; 
+        const gasSelects = ['trx-namamember', 'tm-tujuan']; 
         const hpSelects = ['reset-id-member-hp'];
         const targetHarga = document.getElementById('hrg-target');
 
@@ -710,7 +723,7 @@
            if(isHp) isGas = false;
 
            if (isGas) { 
-               gasSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = (selId === 'reset-id-member') ? mId : mName; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); 
+               gasSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = mName; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); 
                if (targetHarga) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; targetHarga.appendChild(opt); }
            }
            if (isHp) { hpSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); }
@@ -727,6 +740,49 @@
       try { renderAccessLogs(); } catch(e){}
       
       if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
+    }
+
+    // Fungsi Render Tabel Jumlah Tabung Member
+    function renderJumlahTabungMember() {
+        const tbody = document.getElementById('table-tabung-member-body');
+        if (!tbody) return;
+
+        let html = '';
+        appData.members.forEach(m => {
+            const kat = (m[4] || '').toString().toUpperCase();
+            if (kat === 'SMARTPHONE') return;
+
+            const idMem = m[0] || '-';
+            const nama = (m[1] || '-').toString().toUpperCase().trim();
+            const alamat = m[2] || '-';
+
+            let totKeluar = 0;
+            appData.tabungMasuk.forEach(tm => {
+                if ((tm[3] || '').toString().toUpperCase().trim() === nama) {
+                    totKeluar += (Number(tm[2]) || 0);
+                }
+            });
+
+            let totTrx = 0;
+            appData.transaksi.forEach(trx => {
+                if ((trx[2] || '').toString().toUpperCase().trim() === nama) {
+                    totTrx += (Number(trx[5]) || 0);
+                }
+            });
+
+            html += '<tr class="border-b border-gray-800 hover:bg-gray-800/40">' +
+                '<td class="px-4 py-3 text-xs font-mono text-gray-400">' + idMem + '</td>' +
+                '<td class="px-4 py-3 font-semibold text-white">' + nama + '</td>' +
+                '<td class="px-4 py-3 text-gray-300">' + alamat + '</td>' +
+                '<td class="px-4 py-3 font-bold text-yellow-400">' + totKeluar.toLocaleString('id-ID') + ' Tabung</td>' +
+                '<td class="px-4 py-3 font-bold text-[#00ffaa]">' + totTrx.toLocaleString('id-ID') + ' Tabung</td>' +
+            '</tr>';
+        });
+
+        if (html === '') {
+            html = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
+        }
+        tbody.innerHTML = html;
     }
 
     // PEMBARUAN: Fungsi Render Rekap Harga Member (Ditambahkan Tanggal Update)
@@ -820,9 +876,6 @@
               profit = hargaJualTotal - (qty * modalSatuan);
               sumProfitLama += profit;
 
-              // Hitung urutan harga berdasarkan kapan transaksi terjadi vs update harga
-              // Karena data lama tidak menyimpan snapshot riwayat harga multi-tahap secara spesifik di baris transaksi,
-              // kita beri label dinamis "HARGA LAMA"
               badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA LAMA</span>`;
           }
           
@@ -1007,7 +1060,7 @@
       const activeNav = document.getElementById('nav-' + pageId); if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"; window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     function switchKasirSub(subId) {
-      const subs = ['deposit', 'harga', 'masuk', 'member', 'laporan', 'memberbaru'];
+      const subs = ['deposit', 'tabungmember', 'harga', 'masuk', 'member', 'laporan', 'memberbaru'];
       subs.forEach(s => { const sE = document.getElementById('kasir-sub-' + s); if (sE) sE.classList.add('hidden'); const b = document.getElementById('ksub-' + s); if (b) b.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer"; });
       const tS = document.getElementById('kasir-sub-' + subId); if (tS) tS.classList.remove('hidden'); const aB = document.getElementById('ksub-' + subId); if (aB) aB.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
     }
@@ -1023,7 +1076,7 @@
     async function handleHargaSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-harga', async (done) => { const targetMember = document.getElementById('hrg-target').value; const payload = { targetMember: targetMember, hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), hargaModalTabung: parseCleanNumber(document.getElementById('hrg-modal-tabung').value), hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) }; try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleTabungMasukSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tm', async (done) => { const payload = { idMasuk: document.getElementById('tm-id').value, tanggal: document.getElementById('tm-tanggal').value, tujuan: document.getElementById('tm-tujuan').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value) }; try { const res = await apiCall('saveTabungMasuk', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleTransaksiMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-trx', async (done) => { const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) }; try { const res = await apiCall('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleAngsuranSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-angsuran', async (done) => { const namaMemberInput = document.getElementById('ang-member').value.toUpperCase().trim(); const idPembelianInput = document.getElementById('ang-idpembelian').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); return mId === idPembelianInput && mName !== namaMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } let tempatBeli = document.getElementById('ang-tempat-beli').value; if(tempatBeli === 'Toko Offline') { tempatBeli = "Offline - " + document.getElementById('ang-tempat-offline').value; } const payload = { namaMember: namaMemberInput, idPembelian: idPembelianInput, tipeHp: document.getElementById('ang-tipe').value, hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value), keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value, dp: parseCleanNumber(document.getElementById('ang-dp').value), nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value), tempatPembelian: tempatBeli, tglInvoice: document.getElementById('ang-tgl-invoice').value }; try { const res = await apiCall('saveAngsuranBaru', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('container-tempat-offline').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleAngsuranSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-angsuran', async (done) => { const namaMemberInput = document.getElementById('ang-member').value.toUpperCase().trim(); const idPembelianInput = document.getElementById('ang-idpembelian').value.trim(); const isIdTaken = appData.members.some(m => { const mKat = (m[4] || '').toString().toUpperCase().trim(); if (mKat === 'GAS') return false; const mId = (m[2] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); return mId === idPembelianInput && mName !== namaMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } let tempatBeli = document.getElementById('ang-tempat-beli').value; if(tempatBeli === 'Toko Offline') { tempatBeli = "Offline - " + document.getElementById('ang-tempat-offline').value; } const payload = { namaMember: namaMemberInput, idPembelian: idPembelianInput, tipeHp: document.getElementById('ang-tipe').value, hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value), keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value, dp: parseCleanNumber(document.getElementById('ang-dp').value), nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value), tempatPembelian: tempatBeli, tglInvoice: document.getElementById('ang-tgl-invoice').value }; try { const res = await apiCall('saveAngsuranBaru', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('container-tempat-offline').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handlePayHpSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-pay-hp', async (done) => { const payload = { idAngsuran: document.getElementById('pay-hp-id').value, tanggalBayar: document.getElementById('pay-hp-tanggal').value, nominalBayar: parseCleanNumber(document.getElementById('pay-hp-nominal').value) }; try { const res = await apiCall('savePembayaranAngsuran', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('pay-hp-info').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function verifyAdminPin() { const pin = document.getElementById('input-admin-auth-pin').value; try { const res = await apiCall('verifyUserPinAccess', { pin: pin, allowedRole: 'admin' }); if (res.success && res.role === 'admin') { document.getElementById('admin-auth-container').style.display = 'none'; document.getElementById('admin-panel-content').classList.remove('hidden'); showToast("Autentikasi berhasil!", "success"); } else { showToast(res.message, "error"); } } catch (e) { showToast("Server Error", "error"); } }
     
@@ -1032,9 +1085,8 @@
     async function handleResetKasirHpPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-khp-pin', async (done) => { const payload = { targetKey: 'KASIR_HP_PIN', newPin1: document.getElementById('khp-new-pin1').value, newPin2: document.getElementById('khp-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     async function handleUpdateNarasi(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-narasi', async (done) => { const payload = { narasi: document.getElementById('adm-narasi-digital').value }; try { const res = await apiCall('saveDigitalNarasi', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleAddMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-add-member-gas', async (done) => { const payload = { namaMember: document.getElementById('add-nama-member-gas').value, pinMember: document.getElementById('add-pin-member-gas').value }; try { const res = await apiCall('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetMemberPinGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin', async (done) => { const payload = { idMember: document.getElementById('reset-id-member').value, newPIN: document.getElementById('reset-new-pin').value }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetMemberPinHp(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin-hp', async (done) => { const idMemberInput = document.getElementById('reset-id-member-hp').value; const newPinInput = document.getElementById('reset-new-pin-hp').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mMemberId = (m[0] || '').toString().trim(); return mId === newPinInput && mMemberId !== idMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } const payload = { idMember: idMemberInput, newPIN: newPinInput }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleAddMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-add-member-gas', async (done) => { const alamatVal = document.getElementById('add-alamat-member-gas').value; const payload = { namaMember: document.getElementById('add-nama-member-gas').value, alamatMember: alamatVal, pinMember: alamatVal }; try { const res = await apiCall('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleResetMemberPinHp(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin-hp', async (done) => { const idMemberInput = document.getElementById('reset-id-member-hp').value; const newPinInput = document.getElementById('reset-new-pin-hp').value.trim(); const isIdTaken = appData.members.some(m => { const mKat = (m[4] || '').toString().toUpperCase().trim(); if (mKat === 'GAS') return false; const mId = (m[2] || '').toString().trim(); const mMemberId = (m[0] || '').toString().trim(); return mId === newPinInput && mMemberId !== idMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } const payload = { idMember: idMemberInput, newPIN: newPinInput }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
 
     function showToast(message, type = "success") {
       const toast = document.getElementById('toast-notification'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message'); const icon = document.getElementById('toast-icon'); const title = document.getElementById('toast-title');
