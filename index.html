@@ -486,11 +486,12 @@
     window.addEventListener('DOMContentLoaded', async function() {
       const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal', 'refill-tanggal'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-      setupSmartEnterNavigation(); switchPage('dashboard'); 
+      setupSmartEnterNavigation(); 
+      switchPage('dashboard'); // Memastikan halaman utama dashboard terbuka pertama kali
       logVisit(); await loadBackendData();
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzTjxSepWmXojehb6XyM7mmhA1X7lu2EpMt4iZYgDvpfkHoE63t3Frjt2BRHHTp8Q-m/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbytL8phRLvQeNTUKyeuNxvZETyGeAtkdVWUWWH_fWhIdGDDL66O9ZIiGbNGYjogbIkD/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
