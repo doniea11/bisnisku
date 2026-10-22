@@ -1,4 +1,4 @@
-<selection-tag><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -37,7 +37,7 @@
       <p class="mt-4 text-gray-400 text-sm tracking-wide font-medium">memuat sistem pencatatan bisnis masdonie...</p>
     </div>
 
-    <!-- 1. HALAMAN DASHBOARD -->
+    <!-- HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="page-view hidden space-y-8">
       <div class="relative overflow-hidden glass-card rounded-3xl p-8 sm:p-16 zett-glow border border-[#00ffaa]/40 text-center bg-cover bg-center shadow-2xl" style="background: linear-gradient(rgba(11, 15, 25, 0.25), rgba(11, 15, 25, 0.55)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
         <div class="absolute -right-10 -top-10 opacity-15 pointer-events-none"><i class="fa-solid fa-leaf text-[250px] text-[#00ffaa]"></i></div>
@@ -87,7 +87,6 @@
             <button onclick="switchKasirHpSub('memberbaru')" id="btn-khp-memberbaru" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Kelola Pembeli</button>
          </div>
 
-         <!-- SUB KASIR HP: TRANSAKSI BARU -->
          <div id="kasir-hp-baru" class="block">
              <form id="form-angsuran" onsubmit="handleAngsuranSubmit(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                <div class="md:col-span-2"><label class="block text-xs text-gray-400 mb-1">Nama Member (Input Manual)</label><input type="text" id="ang-member" required placeholder="Masukkan Nama Member" data-form-input oninput="formatNamaMemberInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none uppercase"></div>
@@ -111,7 +110,6 @@
              </div>
          </div>
 
-         <!-- SUB KASIR HP: INPUT PEMBAYARAN -->
          <div id="kasir-hp-bayar" class="hidden">
             <form id="form-bayar-hp" onsubmit="handlePayHpSubmit(event)" class="space-y-4 mb-8">
                <div><label class="block text-xs text-gray-400 mb-1">Pilih Member & Tagihan (Hanya Transaksi Aktif)</label><select id="pay-hp-id" required class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer" onchange="onPayHpChange()"></select></div>
@@ -127,7 +125,6 @@
             </form>
          </div>
 
-         <!-- SUB KASIR HP: LAPORAN EXCEL & KEUNTUNGAN -->
          <div id="kasir-hp-laporan" class="hidden space-y-8">
              <div>
                  <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-wallet text-[#00ffaa] mr-2"></i>Rekap Keuntungan Transaksi Smartphone</h3>
@@ -142,7 +139,6 @@
              <div class="mt-8 border-t border-gray-800 pt-8"><h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-check-double text-emerald-400 mr-2"></i>Riwayat Transaksi Lunas</h3><div class="overflow-x-auto rounded-xl border border-gray-800"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-3 py-3">Nama Member</th><th class="px-3 py-3">Tipe HP</th><th class="px-3 py-3">Tanggal Invoice</th><th class="px-3 py-3">Harga Terbayar</th><th class="px-3 py-3">Status</th></tr></thead><tbody id="table-lunas-body"></tbody></table></div></div>
          </div>
 
-         <!-- TAMBAHAN KASIR HP: SUB KELOLA PEMBELI -->
          <div id="kasir-hp-memberbaru" class="hidden space-y-4">
             <div class="glass-card p-6 rounded-2xl space-y-4 max-w-xl mx-auto">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-rotate-right text-[#00ffaa] mr-2"></i> Reset PIN / ID Login Pembeli</h3>
@@ -156,7 +152,7 @@
        </div>
     </section>
 
-    <!-- 2. HALAMAN PUBLIK GAS & 3. HALAMAN KASIR GAS -->
+    <!-- HALAMAN PUBLIK GAS -->
     <section id="page-publik" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -168,7 +164,6 @@
           </div>
         </div>
         
-        <!-- 4 KOLOM DASHBOARD LPG -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
             <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Total Tabung Keseluruhan</p>
@@ -195,18 +190,20 @@
       </div>
     </section>
 
+    <!-- HALAMAN KASIR GAS (4 DI ATAS DAN 4 DI BAWAH) -->
     <section id="page-kasir" class="page-view hidden space-y-6">
       <div class="glass-card p-6 rounded-2xl">
         <h2 class="text-2xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Panel Kasir Gas & Transaksi</h2>
-        <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-4 mb-6">
-          <button onclick="switchKasirSub('deposit')" id="ksub-deposit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer">Deposit Kontrak</button>
-          <button onclick="switchKasirSub('permodalan')" id="ksub-permodalan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Permodalan</button>
-          <button onclick="switchKasirSub('tabungmember')" id="ksub-tabungmember" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Jumlah Tabung Member</button>
-          <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Pengaturan Harga Member</button>
-          <button onclick="switchKasirSub('masuk')" id="ksub-masuk" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Tabung Keluar</button>
-          <button onclick="switchKasirSub('member')" id="ksub-member" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Transaksi Member</button>
-          <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Laporan Transaksi</button>
-          <button onclick="switchKasirSub('memberbaru')" id="ksub-memberbaru" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer">Kelola Member</button>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 border-b border-gray-800 pb-4 mb-6">
+          <button onclick="switchKasirSub('deposit')" id="ksub-deposit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer text-center">Deposit Kontrak</button>
+          <button onclick="switchKasirSub('permodalan')" id="ksub-permodalan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Permodalan</button>
+          <button onclick="switchKasirSub('tabungmember')" id="ksub-tabungmember" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Jumlah Tabung Member</button>
+          <button onclick="switchKasirSub('harga')" id="ksub-harga" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Pengaturan Harga</button>
+          <button onclick="switchKasirSub('masuk')" id="ksub-masuk" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Tabung Keluar</button>
+          <button onclick="switchKasirSub('member')" id="ksub-member" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Transaksi Member</button>
+          <button onclick="switchKasirSub('laporan')" id="ksub-laporan" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Laporan Transaksi</button>
+          <button onclick="switchKasirSub('memberbaru')" id="ksub-memberbaru" class="px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center">Kelola Member</button>
         </div>
 
         <div id="kasir-sub-deposit" class="kasir-sub-content space-y-4">
@@ -220,62 +217,88 @@
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-6"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Deposit</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nominal (Rp)</th><th class="px-4 py-3">Total Tabung</th></tr></thead><tbody id="table-rekap-deposit-body"></tbody></table></div>
         </div>
 
-        <!-- SUB KASIR GAS: PERMODALAN -->
         <div id="kasir-sub-permodalan" class="kasir-sub-content hidden space-y-6">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="flex gap-3 border-b border-gray-800 pb-3 mb-4">
+            <button onclick="switchPermodalanTab('tabung')" id="btn-pmod-tabung" class="px-4 py-2 bg-[#00ffaa] text-gray-900 rounded-lg text-xs font-bold transition-all cursor-pointer">Input Permodalan Tabung Gas</button>
+            <button onclick="switchPermodalanTab('refill')" id="btn-pmod-refill" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-700 transition-all cursor-pointer">Input Isi Ulang Tabung Gas</button>
+          </div>
+
+          <!-- FORM 1: PERMODALAN TABUNG GAS -->
+          <div id="form-permodalan-tabung-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="glass-card p-6 rounded-2xl space-y-4 lg:col-span-1">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-coins text-[#00ffaa] mr-2"></i> Input Permodalan Gas</h3>
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-coins text-[#00ffaa] mr-2"></i> Input Permodalan Tabung Gas</h3>
               <form id="form-permodalan" onsubmit="handlePermodalanSubmit(event)" class="space-y-4">
                 <input type="hidden" id="mod-id" value="">
+                <input type="hidden" id="mod-jenis" value="Tabung Gas">
                 <div><label class="block text-xs text-gray-400 mb-1">Tanggal</label><input type="date" id="mod-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
                 <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung Gas</label><input type="text" id="mod-jumlahtabung" required placeholder="Contoh: 50" data-form-input oninput="formatRupiahInput(this); calcPermodalanTotal();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
                 <div><label class="block text-xs text-gray-400 mb-1">Harga per Tabung Gas (Rp)</label><input type="text" id="mod-hargatabung" required placeholder="Contoh: 150000" data-form-input oninput="formatRupiahInput(this); calcPermodalanTotal();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
                 <div><label class="block text-xs text-gray-400 mb-1">Jumlah Total Modal (Otomatis)</label><input type="text" id="mod-totalmodal" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
-                <div><label class="block text-xs text-gray-400 mb-1">Keterangan / Catatan</label><input type="text" id="mod-keterangan" placeholder="Contoh: Permodalan Awal Bulan" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-                <button type="submit" id="btn-submit-mod" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Permodalan Gas</button>
+                <div><label class="block text-xs text-gray-400 mb-1">Keterangan / Catatan</label><input type="text" id="mod-keterangan" placeholder="Contoh: Permodalan Awal" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+                <button type="submit" id="btn-submit-mod" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Permodalan Tabung Gas</button>
               </form>
             </div>
             
             <div class="glass-card p-6 rounded-2xl space-y-6 lg:col-span-2">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Analisis Balik Modal (Break-Even & ROI)</h3>
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Analisis Balik Modal (Tabung Gas)</h3>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800">
-                  <span class="text-xs text-gray-400 block mb-1">Total Permodalan</span>
-                  <h4 id="disp-mod-total" class="text-xl font-bold text-white">Rp 0</h4>
-                </div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800">
-                  <span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span>
-                  <h4 id="disp-mod-profit" class="text-xl font-bold text-[#00ffaa]">Rp 0</h4>
-                </div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800">
-                  <span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span>
-                  <h4 id="disp-mod-sisa" class="text-xl font-bold text-red-400">Rp 0</h4>
-                </div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan</span><h4 id="disp-mod-total" class="text-xl font-bold text-white">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-mod-profit" class="text-xl font-bold text-[#00ffaa]">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-mod-sisa" class="text-xl font-bold text-red-400">Rp 0</h4></div>
               </div>
-
-              <!-- VISUALISASI PERSENTASE BALIK MODAL -->
               <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Persentase Balik Modal (ROI)</span>
-                  <span id="disp-mod-percent" class="text-sm font-black text-white">0%</span>
-                </div>
-                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden p-0.5 border border-gray-700">
-                  <div id="bar-mod-progress" class="h-full rounded-full transition-all duration-500" style="width: 0%; background-color: #ef4444;"></div>
-                </div>
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Persentase Balik Modal (ROI)</span><span id="disp-mod-percent" class="text-sm font-black text-white">0%</span></div>
+                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden p-0.5 border border-gray-700"><div id="bar-mod-progress" class="h-full rounded-full transition-all duration-500" style="width: 0%; background-color: #ef4444;"></div></div>
                 <p id="disp-mod-status" class="text-xs text-gray-400 italic text-center mt-2">Menghitung status permodalan...</p>
               </div>
+            </div>
+          </div>
 
-              <div>
-                <h4 class="text-sm font-semibold text-white mb-3">Tabel Riwayat Permodalan Gas</h4>
-                <div class="overflow-x-auto rounded-xl border border-gray-800">
-                  <table class="w-full text-left text-sm text-gray-300">
-                    <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                      <tr><th class="px-3 py-3">Tanggal</th><th class="px-3 py-3">Tabung</th><th class="px-3 py-3">Harga/Tabung</th><th class="px-3 py-3">Total Modal</th><th class="px-3 py-3">Keterangan</th></tr>
-                    </thead>
-                    <tbody id="table-rekap-permodalan-body"></tbody>
-                  </table>
+          <!-- FORM 2: ISI ULANG TABUNG GAS -->
+          <div id="form-permodalan-refill-container" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4 lg:col-span-1">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-fire-flame-curved text-[#00ffaa] mr-2"></i> Input Isi Ulang Tabung Gas</h3>
+              <form id="form-permodalan-refill" onsubmit="handlePermodalanRefillSubmit(event)" class="space-y-4">
+                <input type="hidden" id="refill-id" value="">
+                <input type="hidden" id="refill-jenis" value="Isi Ulang Tabung Gas">
+                <div>
+                  <label class="block text-xs text-gray-400 mb-1">Pilih Data Deposit Kontrak</label>
+                  <select id="refill-deposit-select" required onchange="onDepositRefillSelectChange()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer">
+                    <option value="" disabled selected>-- Pilih Deposit Kontrak --</option>
+                  </select>
                 </div>
+                <div><label class="block text-xs text-gray-400 mb-1">Tanggal</label><input type="date" id="refill-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
+                <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung Gas (Otomatis)</label><input type="text" id="refill-jumlahtabung" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-white outline-none" value="0"></div>
+                <div><label class="block text-xs text-gray-400 mb-1">Total Modal / Nominal (Otomatis)</label><input type="text" id="refill-totalmodal" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
+                <div><label class="block text-xs text-gray-400 mb-1">Keterangan / Catatan</label><input type="text" id="refill-keterangan" placeholder="Contoh: Isi Ulang Bulanan" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+                <button type="submit" id="btn-submit-refill" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Isi Ulang Tabung Gas</button>
+              </form>
+            </div>
+            
+            <div class="glass-card p-6 rounded-2xl space-y-6 lg:col-span-2">
+              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Analisis Balik Modal (Isi Ulang Tabung Gas)</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan Refill</span><h4 id="disp-refill-total" class="text-xl font-bold text-white">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-refill-profit" class="text-xl font-bold text-[#00ffaa]">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-refill-sisa" class="text-xl font-bold text-red-400">Rp 0</h4></div>
               </div>
+              <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 space-y-3">
+                <div class="flex justify-between items-center"><span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Persentase Balik Modal (ROI Refill)</span><span id="disp-refill-percent" class="text-sm font-black text-white">0%</span></div>
+                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden p-0.5 border border-gray-700"><div id="bar-refill-progress" class="h-full rounded-full transition-all duration-500" style="width: 0%; background-color: #ef4444;"></div></div>
+                <p id="disp-refill-status" class="text-xs text-gray-400 italic text-center mt-2">Menghitung status isi ulang...</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <h4 class="text-sm font-semibold text-white mb-3">Tabel Riwayat Permodalan Gas</h4>
+            <div class="overflow-x-auto rounded-xl border border-gray-800">
+              <table class="w-full text-left text-sm text-gray-300">
+                <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
+                  <tr><th class="px-3 py-3">Tanggal</th><th class="px-3 py-3">Jenis</th><th class="px-3 py-3">Tabung</th><th class="px-3 py-3">Harga/Tabung</th><th class="px-3 py-3">Total Modal</th><th class="px-3 py-3">Keterangan</th></tr>
+                </thead>
+                <tbody id="table-rekap-permodalan-body"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -332,7 +355,6 @@
                 <select id="hrg-target" required onchange="onTargetHargaChange()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer">
                     <option value="" disabled selected>-- Pilih Member --</option>
                 </select>
-                <p class="text-[10px] text-gray-500 mt-1">*Pilih nama member untuk menentukan Harga Modal dan Harga Jual spesifik keagenan mereka.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div><label class="block text-xs text-gray-400 mb-1">Harga Modal Gas (Rp)</label><input type="text" id="hrg-modal-gas" required placeholder="Harga Modal Gas Khusus Member" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
@@ -342,27 +364,17 @@
             </div>
             <div class="pt-2 flex gap-3"><button type="submit" id="btn-submit-harga" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Harga Member</button></div>
           </form>
-          
-          <!-- TABEL RIWAYAT HARGA MEMBER -->
           <div class="mt-8 border-t border-gray-800 pt-6">
               <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Pengaturan Harga Member</h3>
               <div class="overflow-x-auto rounded-xl border border-gray-800">
                   <table class="w-full text-left text-sm text-gray-300">
                       <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                          <tr>
-                              <th class="px-4 py-3">Nama Member</th>
-                              <th class="px-4 py-3">Modal Gas</th>
-                              <th class="px-4 py-3">Jual Gas</th>
-                              <th class="px-4 py-3">Modal Tabung</th>
-                              <th class="px-4 py-3">Jual Tabung</th>
-                              <th class="px-4 py-3">Tgl Update</th>
-                          </tr>
+                          <tr><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Modal Gas</th><th class="px-4 py-3">Jual Gas</th><th class="px-4 py-3">Modal Tabung</th><th class="px-4 py-3">Jual Tabung</th><th class="px-4 py-3">Tgl Update</th></tr>
                       </thead>
                       <tbody id="table-rekap-harga-body"></tbody>
                   </table>
               </div>
           </div>
-          
         </div>
 
         <div id="kasir-sub-masuk" class="kasir-sub-content hidden space-y-4">
@@ -399,31 +411,13 @@
             </div>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
-                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Terjual</span>
-                <h4 id="lap-tot-tabung" class="text-lg font-bold text-white mt-1">0</h4>
-             </div>
-             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
-                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Omzet</span>
-                <h4 id="lap-tot-omzet" class="text-lg font-bold text-gray-300 mt-1">Rp 0</h4>
-             </div>
-             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
-                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" title="Menggunakan perhitungan dari modal master">Profit (Lama)</span>
-                <h4 id="lap-tot-profit-lama" class="text-lg font-bold text-yellow-400 mt-1">Rp 0</h4>
-             </div>
-             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
-                <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" title="Menggunakan perhitungan tersimpan statis">Profit (Baru)</span>
-                <h4 id="lap-tot-profit-baru" class="text-lg font-bold text-blue-400 mt-1">Rp 0</h4>
-             </div>
-             <div class="glass-card p-4 rounded-xl border border-emerald-900/50 bg-[#00ffaa]/5 flex flex-col justify-center shadow-inner">
-                <span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-black">Total Keseluruhan</span>
-                <h4 id="lap-tot-profit" class="text-xl font-bold text-[#00ffaa] mt-1">Rp 0</h4>
-             </div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center"><span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Terjual</span><h4 id="lap-tot-tabung" class="text-lg font-bold text-white mt-1">0</h4></div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center"><span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Omzet</span><h4 id="lap-tot-omzet" class="text-lg font-bold text-gray-300 mt-1">Rp 0</h4></div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center"><span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Profit (Lama)</span><h4 id="lap-tot-profit-lama" class="text-lg font-bold text-yellow-400 mt-1">Rp 0</h4></div>
+             <div class="glass-card p-4 rounded-xl border border-gray-800 flex flex-col justify-center"><span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Profit (Baru)</span><h4 id="lap-tot-profit-baru" class="text-lg font-bold text-blue-400 mt-1">Rp 0</h4></div>
+             <div class="glass-card p-4 rounded-xl border border-emerald-900/50 bg-[#00ffaa]/5 flex flex-col justify-center shadow-inner"><span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-black">Total Keseluruhan</span><h4 id="lap-tot-profit" class="text-xl font-bold text-[#00ffaa] mt-1">Rp 0</h4></div>
           </div>
-          <div class="glass-card p-4 rounded-xl border border-gray-800">
-             <h4 class="text-sm font-semibold text-white mb-3"><i class="fa-solid fa-users text-[#00ffaa] mr-2"></i>Rincian Profit per Member</h4>
-             <div id="lap-profit-member" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs"></div>
-          </div>
+          <div class="glass-card p-4 rounded-xl border border-gray-800"><h4 class="text-sm font-semibold text-white mb-3"><i class="fa-solid fa-users text-[#00ffaa] mr-2"></i>Rincian Profit per Member</h4><div id="lap-profit-member" class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs"></div></div>
           <div class="overflow-x-auto rounded-xl border border-gray-800 mt-4"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Trx</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Jenis Trx</th><th class="px-4 py-3">Metode</th><th class="px-4 py-3">Jumlah Tabung</th><th class="px-4 py-3">Jumlah Rupiah (Rp)</th><th class="px-4 py-3">Profit (Rp)</th></tr></thead><tbody id="table-laporan-body"></tbody></table></div>
         </div>
 
@@ -456,90 +450,22 @@
       </div>
     </section>
 
-    <!-- 4. HALAMAN SUPER ADMIN -->
+    <!-- HALAMAN SUPER ADMIN -->
     <section id="page-admin" class="page-view hidden space-y-6">
       <div id="admin-panel-content" class="block space-y-6">
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden">
-            <div class="absolute right-0 top-0 opacity-10 pointer-events-none"><i class="fa-solid fa-user-shield text-8xl"></i></div>
-            <div class="flex justify-between items-center relative z-10 border-b border-gray-800 pb-3 mb-2">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-key text-[#00ffaa] mr-2"></i> Password Super Admin</h3>
-              <div class="flex items-center gap-2 cursor-pointer group" onclick="handleTogglePinReq('REQ_PIN_ADMIN')">
-                <span id="text-tog-admin" class="text-xs font-bold text-gray-500 uppercase tracking-wider group-hover:text-white transition-colors">MEMUAT</span>
-                <div id="bg-tog-admin" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 transition-colors duration-300">
-                  <span id="dot-tog-admin" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 translate-x-1 shadow-md"></span>
-                </div>
-              </div>
-            </div>
-            <form onsubmit="handleUpdateAdminPin(event)" class="space-y-3 relative z-10"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="adm-new-pin1" required placeholder="Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="adm-new-pin2" required placeholder="Konfirmasi Password Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-adm-pin" class="w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold rounded-lg text-sm hover:bg-gray-700 hover:text-white cursor-pointer transition-all">Simpan Password Baru</button></form>
-          </div>
-          
-          <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden">
-            <div class="absolute right-0 top-0 opacity-10 pointer-events-none"><i class="fa-solid fa-fire-flame-curved text-8xl"></i></div>
-            <div class="flex justify-between items-center relative z-10 border-b border-gray-800 pb-3 mb-2">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-cash-register text-[#00ffaa] mr-2"></i> Password Kasir Gas</h3>
-              <div class="flex items-center gap-2 cursor-pointer group" onclick="handleTogglePinReq('REQ_PIN_KASIR_GAS')">
-                <span id="text-tog-kgas" class="text-xs font-bold text-gray-500 uppercase tracking-wider group-hover:text-white transition-colors">MEMUAT</span>
-                <div id="bg-tog-kgas" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 transition-colors duration-300">
-                  <span id="dot-tog-kgas" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 translate-x-1 shadow-md"></span>
-                </div>
-              </div>
-            </div>
-            <form onsubmit="handleResetKasirGasPin(event)" class="space-y-3 relative z-10"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="kg-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="kg-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-kg-pin" class="w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold rounded-lg text-sm hover:bg-gray-700 hover:text-white cursor-pointer transition-all">Simpan Password Kasir Gas</button></form>
-          </div>
-          
-          <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden">
-            <div class="absolute right-0 top-0 opacity-10 pointer-events-none"><i class="fa-solid fa-mobile-screen text-8xl"></i></div>
-            <div class="flex justify-between items-center relative z-10 border-b border-gray-800 pb-3 mb-2">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-mobile-screen text-[#00ffaa] mr-2"></i> Password Kasir HP</h3>
-              <div class="flex items-center gap-2 cursor-pointer group" onclick="handleTogglePinReq('REQ_PIN_KASIR_HP')">
-                <span id="text-tog-khp" class="text-xs font-bold text-gray-500 uppercase tracking-wider group-hover:text-white transition-colors">MEMUAT</span>
-                <div id="bg-tog-khp" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 transition-colors duration-300">
-                  <span id="dot-tog-khp" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 translate-x-1 shadow-md"></span>
-                </div>
-              </div>
-            </div>
-            <form onsubmit="handleResetKasirHpPin(event)" class="space-y-3 relative z-10"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="khp-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="khp-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-khp-pin" class="w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold rounded-lg text-sm hover:bg-gray-700 hover:text-white cursor-pointer transition-all">Simpan Password Kasir HP</button></form>
-          </div>
-          
-          <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden">
-            <div class="absolute right-0 top-0 opacity-10 pointer-events-none"><i class="fa-solid fa-chart-pie text-8xl"></i></div>
-            <div class="flex justify-between items-center relative z-10 border-b border-gray-800 pb-3 mb-2">
-              <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-pie text-[#00ffaa] mr-2"></i> PIN Informasi Gas</h3>
-              <div class="flex items-center gap-2 cursor-pointer group" onclick="handleTogglePinReq('REQ_PIN_INFO_GAS')">
-                <span id="text-tog-igas" class="text-xs font-bold text-gray-500 uppercase tracking-wider group-hover:text-white transition-colors">MEMUAT</span>
-                <div id="bg-tog-igas" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 transition-colors duration-300">
-                  <span id="dot-tog-igas" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 translate-x-1 shadow-md"></span>
-                </div>
-              </div>
-            </div>
-            <form onsubmit="handleResetInfoGasPin(event)" class="space-y-3 relative z-10"><div><label class="block text-xs text-gray-400 mb-1">PIN Baru</label><input type="password" id="ig-new-pin1" required placeholder="PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi PIN Baru</label><input type="password" id="ig-new-pin2" required placeholder="Konfirmasi PIN Baru" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div><button type="submit" id="btn-submit-ig-pin" class="w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold rounded-lg text-sm hover:bg-gray-700 hover:text-white cursor-pointer transition-all">Simpan PIN Informasi Gas</button></form>
-          </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl mt-6">
-          <h3 class="text-lg font-bold text-white flex items-center mb-4"><i class="fa-solid fa-pen-to-square text-[#00ffaa] mr-2"></i> Pengaturan Narasi Modal "Digital"</h3>
-          <form onsubmit="handleUpdateNarasi(event)" class="space-y-3">
-            <div><textarea id="adm-narasi-digital" required rows="6" placeholder="Masukkan narasi informasi digital..." class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-[#00ffaa] outline-none leading-relaxed"></textarea></div>
-            <button type="submit" id="btn-submit-adm-narasi" class="w-full sm:w-auto px-6 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Narasi</button>
-          </form>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl mt-6">
-          <h3 class="text-lg font-bold text-white flex items-center mb-4"><i class="fa-solid fa-list-check text-[#00ffaa] mr-2"></i> Log Akses Pengguna</h3>
-          <div class="overflow-x-auto rounded-xl border border-gray-800 max-h-96">
-            <table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800 sticky top-0"><tr><th class="px-4 py-3">ID Log</th><th class="px-4 py-3">Waktu Akses</th><th class="px-4 py-3">IP Address</th><th class="px-4 py-3">Informasi Perangkat</th></tr></thead><tbody id="table-log-akses-body"></tbody></table>
+            <div class="flex justify-between items-center relative z-10 border-b border-gray-800 pb-3 mb-2"><h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-key text-[#00ffaa] mr-2"></i> Password Super Admin</h3></div>
+            <form onsubmit="handleUpdateAdminPin(event)" class="space-y-3 relative z-10"><div><label class="block text-xs text-gray-400 mb-1">Password Baru</label><input type="password" id="adm-new-pin1" required placeholder="Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div><div><label class="block text-xs text-gray-400 mb-1">Konfirmasi Password Baru</label><input type="password" id="adm-new-pin2" required placeholder="Konfirmasi Password Baru" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white outline-none"></div><button type="submit" id="btn-submit-adm-pin" class="w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold rounded-lg text-sm hover:bg-gray-700 cursor-pointer">Simpan Password Baru</button></form>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- MODALS & NOTIFICATIONS -->
-  <div id="pin-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300"><div class="w-16 h-16 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4 zett-glow"><i class="fa-solid fa-lock text-[#00ffaa] text-2xl"></i></div><h3 id="modal-pin-title" class="text-xl font-bold tracking-wide mb-1 text-white">Autentikasi</h3><p id="modal-pin-desc" class="text-xs text-gray-300 mb-4">Masukkan data keamanan Anda.</p><input type="password" id="modal-pin-input" placeholder="Masukkan" onkeydown="if(event.key==='Enter'){submitModalPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white tracking-widest focus:border-[#00ffaa] outline-none mb-4 uppercase"><div class="flex gap-2"><button onclick="closePinModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl hover:bg-gray-700 text-sm cursor-pointer">Batal</button><button onclick="submitModalPin()" class="w-1/2 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] text-sm cursor-pointer">Masuk</button></div></div></div>
-  <div id="toast-notification" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div id="toast-box" class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-95 transition-transform duration-300"><div id="toast-icon-container" class="w-20 h-20 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4 zett-glow"><i id="toast-icon" class="fa-solid fa-circle-check text-[#00ffaa] text-4xl"></i></div><h3 id="toast-title" class="text-2xl font-bold tracking-wide mb-2 text-white">Notifikasi Sistem</h3><p id="toast-message" class="text-base text-gray-300">Pesan notifikasi berhasil muncul di sini.</p></div></div>
-  <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4"><div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6"><div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 rounded-2xl bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center zett-glow"><i class="fa-solid fa-globe text-[#00ffaa] text-2xl"></i></div><div><h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3></div></div><button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-[#00ffaa] flex items-center justify-center transition-all cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="digital-modal-content" class="text-gray-300 space-y-4 text-sm sm:text-base leading-relaxed py-2"></div><div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div></div></div>
+  <div id="pin-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-sm w-full mx-4"><h3 id="modal-pin-title" class="text-xl font-bold mb-1">Autentikasi</h3><p id="modal-pin-desc" class="text-xs text-gray-300 mb-4">Masukkan data keamanan Anda.</p><input type="password" id="modal-pin-input" placeholder="Masukkan" onkeydown="if(event.key==='Enter'){submitModalPin();}" class="w-full bg-[#161b22] border border-gray-700 rounded-xl p-3 text-center text-lg text-white outline-none mb-4 uppercase"><div class="flex gap-2"><button onclick="closePinModal()" class="w-1/2 py-2.5 bg-gray-800 text-gray-300 font-bold rounded-xl text-sm cursor-pointer">Batal</button><button onclick="submitModalPin()" class="w-1/2 py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-xl text-sm cursor-pointer">Masuk</button></div></div></div>
+  <div id="toast-notification" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"><div id="toast-box" class="glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl max-w-md w-full mx-4"><div class="w-20 h-20 rounded-full bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center mx-auto mb-4"><i id="toast-icon" class="fa-solid fa-circle-check text-[#00ffaa] text-4xl"></i></div><h3 id="toast-title" class="text-2xl font-bold mb-2">Notifikasi Sistem</h3><p id="toast-message" class="text-base text-gray-300">Pesan.</p></div></div>
+  <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4"><div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto space-y-6"><div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4"><h3 class="text-xl sm:text-2xl font-black text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3><button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="digital-modal-content" class="text-gray-300 space-y-4 text-sm sm:text-base leading-relaxed py-2"></div><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] cursor-pointer">Mengerti, Lanjutkan!</button></div></div>
 
   <script>
     let appData = { settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], permodalanGas: [], accessLogs: [], summary: {} };
@@ -551,24 +477,20 @@
         let parts = str.split(' ');
         let d = parts[0];
         let time = parts[1] ? ' ' + parts[1] : '';
-
         if (d.includes('-') && d.split('-')[0].length === 4) {
-            let p = d.split('-');
-            d = p[2] + '-' + p[1] + '-' + p[0];
-        } else if (d.includes('/')) {
-            d = d.replace(/\//g, '-');
-        }
+            let p = d.split('-'); d = p[2] + '-' + p[1] + '-' + p[0];
+        } else if (d.includes('/')) { d = d.replace(/\//g, '-'); }
         return d + time;
     }
 
     window.addEventListener('DOMContentLoaded', async function() {
-      const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal'];
+      const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal', 'refill-tanggal'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation(); switchPage('dashboard'); 
       logVisit(); await loadBackendData();
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbw-5MGtJM3JmCujvbMv3G74BeMiy88Ds7ErSD87ecGBHKjupk2fUdNOrAVwZKlL6Zj4/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzTjxSepWmXojehb6XyM7mmhA1X7lu2EpMt4iZYgDvpfkHoE63t3Frjt2BRHHTp8Q-m/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -598,61 +520,24 @@
     function handleLiquefiedClick() { switchPage('gas-portal'); } function handleSmartphoneClick() { switchPage('smartphone-portal'); }
     function openDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100', 'pointer-events-auto'); } }
     function closeDigitalModal() { const m = document.getElementById('digital-info-modal'); if(m) { m.classList.remove('opacity-100', 'pointer-events-auto'); m.classList.add('opacity-0', 'pointer-events-none'); } }
-    
-    function onTargetHargaChange() {
-        const target = document.getElementById('hrg-target').value;
-        const modGasInput = document.getElementById('hrg-modal-gas');
-        const modTabInput = document.getElementById('hrg-modal-tabung');
-        const gasInput = document.getElementById('hrg-jual-gas');
-        const tabInput = document.getElementById('hrg-jual-tabung');
 
-        if (!target) {
-            modGasInput.value = ''; modTabInput.value = ''; gasInput.value = ''; tabInput.value = '';
-            return;
+    function switchPermodalanTab(tabName) {
+        const tabungContainer = document.getElementById('form-permodalan-tabung-container');
+        const refillContainer = document.getElementById('form-permodalan-refill-container');
+        const btnTabung = document.getElementById('btn-pmod-tabung');
+        const btnRefill = document.getElementById('btn-pmod-refill');
+
+        if (tabName === 'tabung') {
+            tabungContainer.classList.remove('hidden');
+            refillContainer.classList.add('hidden');
+            btnTabung.className = "px-4 py-2 bg-[#00ffaa] text-gray-900 rounded-lg text-xs font-bold transition-all cursor-pointer";
+            btnRefill.className = "px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-700 transition-all cursor-pointer";
+        } else {
+            tabungContainer.classList.add('hidden');
+            refillContainer.classList.remove('hidden');
+            btnRefill.className = "px-4 py-2 bg-[#00ffaa] text-gray-900 rounded-lg text-xs font-bold transition-all cursor-pointer";
+            btnTabung.className = "px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-700 transition-all cursor-pointer";
         }
-
-        const member = appData.members.find(m => m[0] === target);
-        if (member) {
-            const mModGas = Number(member[5]) || 0;
-            const mModTab = Number(member[6]) || 0;
-            const mJualGas = Number(member[7]) || 0;
-            const mJualTab = Number(member[8]) || 0;
-
-            modGasInput.value = mModGas > 0 ? mModGas.toLocaleString('id-ID') : '';
-            modTabInput.value = mModTab > 0 ? mModTab.toLocaleString('id-ID') : '';
-            gasInput.value = mJualGas > 0 ? mJualGas.toLocaleString('id-ID') : '';
-            tabInput.value = mJualTab > 0 ? mJualTab.toLocaleString('id-ID') : '';
-        }
-    }
-
-    function onTabungMemberSelectChange() {
-        const selectedId = document.getElementById('tm-member-select').value;
-        const namaInput = document.getElementById('tm-disp-nama');
-        const alamatInput = document.getElementById('tm-disp-alamat');
-        const jumlahManual = document.getElementById('tm-jumlah-manual');
-
-        if(!selectedId) {
-            namaInput.value = ''; alamatInput.value = ''; jumlahManual.value = '';
-            return;
-        }
-
-        const member = appData.members.find(m => m[0] === selectedId);
-        if(member) {
-            namaInput.value = member[1] || '';
-            alamatInput.value = member[2] ? member[2].toString().replace(/^'/, '') : '';
-            const currTabung = Number(member[10]) || 0;
-            jumlahManual.value = currTabung > 0 ? currTabung.toLocaleString('id-ID') : '';
-        }
-    }
-
-    function prepareEditTabungMember(idMember) {
-        switchKasirSub('tabungmember');
-        const sel = document.getElementById('tm-member-select');
-        if(sel) {
-            sel.value = idMember;
-            onTabungMemberSelectChange();
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function calcPermodalanTotal() {
@@ -663,31 +548,29 @@
         if (el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0';
     }
 
-    function calcTransaksiTotal() { 
-        const jenis = document.getElementById('trx-jenis').value; 
-        const jumlah = parseCleanNumber(document.getElementById('trx-jumlahtabung').value); 
-        const namaMember = document.getElementById('trx-namamember').value;
-        
-        let hrgGas = 0; let hrgTabung = 0;
+    function onDepositRefillSelectChange() {
+        const selId = document.getElementById('refill-deposit-select').value;
+        const jmlInput = document.getElementById('refill-jumlahtabung');
+        const totalInput = document.getElementById('refill-totalmodal');
+        const tglInput = document.getElementById('refill-tanggal');
 
-        if (namaMember && appData.members) {
-            const member = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === namaMember.toUpperCase());
-            if (member) {
-                hrgGas = Number(member[7]) || 0; 
-                hrgTabung = Number(member[8]) || 0;
-            }
+        if(!selId) {
+            jmlInput.value = '0';
+            totalInput.value = '0';
+            return;
         }
 
-        let hrg = 0; 
-        if(jenis === 'Penjualan Gas') hrg = hrgGas; 
-        else if(jenis === 'Penjualan Tabung Kosong') hrg = hrgTabung; 
-        
-        const total = jumlah * hrg; 
-        const el = document.getElementById('trx-jumlahrupiah'); 
-        if(el) el.value = total > 0 ? total.toLocaleString('id-ID') : '0'; 
-    }
+        const dep = appData.deposit.find(d => d[0] === selId);
+        if(dep) {
+            const tgl = dep[1] || '';
+            const nominal = Number(dep[2]) || 0;
+            const tabung = Number(dep[3]) || 0;
 
-    function toggleTempatOffline() { const val = document.getElementById('ang-tempat-beli').value; const container = document.getElementById('container-tempat-offline'); const input = document.getElementById('ang-tempat-offline'); if (val === 'Toko Offline') { container.classList.remove('hidden'); input.required = true; } else { container.classList.add('hidden'); input.required = false; input.value = ''; } }
+            if(tgl && !tglInput.value) tglInput.value = tgl.split(' ')[0];
+            jmlInput.value = tabung.toLocaleString('id-ID');
+            totalInput.value = nominal.toLocaleString('id-ID');
+        }
+    }
 
     function requestAccessPage(pageId) { 
       pendingTargetPage = pageId; 
@@ -708,17 +591,13 @@
       } else { switchPage(pageId); } 
     }
     
-    function openPinModal(title, desc, placeholder) { document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = ""; document.getElementById('modal-pin-input').placeholder = placeholder || "Masukkan PIN / Password"; const modal = document.getElementById('pin-auth-modal'); modal.classList.remove('opacity-0', 'pointer-events-none'); modal.classList.add('opacity-100', 'pointer-events-auto'); setTimeout(() => document.getElementById('modal-pin-input').focus(), 100); }
+    function openPinModal(title, desc, placeholder) { document.getElementById('modal-pin-title').innerText = title; document.getElementById('modal-pin-desc').innerText = desc; document.getElementById('modal-pin-input').value = ""; document.getElementById('modal-pin-input').placeholder = placeholder || "Masukkan PIN"; const modal = document.getElementById('pin-auth-modal'); modal.classList.remove('opacity-0', 'pointer-events-none'); modal.classList.add('opacity-100', 'pointer-events-auto'); setTimeout(() => document.getElementById('modal-pin-input').focus(), 100); }
     function closePinModal() { document.getElementById('pin-auth-modal').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('pin-auth-modal').classList.add('opacity-0', 'pointer-events-none'); pendingTargetPage = ''; pendingAllowedRole = ''; }
 
-    function formatNamaMemberInput(input) { input.value = input.value.replace(/[^A-Za-z\s\-']/g, '').toUpperCase(); }
-    function formatIdPembelianInput(input) { input.value = input.value.replace(/\s/g, ''); }
-    function formatPinAngkaOnly(input) { input.value = input.value.replace(/[^0-9]/g, ''); }
     function formatRupiahInput(input) { let v = input.value.replace(/[^,\d]/g, '').toString(); let s = v.split(','); let i = s[0]; if (i.length > 1 && i.startsWith('0')) { i = i.replace(/^0+/, ''); if (i === '') i = '0'; } let r = i.length % 3; let rp = i.substr(0, r); let rb = i.substr(r).match(/\d{3}/gi); if (rb) { rp += (r ? '.' : '') + rb.join('.'); } input.value = s[1] !== undefined ? rp + ',' + s[1] : rp; }
     function parseCleanNumber(val) { return parseFloat((val||"").toString().replace(/\./g, '').replace(/,/g, '.')) || 0; }
-    function calcKeuntunganHp() { const m = parseCleanNumber(document.getElementById('ang-modal').value); const j = parseCleanNumber(document.getElementById('ang-harga').value); const u = j - m; const el = document.getElementById('ang-keuntungan'); if(el) el.value = u > 0 ? u.toLocaleString('id-ID') : '0'; }
 
-    function ensureDataArrays() { appData.deposit = appData.deposit || []; appData.tabungMasuk = appData.tabungMasuk || []; appData.members = appData.members || []; appData.transaksi = appData.transaksi || []; appData.angsuran = appData.angsuran || []; appData.detailAngsuran = appData.detailAngsuran || []; appData.riwayatTabungMember = appData.riwayatTabungMember || []; appData.permodalanGas = appData.permodalanGas || []; appData.accessLogs = appData.accessLogs || []; appData.summary = appData.summary || {}; }
+    function ensureDataArrays() { appData.deposit = appData.deposit || []; appData.tabungMasuk = appData.tabungMasuk || []; appData.members = appData.members || []; appData.transaksi = appData.transaksi || []; appData.permodalanGas = appData.permodalanGas || []; appData.accessLogs = appData.accessLogs || []; appData.summary = appData.summary || {}; }
 
     async function loadBackendData() {
         try {
@@ -728,7 +607,7 @@
             else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
         } catch (err) { 
             const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
-            showToast("Server Error. Pastikan URL sudah benar. " + (err.message || err), "error"); 
+            showToast("Server Error: " + (err.message || err), "error"); 
         }
     }
 
@@ -738,66 +617,14 @@
       try {
           const res = await apiCall('verifyUserPinAccess', { pin: pinVal, allowedRole: pendingAllowedRole });
           if (res.success) {
-              if (res.role === 'member') currentLoggedInMember = res.name;
               const target = pendingTargetPage; closePinModal(); showToast(res.message, "success"); switchPage(target);
-              if (target === 'member-smartphone') renderMemberAngsuran();
           } else { showToast(res.message, "error"); }
       } catch (err) { showToast("Error verifikasi: " + (err.message || err), "error"); }
     }
 
     function populateSettingsForm() {
       if (!appData.settings) return;
-      
       const elNarasi = document.getElementById('adm-narasi-digital'); if (elNarasi) elNarasi.value = appData.settings.digitalNarasi || '';
-      const elModalContent = document.getElementById('digital-modal-content'); if (elModalContent) elModalContent.innerHTML = appData.settings.digitalNarasi || '<p class="text-center text-gray-500">Narasi belum diatur.</p>';
-      
-      const setToggle = (baseId, isActive) => {
-         const bg = document.getElementById('bg-tog-' + baseId);
-         const dot = document.getElementById('dot-tog-' + baseId);
-         const txt = document.getElementById('text-tog-' + baseId);
-         if(!bg || !dot || !txt) return;
-
-         if(isActive) {
-             txt.innerText = "AKTIF"; txt.className = "text-xs font-bold text-[#00ffaa] uppercase tracking-wider group-hover:text-white transition-colors";
-             bg.className = "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 shadow-[0_0_10px_rgba(0,255,170,0.4)] bg-[#00ffaa]";
-             dot.className = "inline-block h-4 w-4 transform rounded-full bg-gray-900 transition-transform duration-300 translate-x-6 shadow-md";
-         } else {
-             txt.innerText = "NONAKTIF"; txt.className = "text-xs font-bold text-gray-500 uppercase tracking-wider group-hover:text-red-400 transition-colors";
-             bg.className = "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 bg-gray-700";
-             dot.className = "inline-block h-4 w-4 transform rounded-full bg-gray-400 transition-transform duration-300 translate-x-1 shadow-md";
-         }
-      };
-
-      setToggle('admin', appData.settings.reqPinAdmin);
-      setToggle('kgas', appData.settings.reqPinKasirGas);
-      setToggle('khp', appData.settings.reqPinKasirHp);
-      setToggle('igas', appData.settings.reqPinInfoGas);
-    }
-
-    async function handleTogglePinReq(targetKey) {
-       let currentStatus = true;
-       if (targetKey === 'REQ_PIN_ADMIN') currentStatus = appData.settings.reqPinAdmin;
-       if (targetKey === 'REQ_PIN_KASIR_GAS') currentStatus = appData.settings.reqPinKasirGas;
-       if (targetKey === 'REQ_PIN_KASIR_HP') currentStatus = appData.settings.reqPinKasirHp;
-       if (targetKey === 'REQ_PIN_INFO_GAS') currentStatus = appData.settings.reqPinInfoGas;
-
-       const newStatus = !currentStatus;
-       if (targetKey === 'REQ_PIN_ADMIN' && newStatus === false) {
-           if(!confirm("PERINGATAN: Menonaktifkan Keamanan Super Admin akan membuat siapa saja bisa mengubah data rahasia. Yakin lanjutkan?")) return;
-       }
-
-       let baseId = '';
-       if (targetKey === 'REQ_PIN_ADMIN') { appData.settings.reqPinAdmin = newStatus; baseId = 'admin'; }
-       if (targetKey === 'REQ_PIN_KASIR_GAS') { appData.settings.reqPinKasirGas = newStatus; baseId = 'kgas'; }
-       if (targetKey === 'REQ_PIN_KASIR_HP') { appData.settings.reqPinKasirHp = newStatus; baseId = 'khp'; }
-       if (targetKey === 'REQ_PIN_INFO_GAS') { appData.settings.reqPinInfoGas = newStatus; baseId = 'igas'; }
-       
-       populateSettingsForm(); 
-
-       try {
-           const res = await apiCall('togglePinStatus', { targetKey: targetKey, status: newStatus });
-           if(res.success) { showToast(res.message, "success"); } else { showToast(res.message, "error"); await loadBackendData(); }
-       } catch(e) { showToast("Error koneksi saat mengubah status PIN", "error"); await loadBackendData(); }
     }
 
     function updateUIAll() {
@@ -809,69 +636,110 @@
       
       let totalDepositKeseluruhan = Number(appData.summary.totalTabung || 0);
       let currentSisa = Number(appData.summary.sisaTabung || 0);
-      
-      let latestDepositTabung = 0;
-      if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
-          latestDepositTabung = Number(appData.deposit[0][3]) || 0;
-      }
+      let latestDepositTabung = (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) ? Number(appData.deposit[0][3]) || 0 : 0;
 
       if(elTotKes) elTotKes.innerText = totalDepositKeseluruhan.toLocaleString('id-ID');
       if(elTot) elTot.innerText = latestDepositTabung.toLocaleString('id-ID'); 
       if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
 
-      try { filterTabungMasukPublik(); } catch(e){} 
       try { renderRekapDeposit(); } catch(e){} 
-      try { renderRekapTabungMasuk(); } catch(e){} 
+      try { renderRekapTabungMasuk(); } catch(e){}
       try { renderRekapTransaksiMember(); } catch(e){}
-      try { renderDataTabungMember(); } catch(e){}
-      try { renderRiwayatTabungMember(); } catch(e){}
       try { renderPermodalanGas(); } catch(e){}
-      
-      try {
-        const spNames = appData.angsuran.map(a => (a[1] || '').toString().toUpperCase().trim());
-        const gasSelects = ['trx-namamember', 'tm-tujuan', 'tm-member-select', 'edit-id-member-gas']; 
-        const hpSelects = ['reset-id-member-hp'];
-        const targetHarga = document.getElementById('hrg-target');
-
-        gasSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; });
-        hpSelects.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = '<option value="" disabled selected>-- Pilih Pembeli --</option>'; });
-        
-        let currTargetHarga = '';
-        if(targetHarga) { currTargetHarga = targetHarga.value; targetHarga.innerHTML = '<option value="" disabled selected>-- Pilih Member --</option>'; }
-
-        appData.members.forEach(m => {
-           const mId = (m[0] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); const mKat = (m[4] || '').toString().toUpperCase().trim();
-           if (!mId || !mName) return; 
-           let isHp = false; let isGas = false;
-           if (mKat === 'SMARTPHONE') { isHp = true; } else if (mKat === 'GAS') { isGas = true; } else { if (spNames.includes(mName)) { isHp = true; } else { isGas = true; } }
-           if(isHp) isGas = false;
-
-           if (isGas) { 
-               gasSelects.forEach(selId => { 
-                   const sel = document.getElementById(selId); 
-                   if (sel) { 
-                       const opt = document.createElement('option'); 
-                       opt.value = (selId === 'tm-member-select' || selId === 'edit-id-member-gas') ? mId : mName; 
-                       opt.innerText = mId + ' - ' + mName; 
-                       sel.appendChild(opt); 
-                   } 
-               }); 
-               if (targetHarga) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; targetHarga.appendChild(opt); }
-           }
-           if (isHp) { hpSelects.forEach(selId => { const sel = document.getElementById(selId); if (sel) { const opt = document.createElement('option'); opt.value = mId; opt.innerText = mId + ' - ' + mName; sel.appendChild(opt); } }); }
-        });
-
-        if(targetHarga && currTargetHarga) { targetHarga.value = currTargetHarga; onTargetHargaChange(); }
-      } catch(e) {}
-
-      try { renderLaporanTable(); } catch(e){} 
-      try { renderRekapHargaMember(); } catch(e){} 
-      try { renderKasirAngsuranDropdown(); } catch(e){} 
-      try { renderKasirAngsuran(); } catch(e){} 
-      try { renderLaporanHp(); } catch(e){} 
       try { renderAccessLogs(); } catch(e){}
       
-      if(currentLoggedInMember !== '') { try { renderMemberAngsuran(); } catch(e){} }
+      try {
+        const refillSelect = document.getElementById('refill-deposit-select');
+        if(refillSelect) {
+            refillSelect.innerHTML = '<option value="" disabled selected>-- Pilih Deposit Kontrak --</option>';
+            appData.deposit.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d[0];
+                opt.innerText = `${d[0]} (${fDate(d[1])}) - Rp ${Number(d[2] || 0).toLocaleString('id-ID')} (${Number(d[3] || 0).toLocaleString('id-ID')} Tbg)`;
+                refillSelect.appendChild(opt);
+            });
+        }
+      } catch(e) {}
+    }
+
+    function renderRekapDeposit() {
+      const tbody = document.getElementById('table-rekap-deposit-body');
+      if(!tbody) return;
+      if(appData.deposit.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>';
+          return;
+      }
+      let html = '';
+      appData.deposit.forEach(row => {
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+              <td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td>
+              <td class="px-4 py-3">${fDate(row[1])}</td>
+              <td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td>
+              <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td>
+          </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderRekapTabungMasuk() {
+      const tbody = document.getElementById('table-rekap-tm-body');
+      if(!tbody) return;
+      if(appData.tabungMasuk.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>';
+          return;
+      }
+      let html = '';
+      appData.tabungMasuk.forEach(row => {
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+              <td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td>
+              <td class="px-4 py-3">${fDate(row[1])}</td>
+              <td class="px-4 py-3 text-white">${row[3] || '-'}</td>
+              <td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td>
+          </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderRekapTransaksiMember() {
+      const tbody = document.getElementById('table-rekap-trx-body');
+      if(!tbody) return;
+      if(appData.transaksi.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>';
+          return;
+      }
+      let html = '';
+      appData.transaksi.forEach(row => {
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+              <td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td>
+              <td class="px-4 py-3 text-xs">${fDate(row[1])}</td>
+              <td class="px-4 py-3 font-semibold text-white">${row[2] || '-'}</td>
+              <td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td>
+              <td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td>
+              <td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td>
+          </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderAccessLogs() {
+      const tbody = document.getElementById('table-log-akses-body');
+      if(!tbody) return;
+      const logs = appData.accessLogs || [];
+      if(logs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data log akses.</td></tr>';
+          return;
+      }
+      let html = '';
+      logs.forEach(row => {
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm">
+              <td class="px-4 py-3 font-mono text-xs text-gray-400">${row[0]}</td>
+              <td class="px-4 py-3">${fDate(row[1])}</td>
+              <td class="px-4 py-3 text-[#00ffaa] font-bold">${row[2]}</td>
+              <td class="px-4 py-3 text-gray-300 text-xs">${row[3] || '-'}</td>
+          </tr>`;
+      });
+      tbody.innerHTML = html;
     }
 
     function renderPermodalanGas() {
@@ -879,445 +747,155 @@
       if(!tbody) return;
       const list = appData.permodalanGas || [];
       if(list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" class="px-3 py-4 text-center text-gray-500">Belum ada data permodalan gas.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-gray-500">Belum ada data permodalan gas.</td></tr>';
       } else {
           let html = '';
           list.forEach(row => {
               html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-xs">
                   <td class="px-3 py-3">${fDate(row[1])}</td>
-                  <td class="px-3 py-3 font-bold text-white">${Number(row[2] || 0).toLocaleString('id-ID')} Tbg</td>
-                  <td class="px-3 py-3 text-gray-300">Rp ${Number(row[3] || 0).toLocaleString('id-ID')}</td>
-                  <td class="px-3 py-3 font-bold text-[#00ffaa]">Rp ${Number(row[4] || 0).toLocaleString('id-ID')}</td>
-                  <td class="px-3 py-3 text-gray-400">${row[5] || '-'}</td>
+                  <td class="px-3 py-3 font-semibold text-blue-300">${row[2] || 'Tabung Gas'}</td>
+                  <td class="px-3 py-3 font-bold text-white">${Number(row[3] || 0).toLocaleString('id-ID')} Tbg</td>
+                  <td class="px-3 py-3 text-gray-300">Rp ${Number(row[4] || 0).toLocaleString('id-ID')}</td>
+                  <td class="px-3 py-3 font-bold text-[#00ffaa]">Rp ${Number(row[5] || 0).toLocaleString('id-ID')}</td>
+                  <td class="px-3 py-3 text-gray-400">${row[6] || '-'}</td>
               </tr>`;
           });
           tbody.innerHTML = html;
       }
 
-      let totalModalAll = 0;
-      list.forEach(row => { totalModalAll += Number(row[4]) || 0; });
-
-      let totalProfitGas = Number(appData.summary.totalProfitGas || 0);
-      let sisaModal = totalModalAll - totalProfitGas;
-      if(sisaModal < 0) sisaModal = 0;
-
-      let percentage = 0;
-      if(totalModalAll > 0) {
-          percentage = (totalProfitGas / totalModalAll) * 100;
-          if(percentage > 100) percentage = 100;
-      }
-
-      document.getElementById('disp-mod-total').innerText = 'Rp ' + totalModalAll.toLocaleString('id-ID');
-      document.getElementById('disp-mod-profit').innerText = 'Rp ' + totalProfitGas.toLocaleString('id-ID');
-      document.getElementById('disp-mod-sisa').innerText = 'Rp ' + sisaModal.toLocaleString('id-ID');
-      document.getElementById('disp-mod-percent').innerText = percentage.toFixed(1) + '%';
-
-      const progressBar = document.getElementById('bar-mod-progress');
-      const statusText = document.getElementById('disp-mod-status');
-      if(progressBar) {
-          progressBar.style.width = percentage + '%';
-          let r = Math.round(239 - (239 * (percentage / 100)));
-          let g = Math.round(68 + ((255 - 68) * (percentage / 100)));
-          let b = Math.round(68 + ((170 - 68) * (percentage / 100)));
-          progressBar.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-      }
-
-      if(statusText) {
-          if(percentage >= 100) {
-              statusText.innerHTML = '<span class="text-[#00ffaa] font-bold"><i class="fa-solid fa-check-circle mr-1"></i> Selamat! Modal Anda sudah 100% kembali dan menghasilkan profit bersih!</span>';
-          } else if(percentage > 0) {
-              statusText.innerHTML = `<span class="text-yellow-400 font-medium"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Dalam proses pengembalian modal (${percentage.toFixed(1)}%). Terus tingkatkan transaksi!</span>`;
+      let totalModalTabung = 0;
+      let totalModalRefill = 0;
+      list.forEach(row => {
+          const jenis = row[2] || 'Tabung Gas';
+          const modalVal = Number(row[5]) || 0;
+          if(jenis === 'Isi Ulang Tabung Gas') {
+              totalModalRefill += modalVal;
           } else {
-              statusText.innerHTML = '<span class="text-red-400 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Belum ada profit penjualan gas yang tercatat untuk menutupi modal.</span>';
+              totalModalTabung += modalVal;
           }
-      }
-    }
-
-    function renderDataTabungMember() {
-        const tbody = document.getElementById('table-data-tabung-member');
-        if(!tbody) return;
-        let html = '';
-        appData.members.forEach(m => {
-            const kat = (m[4] || '').toString().toUpperCase();
-            if(kat === 'SMARTPHONE') return;
-            const idM = m[0] || '-';
-            const nama = m[1] || '-';
-            const alamat = m[2] ? m[2].toString().replace(/^'/, '') : '-';
-            const jumlahTabung = Number(m[10]) || 0;
-
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-                <td class="px-4 py-3 font-mono text-xs text-gray-400">${idM}</td>
-                <td class="px-4 py-3 font-semibold text-white">${nama}</td>
-                <td class="px-4 py-3 text-gray-300">${alamat}</td>
-                <td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahTabung.toLocaleString('id-ID')} Tabung</td>
-                <td class="px-4 py-3 text-center"><button onclick="prepareEditTabungMember('${idM}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded transition-all cursor-pointer"><i class="fa-solid fa-pen-to-square mr-1"></i> Update</button></td>
-            </tr>`;
-        });
-        if(html === '') html = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
-        tbody.innerHTML = html;
-    }
-
-    function renderRiwayatTabungMember() {
-        const tbody = document.getElementById('table-riwayat-tabung-member');
-        if(!tbody) return;
-        let html = '';
-        const riwayat = appData.riwayatTabungMember || [];
-        if(riwayat.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Belum ada riwayat update tabung member.</td></tr>';
-            return;
-        }
-        riwayat.forEach(row => {
-            const idR = row[0] || '-';
-            const tgl = fDate(row[1]);
-            const nama = row[3] || '-';
-            const alamat = row[4] ? row[4].toString().replace(/^'/, '') : '-';
-            const awal = Number(row[5]) || 0;
-            const selisih = Number(row[6]) || 0;
-            const status = row[7] || '-';
-            const akhir = Number(row[8]) || 0;
-
-            let badgeStatus = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[10px] px-2 py-0.5 rounded font-bold">Tetap</span>`;
-            let selisihTeks = '0';
-            if(selisih > 0) {
-                badgeStatus = `<span class="bg-emerald-500/20 text-[#00ffaa] border border-[#00ffaa]/50 text-[10px] px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-arrow-up mr-1"></i> Penambahan</span>`;
-                selisihTeks = `+${selisih.toLocaleString('id-ID')}`;
-            } else if(selisih < 0) {
-                badgeStatus = `<span class="bg-red-500/20 text-red-400 border border-red-500/50 text-[10px] px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-arrow-down mr-1"></i> Pengurangan</span>`;
-                selisihTeks = selisih.toLocaleString('id-ID');
-            }
-
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-xs">
-                <td class="px-4 py-3 font-mono text-gray-400">${idR}</td>
-                <td class="px-4 py-3">${tgl}</td>
-                <td class="px-4 py-3 font-semibold text-white">${nama}</td>
-                <td class="px-4 py-3 text-gray-300">${alamat}</td>
-                <td class="px-4 py-3">${awal.toLocaleString('id-ID')} Tbg</td>
-                <td class="px-4 py-3 font-bold ${selisih > 0 ? 'text-[#00ffaa]' : (selisih < 0 ? 'text-red-400' : 'text-gray-300')}">${selisihTeks} Tbg</td>
-                <td class="px-4 py-3">${badgeStatus}</td>
-                <td class="px-4 py-3 font-bold text-white">${akhir.toLocaleString('id-ID')} Tbg</td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-    }
-
-    function onEditMemberGasChange() {
-        const idMember = document.getElementById('edit-id-member-gas').value;
-        const namaInput = document.getElementById('edit-nama-member-gas');
-        const alamatInput = document.getElementById('edit-alamat-member-gas');
-        if(!idMember) { namaInput.value = ''; alamatInput.value = ''; return; }
-        const member = appData.members.find(m => m[0] === idMember);
-        if(member) {
-            namaInput.value = member[1] || '';
-            alamatInput.value = member[2] ? member[2].toString().replace(/^'/, '') : '';
-        }
-    }
-
-    function renderRekapHargaMember() {
-        const tbody = document.getElementById('table-rekap-harga-body'); 
-        if (!tbody) return;
-        
-        let html = '';
-        appData.members.forEach(m => {
-            const kat = (m[4] || '').toString().toUpperCase();
-            if(kat === 'SMARTPHONE') return;
-            
-            const nama = m[1] || '-';
-            const modGas = Number(m[5]) || 0; 
-            const modTab = Number(m[6]) || 0;
-            const jualGas = Number(m[7]) || 0; 
-            const jualTab = Number(m[8]) || 0;
-            const tglUpdate = m[9] ? fDate(m[9]) : '-';
-            
-            const isBelumAtur = (modGas === 0 && jualGas === 0 && modTab === 0 && jualTab === 0);
-            const badge = isBelumAtur ? `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-triangle-exclamation"></i> BELUM ATUR</span>` : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap"><i class="fa-solid fa-check"></i> AKTIF</span>`;
-            
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-                <td class="px-4 py-3 font-semibold text-white flex items-center">${nama} ${badge}</td>
-                <td class="px-4 py-3 text-gray-400">Rp ${modGas.toLocaleString('id-ID')}</td>
-                <td class="px-4 py-3 text-[#00ffaa] font-bold">Rp ${jualGas.toLocaleString('id-ID')}</td>
-                <td class="px-4 py-3 text-gray-400">Rp ${modTab.toLocaleString('id-ID')}</td>
-                <td class="px-4 py-3 text-blue-400 font-bold">Rp ${jualTab.toLocaleString('id-ID')}</td>
-                <td class="px-4 py-3 text-gray-400 text-xs">${tglUpdate}</td>
-            </tr>`;
-        });
-        if(html === '') html = '<tr><td colspan="6" class="px-4 py-4 text-center text-gray-500">Belum ada data member gas.</td></tr>';
-        tbody.innerHTML = html;
-    }
-
-    function renderRekapDeposit() { const tbody = document.getElementById('table-rekap-deposit-body'); if (!tbody) return; if (appData.deposit.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data deposit.</td></tr>'; return; } let html = ''; appData.deposit.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-blue-400">Rp ${Number(row[2] || 0).toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[3] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
-    function renderRekapTabungMasuk() { const tbody = document.getElementById('table-rekap-tm-body'); if (!tbody) return; if (appData.tabungMasuk.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data tabung keluar.</td></tr>'; return; } let html = ''; appData.tabungMasuk.forEach(row => { html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; }); tbody.innerHTML = html; }
-    
-    function renderRekapTransaksiMember() { 
-        const tbody = document.getElementById('table-rekap-trx-body'); if (!tbody) return; 
-        if (appData.transaksi.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada data transaksi.</td></tr>'; return; } 
-        let html = ''; 
-        appData.transaksi.forEach(row => { 
-            const isKhusus = (row[7] || '') === 'Khusus';
-            const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0 (CEK MODAL)</span>`;
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tabung</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
-        }); 
-        tbody.innerHTML = html; 
-    }
-
-    function renderLaporanTable() {
-      const startEl = document.getElementById('rep-start'); const endEl = document.getElementById('rep-end');
-      const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
-      const baseFiltered = appData.transaksi.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
-      const tbody = document.getElementById('table-laporan-body'); if (!tbody) return; tbody.innerHTML = '';
-      
-      let html = ''; let sumTabung = 0; let sumRupiah = 0; 
-      let sumProfitLama = 0; let sumProfitBaru = 0; let sumProfit = 0; 
-      let memberProfit = {};
-
-      if (baseFiltered.length === 0) { 
-          tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-gray-500">Tidak ada transaksi gas.</td></tr>'; 
-          document.getElementById('lap-tot-tabung').innerText = '0'; 
-          document.getElementById('lap-tot-omzet').innerText = 'Rp 0'; 
-          document.getElementById('lap-tot-profit-lama').innerText = 'Rp 0'; 
-          document.getElementById('lap-tot-profit-baru').innerText = 'Rp 0'; 
-          document.getElementById('lap-tot-profit').innerText = 'Rp 0'; 
-          document.getElementById('lap-profit-member').innerHTML = '<span class="text-gray-500 col-span-full">Belum ada data.</span>'; 
-          return; 
-      }
-
-      baseFiltered.forEach(row => { 
-          const memberName = row[2] || '-'; const jenis = row[3] || '-'; 
-          const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
-          let profit = 0;
-          let badgeSistem = '';
-
-          if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
-              profit = Number(row[10]) || 0;
-              sumProfitBaru += profit;
-              badgeSistem = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA TERBARU</span>`;
-          } else {
-              let modalSatuan = 0;
-              const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === memberName.toUpperCase());
-              if (memberData) {
-                  if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
-                  else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
-              }
-              profit = hargaJualTotal - (qty * modalSatuan);
-              sumProfitLama += profit;
-              badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA LAMA</span>`;
-          }
-          
-          sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
-          
-          if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
-          memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
-
-          const isKhusus = (row[7] || '') === 'Khusus';
-          const infoBadge = isKhusus ? `<span class="text-[9px] text-blue-400 ml-1" title="Khusus"><i class="fa-solid fa-tag"></i></span>` : `<span class="text-[9px] text-yellow-400 ml-1" title="Harga 0"><i class="fa-solid fa-triangle-exclamation"></i></span>`;
-          
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
-      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
-      tbody.innerHTML = html;
-      
-      document.getElementById('lap-tot-tabung').innerText = sumTabung.toLocaleString('id-ID'); 
-      document.getElementById('lap-tot-omzet').innerText = 'Rp ' + sumRupiah.toLocaleString('id-ID'); 
-      document.getElementById('lap-tot-profit-lama').innerText = 'Rp ' + sumProfitLama.toLocaleString('id-ID');
-      document.getElementById('lap-tot-profit-baru').innerText = 'Rp ' + sumProfitBaru.toLocaleString('id-ID');
-      document.getElementById('lap-tot-profit').innerText = 'Rp ' + sumProfit.toLocaleString('id-ID');
-      
-      let memberHtml = '';
-      for (const [name, data] of Object.entries(memberProfit)) { memberHtml += `<div class="bg-[#161b22] p-2 rounded border border-gray-800"><strong class="text-white block truncate">${name}</strong><span class="text-gray-400 block">${data.qty.toLocaleString('id-ID')} Tabung</span><span class="text-[#00ffaa] font-bold">Rp ${data.profit.toLocaleString('id-ID')}</span></div>`; }
-      document.getElementById('lap-profit-member').innerHTML = memberHtml;
-    }
-
-    function renderAccessLogs() {
-        const tbody = document.getElementById('table-log-akses-body'); if (!tbody) return;
-        const logs = appData.accessLogs || [];
-        if (logs.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Belum ada data log akses.</td></tr>'; return; }
-        let html = '';
-        logs.forEach(row => {
-            const rawUA = row[3] || ''; let deviceInfo = rawUA;
-            try {
-                if (typeof UAParser !== 'undefined') {
-                    const parser = new UAParser(rawUA); const res = parser.getResult();
-                    let devType = res.device.type || 'Desktop / Laptop'; if(devType === 'mobile') devType = 'Smartphone'; if(devType === 'tablet') devType = 'Tablet';
-                    const vendor = res.device.vendor ? res.device.vendor : ''; const model = res.device.model ? res.device.model : '';
-                    let hardware = vendor || model ? `${vendor} ${model}`.trim() : 'Unknown Model'; if (devType === 'Desktop / Laptop' && hardware === 'Unknown Model') hardware = 'PC / Mac';
-                    const osName = res.os.name || 'Unknown OS'; const osVer = res.os.version || ''; const browser = res.browser.name || 'Browser';
-                    let iconDev = 'fa-laptop'; if(devType === 'Smartphone') iconDev = 'fa-mobile-screen'; else if(devType === 'Tablet') iconDev = 'fa-tablet-screen-button';
-                    let iconOS = 'fa-microchip'; if(/Windows/i.test(osName)) iconOS = 'fa-brands fa-windows'; else if(/Mac|iOS/i.test(osName)) iconOS = 'fa-brands fa-apple'; else if(/Android/i.test(osName)) iconOS = 'fa-brands fa-android'; else if(/Linux/i.test(osName)) iconOS = 'fa-brands fa-linux';
-                    deviceInfo = `<div class="flex flex-col"><span class="text-white font-bold text-sm"><i class="fa-solid ${iconDev} text-[#00ffaa] mr-1 w-4"></i> ${devType.toUpperCase()} - ${hardware}</span><span class="text-xs text-blue-300 mt-0.5"><i class="${iconOS} mr-1 w-4"></i> ${osName} ${osVer} &nbsp;|&nbsp; <i class="fa-solid fa-globe mr-1 w-4"></i> ${browser}</span><span class="text-[10px] text-gray-500 mt-1 truncate max-w-sm cursor-help" title="${rawUA}">Raw: ${rawUA.substring(0,40)}...</span></div>`;
-                }
-            } catch(e) { deviceInfo = `<span class="text-gray-400 text-xs truncate max-w-xs" title="${rawUA}">${rawUA}</span>`; }
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-4 py-3 font-mono text-xs text-gray-400">${row[0]}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-[#00ffaa] font-bold">${row[2]}</td><td class="px-4 py-3">${deviceInfo}</td></tr>`;
-        });
-        tbody.innerHTML = html;
-    }
-
-    function filterTabungMasukPublik() { 
-      const startEl = document.getElementById('filter-start-date'); const endEl = document.getElementById('filter-end-date');
-      const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
-      const tbody = document.getElementById('table-publik-masuk-body'); if (!tbody) return; tbody.innerHTML = '';
-      const filtered = appData.tabungMasuk.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Tidak ada data tabung keluar.</td></tr>'; document.getElementById('pub-tabung-masuk').innerText = '0'; return; }
-      let html = ''; let totalMasuk = 0;
-      filtered.forEach(row => { totalMasuk += Number(row[2]) || 0; html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; });
-      tbody.innerHTML = html; document.getElementById('pub-tabung-masuk').innerText = totalMasuk.toLocaleString('id-ID');
-    }
-    
-    function resetFilterPublik() { const startEl = document.getElementById('filter-start-date'); const endEl = document.getElementById('filter-end-date'); if (startEl) startEl.value = ''; if (endEl) endEl.value = ''; filterTabungMasukPublik(); }
-    
-    function renderKasirAngsuranDropdown() {
-      const sel = document.getElementById('pay-hp-id'); if (!sel) return; sel.innerHTML = '<option value="" disabled selected>-- Pilih Member & Tagihan --</option>';
-      try { 
-          const activeAngsuran = appData.angsuran.filter(a => a[14] !== "Selesai");
-          if (activeAngsuran.length > 0) { activeAngsuran.forEach(a => { const totalBln = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0; if (terbayar < totalBln) { const opt = document.createElement('option'); opt.value = a[0]; opt.innerText = `${a[1] || '-'} - ${a[2] || '-'} (Sisa ${totalBln - terbayar} Bln)`; sel.appendChild(opt); } }); } 
-      } catch(e) {}
-    }
-
-    function onPayHpChange() {
-       const id = document.getElementById('pay-hp-id').value; const infoDiv = document.getElementById('pay-hp-info');
-       if(!id) { infoDiv.classList.add('hidden'); return; }
-       const a = appData.angsuran.find(x => x[0] === id);
-       if(a) {
-           infoDiv.classList.remove('hidden'); document.getElementById('disp-pay-tipe').innerText = a[2]; document.getElementById('disp-pay-harga').innerText = 'Rp ' + Number(a[3]).toLocaleString('id-ID');
-           const sisa = Number(a[8]) - Number(a[9]); document.getElementById('disp-pay-sisa').innerText = sisa + ' Bulan'; document.getElementById('disp-pay-terbayar').innerText = a[9] + ' Bulan'; document.getElementById('pay-hp-nominal').value = Number(a[7]).toLocaleString('id-ID');
-       }
-    }
-
-    async function archiveAngsuran(id) {
-       if(!confirm("Yakin ingin menyelesaikan dan mengarsipkan transaksi ini (LUNAS)? Data akan dipindah ke Riwayat Lunas.")) return;
-       const btn = document.getElementById('btn-archive-' + id); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
-       try { const res = await apiCall('archiveAngsuranHP', {idAngsuran: id}); if(res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); if(btn){ btn.disabled=false; btn.innerText="LUNAS (Arsipkan)"; } }
-       } catch(e) { showToast("Error koneksi", "error"); if(btn){ btn.disabled=false; btn.innerText="LUNAS (Arsipkan)"; } }
-    }
-
-    function renderKasirAngsuran() {
-      const tbody = document.getElementById('table-angsuran-body'); if(!tbody) return;
-      try {
-          const activeAngsuran = appData.angsuran.filter(a => a[14] !== "Selesai");
-          if(activeAngsuran.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-400">Tidak ada transaksi aktif.</td></tr>'; return; }
-          let html = '';
-          activeAngsuran.forEach(a => {
-              const nominal = Number(a[7]) || 0; const totalBulan = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0; const sisaBulan = totalBulan - terbayar; const totalRp = terbayar * nominal; const sisaRp = sisaBulan * nominal;
-              const tempatBeli = a[12] || '-'; const tglInvoice = fDate(a[13]); 
-              let actionBtn = '';
-              if (sisaBulan <= 0) { actionBtn = `<button id="btn-archive-${a[0]}" onclick="archiveAngsuran('${a[0]}')" class="px-3 py-1.5 bg-[#00ffaa] hover:bg-[#00cc88] text-gray-900 font-bold text-xs rounded transition-all shadow-[0_0_10px_rgba(0,255,170,0.4)]"><i class="fa-solid fa-box-archive mr-1"></i> LUNAS (Arsipkan)</button>`; } 
-              else { actionBtn = `<div class="flex flex-col sm:flex-row gap-2 justify-center"><button onclick="gotoInputPembayaran('${a[0]}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded transition-all">Bayar Angsuran</button></div>`; }
-              html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-3 py-3"><span class="font-semibold text-white block">${a[1] || '-'}</span><span class="text-[10px] text-gray-400 block mt-0.5"><i class="fa-solid fa-shop"></i> ${tempatBeli}</span></td><td class="px-3 py-3"><span class="text-gray-300 block">${a[2] || '-'}</span><span class="text-[10px] text-blue-300 block mt-0.5"><i class="fa-solid fa-file-invoice"></i> Nota: ${tglInvoice}</span></td><td class="px-3 py-3 text-red-400 font-bold">${sisaBulan} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${sisaRp.toLocaleString('id-ID')}</span></td><td class="px-3 py-3 text-[#00ffaa] font-bold">${terbayar} Bln <br><span class="text-xs font-normal text-gray-400">Rp ${totalRp.toLocaleString('id-ID')}</span></td><td class="px-3 py-3 text-center">${actionBtn}</td></tr>`;
-          }); tbody.innerHTML = html;
-      } catch(e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-red-500 font-bold">Gagal merender tabel. Pastikan kolom database lengkap.</td></tr>'; }
-    }
-
-    function renderLaporanHp() {
-        const tbodyExcel = document.getElementById('table-hp-excel-body'); const tbodyLunas = document.getElementById('table-lunas-body'); 
-        try {
-            let totModal = 0, totOmzet = 0, totUntung = 0; let htmlExcel = ''; let memberProfitHp = {};
-            if(appData.angsuran.length === 0) { if(tbodyExcel) tbodyExcel.innerHTML = '<tr><td colspan="7" class="text-center p-4">Belum ada data.</td></tr>'; 
-            } else {
-                let sortedLaporanAngsuran = [...appData.angsuran].sort((a, b) => { let dateA = (a[4] || '') + (a[13] || ''); let dateB = (b[4] || '') + (b[13] || ''); return dateA.localeCompare(dateB); });
-                sortedLaporanAngsuran.forEach(a => {
-                     const isLunas = a[14] === "Selesai"; const nama = a[1] || '-'; const nameTag = isLunas ? `${nama} <span class="bg-gray-200 text-gray-800 text-[10px] px-1 rounded ml-1">LUNAS</span>` : nama;
-                     const idTrx = a[0]; const tipe = a[2]; const harga = Number(a[3]) || 0; const bulanOrder = a[4]; const dp = Number(a[5]) || 0; const modal = Number(a[10]) || 0; const untung = Number(a[11]) || 0; const tglInvoice = fDate(a[13]);
-                     totModal += modal; totOmzet += harga; totUntung += untung;
-                     const myPayments = (appData.detailAngsuran || []).filter(pay => pay[1] === idTrx); myPayments.sort((x, y) => new Date(x[2]) - new Date(y[2]));
-                     const totalBln = Number(a[8]) || 1; let totalBayar = 0;
-                     let rowspanVal = totalBln + 3; let colNama = `<td rowspan="${rowspanVal}" class="border border-black p-2 align-top font-semibold">${nameTag}</td>`; let colBarang = `<td rowspan="${rowspanVal}" class="border border-black p-2 align-top">${tipe || '-'}</td>`; let colWaktu = `<td rowspan="${rowspanVal}" class="border border-black p-2 text-center align-top">${bulanOrder || '-'}</td>`; let colHarga = `<td rowspan="${rowspanVal}" class="border border-black p-2 text-center align-top font-semibold">Rp ${harga.toLocaleString('id-ID')}</td>`; 
-                     htmlExcel += `<tr>${colNama}${colBarang}${colWaktu}${colHarga}<td class="border border-black p-1 text-center font-semibold bg-gray-100">DP Awal</td><td class="border border-black p-1 text-right pr-2 bg-gray-100 font-semibold">Rp ${dp.toLocaleString('id-ID')}</td><td class="border border-black p-1 text-center bg-gray-100">${tglInvoice}</td></tr>`;
-                     for(let i=1; i<=totalBln; i++) { const pay = myPayments[i-1]; const nominalBayar = pay ? (Number(pay[3]) || 0) : ''; const tglBayar = pay ? fDate(pay[2]) : ''; if(pay) totalBayar += nominalBayar; let textNominal = nominalBayar !== '' ? `Rp ${nominalBayar.toLocaleString('id-ID')}` : ''; htmlExcel += `<tr><td class="border border-black p-1 text-center font-semibold">${i}</td><td class="border border-black p-1 text-right pr-2">${textNominal}</td><td class="border border-black p-1 text-center">${tglBayar}</td></tr>`; }
-                     const totalTerkumpul = dp + totalBayar; const sisaRupiah = harga - totalTerkumpul; let untungBerjalan = 0; if (harga > 0) { untungBerjalan = (totalTerkumpul / harga) * untung; }
-                     if(!memberProfitHp[nama]) memberProfitHp[nama] = { untung: 0, untungBerjalan: 0, trx: 0 }; memberProfitHp[nama].untung += untung; memberProfitHp[nama].untungBerjalan += untungBerjalan; memberProfitHp[nama].trx += 1;
-                     htmlExcel += `<tr><td class="border border-black p-1 text-right font-bold italic">Total Terbayar</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-blue-700">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr><tr><td class="border border-black p-1 text-right font-bold italic">Sisa Angsuran</td><td class="border border-black p-1 text-right pr-2 font-bold italic text-red-600">Rp ${sisaRupiah.toLocaleString('id-ID')}</td><td class="border border-black p-1 bg-gray-100"></td></tr><tr class="bg-[#161b22]"><td colspan="7" class="border border-black h-3"></td></tr>`;
-                });
-                if(tbodyExcel) tbodyExcel.innerHTML = htmlExcel;
-            }
-            document.getElementById('khp-tot-modal').innerText = 'Rp ' + totModal.toLocaleString('id-ID'); document.getElementById('khp-tot-omzet').innerText = 'Rp ' + totOmzet.toLocaleString('id-ID'); document.getElementById('khp-tot-untung').innerText = 'Rp ' + totUntung.toLocaleString('id-ID');
-
-            let memberHtmlHp = '';
-            for (const [mName, mData] of Object.entries(memberProfitHp)) {
-                memberHtmlHp += `<div class="bg-[#161b22] p-3 rounded-xl border border-gray-800 flex flex-col"><strong class="text-white block truncate mb-1">${mName}</strong><span class="text-xs text-gray-400 block mb-2">${mData.trx} Transaksi</span><div class="flex justify-between items-end mt-auto pt-2 border-t border-gray-800"><div><span class="text-[10px] text-gray-500 block uppercase">Estimasi</span><span class="text-[#00ffaa] font-bold text-xs">Rp ${mData.untung.toLocaleString('id-ID')}</span></div><div class="text-right"><span class="text-[10px] text-gray-500 block uppercase">Didapat</span><span class="text-blue-400 font-bold text-xs">Rp ${Math.round(mData.untungBerjalan).toLocaleString('id-ID')}</span></div></div></div>`;
-            }
-            const hpProfitContainer = document.getElementById('laporan-hp-profit-member'); if(hpProfitContainer) hpProfitContainer.innerHTML = memberHtmlHp;
-
-            if(tbodyLunas) {
-                let htmlLunas = ''; const lunasData = appData.angsuran.filter(a => a[14] === "Selesai"); lunasData.sort((a, b) => a[1].localeCompare(b[1])); let currentName = ''; let trxCount = 0;
-                if(lunasData.length === 0) { htmlLunas = '<tr><td colspan="5" class="text-center py-4 text-gray-500">Belum ada transaksi lunas.</td></tr>'; }
-                else { lunasData.forEach(a => { if(a[1] !== currentName) { currentName = a[1]; trxCount = 1; } else { trxCount++; } htmlLunas += `<tr class="border-b border-gray-800 hover:bg-gray-800/40 text-sm"><td class="px-3 py-3 font-semibold text-[#00ffaa]">${a[1]} <span class="bg-blue-900/50 text-blue-300 text-[10px] px-1.5 py-0.5 rounded ml-1 font-bold">Trx Ke-${trxCount}</span></td><td class="px-3 py-3 text-white">${a[2]}</td><td class="px-3 py-3 text-gray-400">${fDate(a[13])}</td><td class="px-3 py-3 text-gray-400 font-medium">Rp ${Number(a[3]).toLocaleString('id-ID')}</td><td class="px-3 py-3 text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</td></tr>`; }); }
-                tbodyLunas.innerHTML = htmlLunas;
-            }
-        } catch(e) { console.error(e); }
-    }
-
-    function gotoInputPembayaran(idAngsuran) { switchKasirHpSub('bayar'); const sel = document.getElementById('pay-hp-id'); if(sel) { sel.value = idAngsuran; onPayHpChange(); } window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-    function renderMemberAngsuran() {
-      const container = document.getElementById('member-angsuran-content'); container.innerHTML = '';
-      try {
-          const myAngsuran = appData.angsuran.filter(a => a[1] === currentLoggedInMember && a[14] !== "Selesai");
-          if (myAngsuran.length === 0) { container.innerHTML = '<div class="p-6 text-center text-gray-400 bg-[#161b22] border border-gray-800 rounded-xl"><i class="fa-solid fa-box-open text-3xl mb-3 text-gray-600 block"></i> Tidak ada tagihan angsuran aktif saat ini. Terima kasih!</div>'; return; }
-          let fullHtml = ''; const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-          myAngsuran.forEach(a => {
-              const idTrx = a[0]; const nama = a[1]; const tipe = a[2]; const harga = Number(a[3]) || 0; const bulanOrder = a[4]; const dp = Number(a[5]) || 0; const nominalBulan = Number(a[7]) || 0; const totalBln = Number(a[8]) || 0; const terbayar = Number(a[9]) || 0; const sisaBln = totalBln - terbayar;
-              let anyWarning = '';
-              if (bulanOrder && bulanOrder.includes('-') && terbayar < totalBln) {
-                  const parts = bulanOrder.split('-'); let buyYear = parseInt(parts[0]); let buyMonth = parseInt(parts[1]) - 1; let nextDueMonth = buyMonth + 1 + terbayar; let nextDueYear = buyYear; while(nextDueMonth > 11) { nextDueMonth -= 12; nextDueYear++; }
-                  const today = new Date(); const todayVal = today.getFullYear() * 100 + today.getMonth(); const dueVal = nextDueYear * 100 + nextDueMonth;
-                  if (todayVal >= dueVal) { anyWarning = `<div class="bg-red-900/40 border border-red-500 text-red-400 p-4 rounded-xl mb-6 flex items-center shadow-[0_0_15px_rgba(239,68,68,0.3)]"><i class="fa-solid fa-bell-slash text-3xl mr-4"></i><div><strong class="block font-bold text-lg">Peringatan Pembayaran!</strong><span class="text-sm">Anda belum membayar angsuran untuk bulan <b>${monthNames[nextDueMonth]} ${nextDueYear}</b>. Segera hubungi Kasir/Admin.</span></div></div>`; }
+      let totalProfitGas = 0;
+      (appData.transaksi || []).forEach(row => {
+          const memberName = row[2] || "";
+          const jenis = row[3] || "";
+          const qty = Number(row[5]) || 0;
+          const hargaJualTotal = Number(row[6]) || 0;
+          if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
+              totalProfitGas += Number(row[10]) || 0;
+          } else {
+              let modalSatuan = 0;
+              for (let m = 0; m < (appData.members || []).length; m++) {
+                  if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === memberName.toUpperCase()) {
+                      if (jenis === 'Penjualan Gas') modalSatuan = Number(appData.members[m][5]) || 0;
+                      else if (jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(appData.members[m][6]) || 0;
+                      break;
+                  }
               }
-              const myPayments = (appData.detailAngsuran || []).filter(pay => pay[1] === idTrx); myPayments.sort((x, y) => new Date(x[2]) - new Date(y[2]));
-              let totalBayarRp = dp; let tableRows = `<tr class="border-b border-gray-700 bg-gray-800/30"><td class="p-3 text-white font-medium">DP (Uang Muka)</td><td class="p-3 text-white font-medium">Rp ${dp.toLocaleString('id-ID')}</td><td class="p-3 text-gray-400 text-center">Saat Pembelian</td><td class="p-3 text-center text-[#00ffaa] font-bold"><i class="fa-solid fa-check"></i> Lunas</td></tr>`;
-              for(let i=1; i<=totalBln; i++) {
-                  const pay = myPayments[i-1]; 
-                  if(pay) { const nominalBayar = Number(pay[3]) || 0; totalBayarRp += nominalBayar; tableRows += `<tr class="border-b border-gray-700"><td class="p-3 text-gray-300">Angsuran Ke-${i}</td><td class="p-3 text-white font-medium">Rp ${nominalBayar.toLocaleString('id-ID')}</td><td class="p-3 text-gray-400 text-center">${fDate(pay[2])}</td><td class="p-3 text-center text-[#00ffaa] font-bold"><i class="fa-solid fa-check"></i> Lunas</td></tr>`; } 
-                  else { tableRows += `<tr class="border-b border-gray-800 opacity-60"><td class="p-3 text-gray-400">Angsuran Ke-${i}</td><td class="p-3 text-gray-400">Rp ${nominalBulan.toLocaleString('id-ID')}</td><td class="p-3 text-gray-500 text-center">-</td><td class="p-3 text-center text-red-400 font-medium">Belum Bayar</td></tr>`; }
-              }
-              const sisaRp = harga - totalBayarRp; let bulanTeks = bulanOrder; if (bulanOrder.includes('-')) { const p = bulanOrder.split('-'); bulanTeks = monthNames[parseInt(p[1]) - 1] + ' ' + p[0]; }
+              totalProfitGas += (hargaJualTotal - (qty * modalSatuan));
+          }
+      });
 
-              fullHtml += `${anyWarning}<div class="glass-card border border-[#00ffaa]/30 rounded-2xl overflow-hidden mb-8 shadow-lg"><div class="bg-[#161b22] p-5 border-b border-gray-700 flex flex-col md:flex-row justify-between md:items-center gap-4"><div><span class="text-xs text-[#00ffaa] uppercase tracking-wider font-bold mb-1 block">Nama Pembeli</span><h3 class="text-2xl font-black text-white">${nama}</h3></div><div class="text-left md:text-right"><span class="text-xs text-gray-400 uppercase tracking-wider mb-1 block">Bulan Pembelian</span><span class="text-lg font-bold text-blue-300">${bulanTeks}</span></div></div><div class="p-5 bg-gray-900/50 border-b border-gray-700"><span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Jenis HP</span><h4 class="text-xl font-semibold text-white">${tipe}</h4></div><div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-700 border-b border-gray-700"><div class="p-5 bg-[#161b22]"><span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Total Terbayar</span><span class="text-3xl font-black text-[#00ffaa]">Rp ${totalBayarRp.toLocaleString('id-ID')}</span><span class="text-xs text-gray-500 block mt-1">Selesai ${terbayar} dari ${totalBln} Bulan</span></div><div class="p-5 bg-[#161b22]"><span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Sisa Angsuran</span><span class="text-3xl font-black text-red-400">Rp ${sisaRp.toLocaleString('id-ID')}</span><span class="text-xs text-gray-500 block mt-1">Tersisa ${sisaBln} Bulan Pembayaran</span></div></div><div class="p-5 bg-gray-900/80"><h4 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Rincian Angsuran Pertama - Terakhir</h4><div class="overflow-x-auto rounded-lg border border-gray-700"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="text-xs text-gray-400 uppercase border-b border-gray-700 bg-gray-800"><tr><th class="p-3 font-medium">Angsuran</th><th class="p-3 font-medium">Nominal</th><th class="p-3 font-medium text-center">Tanggal Bayar</th><th class="p-3 font-medium text-center">Status</th></tr></thead><tbody>${tableRows}</tbody></table></div></div></div>`;
-          });
-          container.innerHTML = fullHtml;
-      } catch(e) { container.innerHTML = `<div class="p-6 text-center text-red-500 bg-[#161b22] border border-gray-800 rounded-xl">Error memuat data member: ${e.message}</div>`; }
+      let sisaModalTabung = totalModalTabung - totalProfitGas;
+      if(sisaModalTabung < 0) sisaModalTabung = 0;
+      let percentTabung = totalModalTabung > 0 ? Math.min(100, (totalProfitGas / totalModalTabung) * 100) : 0;
+
+      document.getElementById('disp-mod-total').innerText = 'Rp ' + totalModalTabung.toLocaleString('id-ID');
+      document.getElementById('disp-mod-profit').innerText = 'Rp ' + totalProfitGas.toLocaleString('id-ID');
+      document.getElementById('disp-mod-sisa').innerText = 'Rp ' + sisaModalTabung.toLocaleString('id-ID');
+      document.getElementById('disp-mod-percent').innerText = percentTabung.toFixed(1) + '%';
+      
+      const barTabung = document.getElementById('bar-mod-progress');
+      if(barTabung) {
+          barTabung.style.width = percentTabung + '%';
+          let r = Math.round(239 - (239 * (percentTabung / 100)));
+          let g = Math.round(68 + ((255 - 68) * (percentTabung / 100)));
+          barTabung.style.backgroundColor = `rgb(${r}, ${g}, 68)`;
+      }
+
+      let profitForRefill = totalProfitGas > totalModalTabung ? (totalProfitGas - totalModalTabung) : 0;
+      let sisaModalRefill = totalModalRefill - profitForRefill;
+      if(sisaModalRefill < 0) sisaModalRefill = 0;
+      let percentRefill = totalModalRefill > 0 ? Math.min(100, (profitForRefill / totalModalRefill) * 100) : 0;
+
+      document.getElementById('disp-refill-total').innerText = 'Rp ' + totalModalRefill.toLocaleString('id-ID');
+      document.getElementById('disp-refill-profit').innerText = 'Rp ' + profitForRefill.toLocaleString('id-ID');
+      document.getElementById('disp-refill-sisa').innerText = 'Rp ' + sisaModalRefill.toLocaleString('id-ID');
+      document.getElementById('disp-refill-percent').innerText = percentRefill.toFixed(1) + '%';
+
+      const barRefill = document.getElementById('bar-refill-progress');
+      if(barRefill) {
+          barRefill.style.width = percentRefill + '%';
+          let r2 = Math.round(239 - (239 * (percentRefill / 100)));
+          let g2 = Math.round(68 + ((255 - 68) * (percentRefill / 100)));
+          barRefill.style.backgroundColor = `rgb(${r2}, ${g2}, 68)`;
+      }
     }
 
     function switchPage(pageId) {
       const pages = ['dashboard', 'publik', 'kasir', 'admin', 'gas-portal', 'smartphone-portal', 'member-smartphone', 'kasir-smartphone'];
-      pages.forEach(p => { const pE = document.getElementById('page-' + p); if (pE) { pE.classList.add('hidden'); } const nB = document.getElementById('nav-' + p); if (nB) { nB.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-gray-800 hover:text-white cursor-pointer"; } });
+      pages.forEach(p => { const pE = document.getElementById('page-' + p); if (pE) pE.classList.add('hidden'); });
       const targetPage = document.getElementById('page-' + pageId); if (targetPage) targetPage.classList.remove('hidden');
-      const activeNav = document.getElementById('nav-' + pageId); if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-[#00ffaa]/20 text-[#00ffaa] border border-[#00ffaa]/50 cursor-pointer"; window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
     function switchKasirSub(subId) {
       const subs = ['deposit', 'permodalan', 'tabungmember', 'harga', 'masuk', 'member', 'laporan', 'memberbaru'];
-      subs.forEach(s => { const sE = document.getElementById('kasir-sub-' + s); if (sE) sE.classList.add('hidden'); const b = document.getElementById('ksub-' + s); if (b) b.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer"; });
-      const tS = document.getElementById('kasir-sub-' + subId); if (tS) tS.classList.remove('hidden'); const aB = document.getElementById('ksub-' + subId); if (aB) aB.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
-    }
-    function switchKasirHpSub(subId) {
-      const subs = ['baru', 'bayar', 'laporan', 'memberbaru'];
-      subs.forEach(s => { const sE = document.getElementById('kasir-hp-' + s); if (sE) sE.classList.add('hidden'); const b = document.getElementById('btn-khp-' + s); if (b) b.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer"; });
-      const tS = document.getElementById('kasir-hp-' + subId); if (tS) tS.classList.remove('hidden'); const aB = document.getElementById('btn-khp-' + subId); if (aB) aB.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer";
+      subs.forEach(s => { const sE = document.getElementById('kasir-sub-' + s); if (sE) sE.classList.add('hidden'); const b = document.getElementById('ksub-' + s); if (b) b.className = "px-4 py-2 rounded-lg text-sm font-semibold glass-card text-gray-300 hover:text-white transition-all cursor-pointer text-center"; });
+      const tS = document.getElementById('kasir-sub-' + subId); if (tS) tS.classList.remove('hidden'); const aB = document.getElementById('ksub-' + subId); if (aB) aB.className = "px-4 py-2 rounded-lg text-sm font-semibold bg-[#00ffaa] text-gray-900 transition-all cursor-pointer text-center";
     }
 
     function executeSafeSubmit(btnId, submitFunction) { const btn = document.getElementById(btnId); if (!btn || btn.disabled) return; btn.disabled = true; const originalText = btn.innerText; btn.innerText = "Memproses..."; submitFunction(() => { btn.disabled = false; btn.innerText = originalText; }); }
 
-    async function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async (done) => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value), totalTabung: parseCleanNumber(document.getElementById('dep-totaltabung').value) }; try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('dep-totaltabung').value = ''; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handlePermodalanSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-mod', async (done) => { const payload = { idPermodalan: document.getElementById('mod-id').value, tanggal: document.getElementById('mod-tanggal').value, jumlahTabungGas: parseCleanNumber(document.getElementById('mod-jumlahtabung').value), hargaPerTabung: parseCleanNumber(document.getElementById('mod-hargatabung').value), keterangan: document.getElementById('mod-keterangan').value }; try { const res = await apiCall('savePermodalanGas', payload); if(res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('mod-totalmodal').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleTabungMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tabung-member', async (done) => { const payload = { idMember: document.getElementById('tm-member-select').value, tanggal: document.getElementById('tm-tanggal-update').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah-manual').value) }; try { const res = await apiCall('saveJumlahTabungMember', payload); if(res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('tm-disp-nama').value = ''; document.getElementById('tm-disp-alamat').value = ''; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleHargaSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-harga', async (done) => { const targetMember = document.getElementById('hrg-target').value; const payload = { targetMember: targetMember, hargaModalGas: parseCleanNumber(document.getElementById('hrg-modal-gas').value), hargaModalTabung: parseCleanNumber(document.getElementById('hrg-modal-tabung').value), hargaJualGas: parseCleanNumber(document.getElementById('hrg-jual-gas').value), hargaJualTabung: parseCleanNumber(document.getElementById('hrg-jual-tabung').value) }; try { const res = await apiCall('savePengaturanHarga', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleTabungMasukSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-tm', async (done) => { const payload = { idMasuk: document.getElementById('tm-id').value, tanggal: document.getElementById('tm-tanggal').value, tujuan: document.getElementById('tm-tujuan').value, jumlahTabung: parseCleanNumber(document.getElementById('tm-jumlah').value) }; try { const res = await apiCall('saveTabungMasuk', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleTransaksiMemberSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-trx', async (done) => { const payload = { idTrx: document.getElementById('trx-id').value, tanggal: document.getElementById('trx-tanggal').value, namaMember: document.getElementById('trx-namamember').value, jenisTransaksi: document.getElementById('trx-jenis').value, metodeSetoran: document.getElementById('trx-metode').value, jumlahTabung: parseCleanNumber(document.getElementById('trx-jumlahtabung').value) }; try { const res = await apiCall('saveTransaksiMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('trx-jumlahrupiah').value = '0'; } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleAngsuranSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-angsuran', async (done) => { const namaMemberInput = document.getElementById('ang-member').value.toUpperCase().trim(); const idPembelianInput = document.getElementById('ang-idpembelian').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mName = (m[1] || '').toString().toUpperCase().trim(); return mId === idPembelianInput && mName !== namaMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } let tempatBeli = document.getElementById('ang-tempat-beli').value; if(tempatBeli === 'Toko Offline') { tempatBeli = "Offline - " + document.getElementById('ang-tempat-offline').value; } const payload = { namaMember: namaMemberInput, idPembelian: idPembelianInput, tipeHp: document.getElementById('ang-tipe').value, hargaModal: parseCleanNumber(document.getElementById('ang-modal').value), hargaHp: parseCleanNumber(document.getElementById('ang-harga').value), keuntungan: parseCleanNumber(document.getElementById('ang-keuntungan').value), bulanPembelian: document.getElementById('ang-bulan').value, dp: parseCleanNumber(document.getElementById('ang-dp').value), nominalPerBulan: parseCleanNumber(document.getElementById('ang-nominal').value), totalBulan: parseInt(document.getElementById('ang-totalbulan').value), tempatPembelian: tempatBeli, tglInvoice: document.getElementById('ang-tgl-invoice').value }; try { const res = await apiCall('saveAngsuranBaru', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('container-tempat-offline').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handlePayHpSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-pay-hp', async (done) => { const payload = { idAngsuran: document.getElementById('pay-hp-id').value, tanggalBayar: document.getElementById('pay-hp-tanggal').value, nominalBayar: parseCleanNumber(document.getElementById('pay-hp-nominal').value) }; try { const res = await apiCall('savePembayaranAngsuran', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('pay-hp-info').classList.add('hidden'); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handleDepositSubmit(e) { e.preventDefault(); executeSafeSubmit('btn-submit-dep', async (done) => { const payload = { idDeposit: document.getElementById('dep-id').value, tanggal: document.getElementById('dep-tanggal').value, nominalDeposit: parseCleanNumber(document.getElementById('dep-nominal').value), totalTabung: parseCleanNumber(document.getElementById('dep-totaltabung').value) }; try { const res = await apiCall('saveDepositKontrak', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
     
-    async function handleUpdateAdminPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-pin', async (done) => { const payload = { targetKey: 'ADMIN_PIN', newPin1: document.getElementById('adm-new-pin1').value, newPin2: document.getElementById('adm-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetKasirGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-kg-pin', async (done) => { const payload = { targetKey: 'KASIR_GAS_PIN', newPin1: document.getElementById('kg-new-pin1').value, newPin2: document.getElementById('kg-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetKasirHpPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-khp-pin', async (done) => { const payload = { targetKey: 'KASIR_HP_PIN', newPin1: document.getElementById('khp-new-pin1').value, newPin2: document.getElementById('khp-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetInfoGasPin(e) { e.preventDefault(); executeSafeSubmit('btn-submit-ig-pin', async (done) => { const payload = { targetKey: 'INFO_GAS_PIN', newPin1: document.getElementById('ig-new-pin1').value, newPin2: document.getElementById('ig-new-pin2').value }; try { const res = await apiCall('updateKasirPin', payload); if (res.success) { showToast(res.message, "success"); e.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleUpdateNarasi(e) { e.preventDefault(); executeSafeSubmit('btn-submit-adm-narasi', async (done) => { const payload = { narasi: document.getElementById('adm-narasi-digital').value }; try { const res = await apiCall('saveDigitalNarasi', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleAddMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-add-member-gas', async (done) => { const payload = { namaMember: document.getElementById('add-nama-member-gas').value, alamatMember: document.getElementById('add-alamat-member-gas').value }; try { const res = await apiCall('addNewMember', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleEditMemberGas(event) { event.preventDefault(); executeSafeSubmit('btn-submit-edit-member-gas', async (done) => { const payload = { idMember: document.getElementById('edit-id-member-gas').value, namaMember: document.getElementById('edit-nama-member-gas').value, alamatMember: document.getElementById('edit-alamat-member-gas').value }; try { const res = await apiCall('updateMemberGas', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
-    async function handleResetMemberPinHp(event) { event.preventDefault(); executeSafeSubmit('btn-submit-reset-pin-hp', async (done) => { const idMemberInput = document.getElementById('reset-id-member-hp').value; const newPinInput = document.getElementById('reset-new-pin-hp').value.trim(); const isIdTaken = appData.members.some(m => { const mId = (m[2] || '').toString().trim(); const mMemberId = (m[0] || '').toString().trim(); return mId === newPinInput && mMemberId !== idMemberInput; }); if (isIdTaken) { showToast("ID PEMBELI tidak bisa digunakan karena sudah dipakai oleh pembeli lain!", "error"); done(); return; } const payload = { idMember: idMemberInput, newPIN: newPinInput }; try { const res = await apiCall('resetMemberPin', payload); if (res.success) { showToast(res.message, "success"); loadBackendData(); event.target.reset(); } else { showToast(res.message, "error"); } } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } }); }
+    async function handlePermodalanSubmit(e) { 
+      e.preventDefault(); 
+      executeSafeSubmit('btn-submit-mod', async (done) => { 
+        const payload = { 
+          idPermodalan: document.getElementById('mod-id').value, 
+          tanggal: document.getElementById('mod-tanggal').value, 
+          jenisPermodalan: document.getElementById('mod-jenis').value,
+          jumlahTabungGas: parseCleanNumber(document.getElementById('mod-jumlahtabung').value), 
+          hargaPerTabung: parseCleanNumber(document.getElementById('mod-hargatabung').value), 
+          totalModal: parseCleanNumber(document.getElementById('mod-totalmodal').value),
+          keterangan: document.getElementById('mod-keterangan').value 
+        }; 
+        try { 
+          const res = await apiCall('savePermodalanGas', payload); 
+          if(res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); document.getElementById('mod-totalmodal').value = '0'; } 
+          else { showToast(res.message, "error"); } 
+        } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); } 
+      }); 
+    }
+
+    async function handlePermodalanRefillSubmit(e) {
+      e.preventDefault();
+      executeSafeSubmit('btn-submit-refill', async (done) => {
+        const selDepId = document.getElementById('refill-deposit-select').value;
+        const payload = {
+          idPermodalan: document.getElementById('refill-id').value,
+          tanggal: document.getElementById('refill-tanggal').value,
+          jenisPermodalan: document.getElementById('refill-jenis').value,
+          jumlahTabungGas: parseCleanNumber(document.getElementById('refill-jumlahtabung').value),
+          hargaPerTabung: 0,
+          totalModal: parseCleanNumber(document.getElementById('refill-totalmodal').value),
+          keterangan: document.getElementById('refill-keterangan').value || 'Refill dari Deposit Kontrak ' + selDepId,
+          idDepositRef: selDepId
+        };
+        try {
+          const res = await apiCall('savePermodalanGas', payload);
+          if(res.success) { showToast(res.message, "success"); loadBackendData(); e.target.reset(); }
+          else { showToast(res.message, "error"); }
+        } catch(err) { showToast("Error: " + err.message, "error"); } finally { done(); }
+      });
+    }
 
     function showToast(message, type = "success") {
       const toast = document.getElementById('toast-notification'); const box = document.getElementById('toast-box'); const msg = document.getElementById('toast-message'); const icon = document.getElementById('toast-icon'); const title = document.getElementById('toast-title');
       if (!toast || !msg || !icon) return; msg.innerText = message;
-      if (type === "success") { title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; } 
-      else { title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; }
+      if (type === "success") { title.innerText = "BERHASIL"; title.className = "text-2xl font-bold mb-2 text-[#00ffaa]"; icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl"; } 
+      else { title.innerText = "ERROR"; title.className = "text-2xl font-bold mb-2 text-red-400"; icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl"; }
       toast.classList.remove('opacity-0', 'pointer-events-none'); toast.classList.add('opacity-100', 'pointer-events-auto'); setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
     }
   </script>
