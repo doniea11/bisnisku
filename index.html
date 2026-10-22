@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<selection-tag><!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -224,8 +224,8 @@
           </div>
 
           <!-- FORM 1: PERMODALAN TABUNG GAS -->
-          <div id="form-permodalan-tabung-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-2xl space-y-4 lg:col-span-1">
+          <div id="form-permodalan-tabung-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-coins text-[#00ffaa] mr-2"></i> Input Permodalan Tabung Gas</h3>
               <form id="form-permodalan" onsubmit="handlePermodalanSubmit(event)" class="space-y-4">
                 <input type="hidden" id="mod-id" value="">
@@ -239,24 +239,30 @@
               </form>
             </div>
             
-            <div class="glass-card p-6 rounded-2xl space-y-6 lg:col-span-2">
+            <!-- ANALISIS BALIK MODAL (TABUNG GAS) -->
+            <div class="glass-card p-6 rounded-2xl space-y-6">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Analisis Balik Modal (Tabung Gas)</h3>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan</span><h4 id="disp-mod-total" class="text-xl font-bold text-white">Rp 0</h4></div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-mod-profit" class="text-xl font-bold text-[#00ffaa]">Rp 0</h4></div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-mod-sisa" class="text-xl font-bold text-red-400">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan</span><h4 id="disp-mod-total" class="text-lg font-bold text-white">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-mod-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-mod-sisa" class="text-lg font-bold text-red-400">Rp 0</h4></div>
               </div>
-              <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 space-y-3">
-                <div class="flex justify-between items-center"><span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Persentase Balik Modal (ROI)</span><span id="disp-mod-percent" class="text-sm font-black text-white">0%</span></div>
-                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden p-0.5 border border-gray-700"><div id="bar-mod-progress" class="h-full rounded-full transition-all duration-500" style="width: 0%; background-color: #ef4444;"></div></div>
-                <p id="disp-mod-status" class="text-xs text-gray-400 italic text-center mt-2">Menghitung status permodalan...</p>
+              <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div><span class="text-xs font-bold text-gray-300 uppercase tracking-wider block mb-1">Persentase Balik Modal (ROI)</span><p id="disp-mod-status" class="text-xs text-gray-400 italic">Menghitung status permodalan...</p></div>
+                <div class="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-gray-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path id="circle-bar-mod" class="transition-all duration-500" stroke-width="3.5" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center"><span id="disp-mod-percent" class="text-lg font-black text-white">0%</span></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- FORM 2: ISI ULANG TABUNG GAS -->
-          <div id="form-permodalan-refill-container" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-2xl space-y-4 lg:col-span-1">
+          <div id="form-permodalan-refill-container" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-2xl space-y-4">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-fire-flame-curved text-[#00ffaa] mr-2"></i> Input Isi Ulang Tabung Gas</h3>
               <form id="form-permodalan-refill" onsubmit="handlePermodalanRefillSubmit(event)" class="space-y-4">
                 <input type="hidden" id="refill-id" value="">
@@ -275,17 +281,23 @@
               </form>
             </div>
             
-            <div class="glass-card p-6 rounded-2xl space-y-6 lg:col-span-2">
+            <!-- ANALISIS BALIK MODAL (REFILL) -->
+            <div class="glass-card p-6 rounded-2xl space-y-6">
               <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Analisis Balik Modal (Isi Ulang Tabung Gas)</h3>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan Refill</span><h4 id="disp-refill-total" class="text-xl font-bold text-white">Rp 0</h4></div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-refill-profit" class="text-xl font-bold text-[#00ffaa]">Rp 0</h4></div>
-                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-refill-sisa" class="text-xl font-bold text-red-400">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan Refill</span><h4 id="disp-refill-total" class="text-lg font-bold text-white">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-refill-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
+                <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-refill-sisa" class="text-lg font-bold text-red-400">Rp 0</h4></div>
               </div>
-              <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 space-y-3">
-                <div class="flex justify-between items-center"><span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Persentase Balik Modal (ROI Refill)</span><span id="disp-refill-percent" class="text-sm font-black text-white">0%</span></div>
-                <div class="w-full bg-gray-800 h-4 rounded-full overflow-hidden p-0.5 border border-gray-700"><div id="bar-refill-progress" class="h-full rounded-full transition-all duration-500" style="width: 0%; background-color: #ef4444;"></div></div>
-                <p id="disp-refill-status" class="text-xs text-gray-400 italic text-center mt-2">Menghitung status isi ulang...</p>
+              <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div><span class="text-xs font-bold text-gray-300 uppercase tracking-wider block mb-1">Persentase Balik Modal (ROI Refill)</span><p id="disp-refill-status" class="text-xs text-gray-400 italic">Menghitung status isi ulang...</p></div>
+                <div class="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-gray-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path id="circle-bar-refill" class="transition-all duration-500" stroke-width="3.5" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center"><span id="disp-refill-percent" class="text-lg font-black text-white">0%</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -487,31 +499,30 @@
       const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal', 'refill-tanggal'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation(); 
-      switchPage('dashboard'); // Memastikan halaman utama dashboard terbuka pertama kali
+      switchPage('dashboard');
       logVisit(); await loadBackendData();
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbytL8phRLvQeNTUKyeuNxvZETyGeAtkdVWUWWH_fWhIdGDDL66O9ZIiGbNGYjogbIkD/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwmrDi9nRZvdx6hH7hP5Y-0UUl6VkARuO2RAAEmGd--cIF-DzsYbkrgru-qVB6sfwiy/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
         try {
           if (GAS_URL === "YOUR_WEB_APP_URL_HERE" || !GAS_URL.startsWith("http") || window.location.protocol === 'blob:') {
-              // Fallback Mock Response untuk Preview Mode / Canvas
               if (action === 'getAppData') {
                   resolve({
                       success: true,
                       adminPinSet: "122009",
                       settings: { digitalNarasi: "Selamat datang di portal informasi Digital Masdonie Group!", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
                       deposit: [["DEP-20261022-0001", "2026-10-22", 49400000, 260]],
-                      tabungMasuk: [],
+                      tabungMasuk: [["TM-20261022-0001", "2026-10-22", 50, "TOKO BERKAH"]],
                       members: [["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100]],
                       transaksi: [["TRX-20261022-0001", "2026-10-22", "TOKO BERKAH", "Penjualan Gas", "Tunai", 50, 9000000, "Khusus", 150000, 180000, 1500000]],
                       permodalanGas: [["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""]],
                       angsuran: [],
                       detailAngsuran: [],
                       riwayatTabungMember: [],
-                      accessLogs: [["LOG-0001", "22-10-2026 10:00:00", "127.0.0.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"]],
+                      accessLogs: [["LOG-0001", "22-10-2026 10:00:00", "127.0.0.1", "Mozilla/5.0"]],
                       summary: { totalTabung: 260, sisaTabung: 210, totalTabungMasuk: 50, totalProfitGas: 1500000 }
                   });
                   return;
@@ -524,14 +535,13 @@
           if (!response.ok) throw new Error("Gagal menghubungi server (HTTP " + response.status + ")");
           let result = await response.json(); resolve(result);
         } catch (error) { 
-          // Fallback otomatis ke mock data jika terjadi gagal fetch network saat testing
           if (action === 'getAppData') {
               resolve({
                   success: true,
                   adminPinSet: "122009",
                   settings: { digitalNarasi: "Selamat datang di portal informasi Digital Masdonie Group!", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
                   deposit: [["DEP-20261022-0001", "2026-10-22", 49400000, 260]],
-                  tabungMasuk: [],
+                  tabungMasuk: [["TM-20261022-0001", "2026-10-22", 50, "TOKO BERKAH"]],
                   members: [["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100]],
                   transaksi: [["TRX-20261022-0001", "2026-10-22", "TOKO BERKAH", "Penjualan Gas", "Tunai", 50, 9000000, "Khusus", 150000, 180000, 1500000]],
                   permodalanGas: [["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""]],
@@ -543,7 +553,7 @@
               });
               return;
           }
-          console.error("API Error:", error); reject(error); 
+          reject(error); 
         }
       });
     }
@@ -689,6 +699,7 @@
       try { renderRekapTransaksiMember(); } catch(e){}
       try { renderPermodalanGas(); } catch(e){}
       try { renderAccessLogs(); } catch(e){}
+      try { filterTabungMasukPublik(); } catch(e){}
       
       try {
         const refillSelect = document.getElementById('refill-deposit-select');
@@ -784,6 +795,17 @@
       tbody.innerHTML = html;
     }
 
+    function filterTabungMasukPublik() { 
+      const startEl = document.getElementById('filter-start-date'); const endEl = document.getElementById('filter-end-date');
+      const start = startEl ? startEl.value : ''; const end = endEl ? endEl.value : '';
+      const tbody = document.getElementById('table-publik-masuk-body'); if (!tbody) return; tbody.innerHTML = '';
+      const filtered = appData.tabungMasuk.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
+      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Tidak ada data tabung keluar.</td></tr>'; document.getElementById('pub-tabung-masuk').innerText = '0'; return; }
+      let html = ''; let totalMasuk = 0;
+      filtered.forEach(row => { totalMasuk += Number(row[2]) || 0; html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${row[3] || '-'}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${Number(row[2] || 0).toLocaleString('id-ID')} Tabung</td></tr>`; });
+      tbody.innerHTML = html; document.getElementById('pub-tabung-masuk').innerText = totalMasuk.toLocaleString('id-ID');
+    }
+
     function renderPermodalanGas() {
       const tbody = document.getElementById('table-rekap-permodalan-body');
       if(!tbody) return;
@@ -838,39 +860,53 @@
           }
       });
 
+      // --- ANALISIS 1: TABUNG GAS ---
       let sisaModalTabung = totalModalTabung - totalProfitGas;
       if(sisaModalTabung < 0) sisaModalTabung = 0;
-      let percentTabung = totalModalTabung > 0 ? Math.min(100, (totalProfitGas / totalModalTabung) * 100) : 0;
+      let percentTabung = totalModalTabung > 0 ? Math.round((totalProfitGas / totalModalTabung) * 100) : 0;
+      if(percentTabung > 100) percentTabung = 100;
 
       document.getElementById('disp-mod-total').innerText = 'Rp ' + totalModalTabung.toLocaleString('id-ID');
       document.getElementById('disp-mod-profit').innerText = 'Rp ' + totalProfitGas.toLocaleString('id-ID');
       document.getElementById('disp-mod-sisa').innerText = 'Rp ' + sisaModalTabung.toLocaleString('id-ID');
-      document.getElementById('disp-mod-percent').innerText = percentTabung.toFixed(1) + '%';
-      
-      const barTabung = document.getElementById('bar-mod-progress');
-      if(barTabung) {
-          barTabung.style.width = percentTabung + '%';
-          let r = Math.round(239 - (239 * (percentTabung / 100)));
-          let g = Math.round(68 + ((255 - 68) * (percentTabung / 100)));
-          barTabung.style.backgroundColor = `rgb(${r}, ${g}, 68)`;
+      document.getElementById('disp-mod-percent').innerText = percentTabung + '%';
+
+      const circleMod = document.getElementById('circle-bar-mod');
+      const statusMod = document.getElementById('disp-mod-status');
+      if(circleMod && statusMod) {
+          circleMod.setAttribute('stroke-dasharray', `${percentTabung}, 100`);
+          if (totalProfitGas >= totalModalTabung && totalModalTabung > 0) {
+              circleMod.style.color = '#00ffaa';
+              statusMod.innerHTML = '<span class="text-[#00ffaa] font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Modal Sudah Kembali (Lunas/Plus)</span>';
+          } else {
+              circleMod.style.color = '#ef4444';
+              statusMod.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Modal Belum Kembali (Minus)</span>';
+          }
       }
 
+      // --- ANALISIS 2: REFILL ---
       let profitForRefill = totalProfitGas > totalModalTabung ? (totalProfitGas - totalModalTabung) : 0;
       let sisaModalRefill = totalModalRefill - profitForRefill;
       if(sisaModalRefill < 0) sisaModalRefill = 0;
-      let percentRefill = totalModalRefill > 0 ? Math.min(100, (profitForRefill / totalModalRefill) * 100) : 0;
+      let percentRefill = totalModalRefill > 0 ? Math.round((profitForRefill / totalModalRefill) * 100) : 0;
+      if(percentRefill > 100) percentRefill = 100;
 
       document.getElementById('disp-refill-total').innerText = 'Rp ' + totalModalRefill.toLocaleString('id-ID');
       document.getElementById('disp-refill-profit').innerText = 'Rp ' + profitForRefill.toLocaleString('id-ID');
       document.getElementById('disp-refill-sisa').innerText = 'Rp ' + sisaModalRefill.toLocaleString('id-ID');
-      document.getElementById('disp-refill-percent').innerText = percentRefill.toFixed(1) + '%';
+      document.getElementById('disp-refill-percent').innerText = percentRefill + '%';
 
-      const barRefill = document.getElementById('bar-refill-progress');
-      if(barRefill) {
-          barRefill.style.width = percentRefill + '%';
-          let r2 = Math.round(239 - (239 * (percentRefill / 100)));
-          let g2 = Math.round(68 + ((255 - 68) * (percentRefill / 100)));
-          barRefill.style.backgroundColor = `rgb(${r2}, ${g2}, 68)`;
+      const circleRefill = document.getElementById('circle-bar-refill');
+      const statusRefill = document.getElementById('disp-refill-status');
+      if(circleRefill && statusRefill) {
+          circleRefill.setAttribute('stroke-dasharray', `${percentRefill}, 100`);
+          if (profitForRefill >= totalModalRefill && totalModalRefill > 0) {
+              circleRefill.style.color = '#00ffaa';
+              statusRefill.innerHTML = '<span class="text-[#00ffaa] font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Modal Refill Sudah Kembali (Lunas/Plus)</span>';
+          } else {
+              circleRefill.style.color = '#ef4444';
+              statusRefill.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Modal Refill Belum Kembali (Minus)</span>';
+          }
       }
     }
 
