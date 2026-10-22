@@ -665,19 +665,13 @@
                           ["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100],
                           ["MEMBER-0002", "BAYU SAPUTRA", "bayu_01", "22-10-2026 10:00:00", "SMARTPHONE", 0, 0, 0, 0, "", 0]
                       ],
-                      transaksi: [
-                          // Tabung 88 baru keluar, belum ada input transaksi penjualan member setelah tgl 22-10-2026
-                      ],
+                      transaksi: [], // Bersih dari data dummy, nilai uang masuk awal akan 0 jika belum ada transaksi riil
                       permodalanGas: [
                           ["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""],
                           ["MOD-20261022-0002", "2026-10-22", "Isi Ulang Tabung Gas", 300, 180000, 54000000, "Refill dari Deposit Kontrak DEP-20261022-0001", "DEP-20261022-0001"]
                       ],
-                      angsuran: [
-                          ["HP-20261022-0001", "BAYU SAPUTRA", "Infinix Hot 70", 2500000, "2026-10", 500000, "-", 500000, 4, 1, 2000000, 500000, "Tokopedia", "2026-10-22", "Aktif"]
-                      ],
-                      detailAngsuran: [
-                          ["PAYHP-20261022-0001", "HP-20261022-0001", "2026-10-22", 500000]
-                      ],
+                      angsuran: [],
+                      detailAngsuran: [],
                       riwayatTabungMember: [],
                       accessLogs: [],
                       summary: { totalTabung: 300, sisaTabung: 212, totalTabungMasuk: 88, totalProfitGas: 0 }
@@ -997,7 +991,7 @@
       // ==========================================
       // PERHITUNGAN AKUMULASI UANG MASUK (REFILL)
       // Murni dari Transaksi Penjualan Member setelah Tanggal Deposit Baru
-      // Jika belum ada penjualan/pembayaran member, maka Uang Masuk = Rp 0
+      // Tanpa data dummy, jika belum ada transaksi riil maka bernilai Rp 0
       // ==========================================
       let totalUangMasukRefill = 0;
       
