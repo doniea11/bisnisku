@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/1.0.35/ua-parser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
   <style>
     body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
     .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 170, 0.35); }
@@ -18,7 +19,6 @@
     .bg-nature-theme { background: linear-gradient(rgba(11, 15, 25, 0.15), rgba(11, 15, 25, 0.45)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
     ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #0b0f19; } ::-webkit-scrollbar-thumb { background: #00ffaa; border-radius: 4px; } ::-webkit-scrollbar-thumb:hover { background: #00cc88; }
     
-    /* Radial Progress Bar CSS */
     .radial-progress {
         transform: rotate(-90deg);
     }
@@ -317,7 +317,7 @@
                 <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Laporan Status Modal (Isi Ulang Tabung Gas)</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan Refill</span><h4 id="disp-refill-total" class="text-lg font-bold text-white">Rp 0</h4></div>
-                  <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Gas</span><h4 id="disp-refill-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
+                  <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Uang Masuk</span><h4 id="disp-refill-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
                   <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-refill-sisa" class="text-lg font-bold text-red-400">Rp 0</h4></div>
                 </div>
                 <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -659,7 +659,10 @@
                       deposit: [["DEP-20261022-0001", "2026-10-22", 54000000, 300]],
                       tabungMasuk: [["TM-20261022-0001", "2026-10-22", 50, "TOKO BERKAH"]],
                       members: [["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100]],
-                      transaksi: [["TRX-20261022-0001", "2026-10-22", "TOKO BERKAH", "Penjualan Gas", "Tunai", 50, 9000000, "Khusus", 150000, 180000, 1500000]],
+                      transaksi: [
+                          ["TRX-20261022-0001", "2026-10-22", "TOKO BERKAH", "Penjualan Gas", "Tunai", 50, 9000000, "Khusus", 150000, 180000, 1500000],
+                          ["TRX-20261023-0001", "2026-10-23", "TOKO BERKAH", "Penjualan Gas", "Tunai", 20, 3600000, "Khusus", 150000, 180000, 600000]
+                      ],
                       permodalanGas: [
                           ["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""],
                           ["MOD-20261022-0002", "2026-10-22", "Isi Ulang Tabung Gas", 300, 180000, 54000000, "Refill dari Deposit Kontrak DEP-20261022-0001", "DEP-20261022-0001"]
@@ -668,7 +671,7 @@
                       detailAngsuran: [],
                       riwayatTabungMember: [],
                       accessLogs: [],
-                      summary: { totalTabung: 300, sisaTabung: 250, totalTabungMasuk: 50, totalProfitGas: 1500000 }
+                      summary: { totalTabung: 300, sisaTabung: 250, totalTabungMasuk: 50, totalProfitGas: 2100000 }
                   });
                   return;
               }
@@ -681,6 +684,18 @@
           let result = await response.json(); resolve(result);
         } catch (error) { console.error("API Error:", error); reject(error); }
       });
+    }
+
+    async function loadBackendData() {
+        try {
+            const res = await apiCall('getAppData');
+            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
+            if (res && res.success) { appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); } 
+            else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
+        } catch (err) { 
+            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
+            showToast("Server Error. Pastikan URL sudah benar. " + (err.message || err), "error"); 
+        }
     }
 
     async function logVisit() {
@@ -860,6 +875,7 @@
         let p = percent; if(p > 100) p = 100; if(p < 0) p = 0;
         
         if(circ) {
+            /* Garis profit yang sudah kembali SELALU berwarna Hijau Cerah */
             circ.style.stroke = '#00ffaa'; 
             
             const bgCirc = circ.parentElement ? circ.parentElement.querySelector('.radial-progress-bg') : null;
@@ -869,6 +885,7 @@
                 if(text) text.className = "text-sm font-black text-[#00ffaa]";
                 if(status) status.innerHTML = '<span class="text-[#00ffaa] font-bold block"><i class="fa-solid fa-circle-check mr-1"></i> Modal Sudah Kembali (Lunas)</span>';
             } else {
+                /* Background merah jika modal belum kembali */
                 if(bgCirc) bgCirc.style.stroke = 'rgba(239, 68, 68, 0.4)'; 
                 if(text) text.className = "text-sm font-black text-white";
                 if(status) status.innerHTML = '<span class="text-[#00ffaa] font-bold block"><i class="fa-solid fa-circle-check mr-1"></i> Modal Sudah Kembali</span><span class="text-red-400 font-bold block mt-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Modal Belum Kembali</span>';
@@ -895,16 +912,11 @@
                             if(currentP >= p) {
                                 currentP = p;
                                 clearInterval(timer);
-                                /* TRIGGER CONFETTI JIKA MODAL LUNAS (>= 100%) */
+                                
+                                /* Animasi Konfeti jika persentase 100% lunas */
                                 if (currentP >= 100 && circ.dataset.confettiFired !== 'true') {
                                     try {
-                                        confetti({
-                                            particleCount: 150,
-                                            spread: 80,
-                                            origin: { y: 0.5 },
-                                            colors: ['#00ffaa', '#ffffff', '#00bfff'],
-                                            zIndex: 10000
-                                        });
+                                        confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 }, colors: ['#00ffaa', '#ffffff', '#00bfff'], zIndex: 10000 });
                                     } catch(e){}
                                     circ.dataset.confettiFired = 'true';
                                 } else if (currentP < 100) {
@@ -954,6 +966,7 @@
           }
       });
 
+      // Menghitung Profit Keseluruhan untuk Tabung Gas
       let totalProfitGas = 0;
       (appData.transaksi || []).forEach(row => {
           const memberName = row[2] || ""; 
@@ -976,7 +989,8 @@
           }
       });
 
-      let totalProfitRefill = 0;
+      // Menghitung Uang Masuk Khusus Refill (Mulai dari tgl deposit bersangkutan - NILAI MODAL MEMBER)
+      let totalUangMasukRefill = 0;
       const selDepId = document.getElementById('refill-deposit-select') ? document.getElementById('refill-deposit-select').value : '';
       let filterDepDate = '';
       if(selDepId) {
@@ -986,17 +1000,17 @@
 
       (appData.transaksi || []).forEach(row => {
           const tglTrx = (row[1] || '').split(' ')[0];
+          // Hitung uang masuk refill HANYA JIKA ada tgl filter dan trx tsb >= tgl filter deposit
           if(filterDepDate && tglTrx < filterDepDate) return; 
 
           const memberName = row[2] || ""; 
           const jenis = row[3] || ""; 
           const qty = Number(row[5]) || 0; 
-          const hargaJualTotal = Number(row[6]) || 0;
           
-          if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
-              totalProfitRefill += Number(row[10]) || 0;
+          let modalSatuan = 0;
+          if (row.length >= 11 && row[8] !== "" && row[8] !== undefined) {
+              modalSatuan = Number(row[8]) || 0;
           } else {
-              let modalSatuan = 0;
               for (let m = 0; m < (appData.members || []).length; m++) {
                   if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === memberName.toUpperCase()) {
                       if (jenis === 'Penjualan Gas') modalSatuan = Number(appData.members[m][5]) || 0;
@@ -1004,10 +1018,13 @@
                       break;
                   }
               }
-              totalProfitRefill += (hargaJualTotal - (qty * modalSatuan));
           }
+          
+          // Yang dihitung sebagai pengembalian modal refill adalah porsi MODAL dari setoran, bukan harga jual kotor
+          totalUangMasukRefill += (qty * modalSatuan);
       });
 
+      // TABUNG GAS UPDATE
       let sisaModalTabung = totalModalTabung - totalProfitGas; if(sisaModalTabung < 0) sisaModalTabung = 0;
       let percentTabung = totalModalTabung > 0 ? (totalProfitGas / totalModalTabung) * 100 : 0;
       document.getElementById('disp-mod-total').innerText = 'Rp ' + totalModalTabung.toLocaleString('id-ID');
@@ -1015,27 +1032,16 @@
       document.getElementById('disp-mod-sisa').innerText = 'Rp ' + sisaModalTabung.toLocaleString('id-ID');
       updateRadialCircle('circle-bar-mod', 'disp-mod-percent', 'disp-mod-status', percentTabung, totalProfitGas >= totalModalTabung && totalModalTabung > 0);
 
-      let sisaModalRefill = totalModalRefill - totalProfitRefill; if(sisaModalRefill < 0) sisaModalRefill = 0;
-      let percentRefill = totalModalRefill > 0 ? (totalProfitRefill / totalModalRefill) * 100 : 0;
+      // REFILL UPDATE (Menggunakan Modal Uang Masuk, BUKAN Profit Kotor)
+      let sisaModalRefill = totalModalRefill - totalUangMasukRefill; if(sisaModalRefill < 0) sisaModalRefill = 0;
+      let percentRefill = totalModalRefill > 0 ? (totalUangMasukRefill / totalModalRefill) * 100 : 0;
       document.getElementById('disp-refill-total').innerText = 'Rp ' + totalModalRefill.toLocaleString('id-ID');
-      document.getElementById('disp-refill-profit').innerText = 'Rp ' + totalProfitRefill.toLocaleString('id-ID');
+      document.getElementById('disp-refill-profit').innerText = 'Rp ' + totalUangMasukRefill.toLocaleString('id-ID'); // Label sudah diubah ke Akumulasi Uang Masuk
       document.getElementById('disp-refill-sisa').innerText = 'Rp ' + sisaModalRefill.toLocaleString('id-ID');
-      updateRadialCircle('circle-bar-refill', 'disp-refill-percent', 'disp-refill-status', percentRefill, totalProfitRefill >= totalModalRefill && totalModalRefill > 0);
+      updateRadialCircle('circle-bar-refill', 'disp-refill-percent', 'disp-refill-status', percentRefill, totalUangMasukRefill >= totalModalRefill && totalModalRefill > 0);
     }
 
     function ensureDataArrays() { appData.deposit = appData.deposit || []; appData.tabungMasuk = appData.tabungMasuk || []; appData.members = appData.members || []; appData.transaksi = appData.transaksi || []; appData.angsuran = appData.angsuran || []; appData.detailAngsuran = appData.detailAngsuran || []; appData.riwayatTabungMember = appData.riwayatTabungMember || []; appData.accessLogs = appData.accessLogs || []; appData.permodalanGas = appData.permodalanGas || []; appData.summary = appData.summary || {}; }
-
-    async function loadBackendData() {
-        try {
-            const res = await apiCall('getAppData');
-            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
-            if (res && res.success) { appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); } 
-            else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
-        } catch (err) { 
-            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
-            showToast("Server Error. Pastikan URL sudah benar. " + (err.message || err), "error"); 
-        }
-    }
 
     async function submitModalPin() {
       const pinVal = document.getElementById('modal-pin-input').value;
@@ -1179,8 +1185,11 @@
       const refillSel = document.getElementById('refill-deposit-select');
       if(refillSel) {
           let htmlOpt = '<option value="" disabled selected>-- Pilih Deposit Kontrak --</option>';
-          (appData.deposit || []).forEach(d => { 
-              htmlOpt += `<option value="${d[0]}">${d[0]} - Tgl: ${fDate(d[1])} (${Number(d[3]||0).toLocaleString('id-ID')} Tbg)</option>`; 
+          (appData.deposit || []).forEach((d, index) => { 
+              const isLatest = index === 0;
+              const disableAttr = isLatest ? '' : 'disabled';
+              const statusText = isLatest ? '' : ' (Terdahulu)';
+              htmlOpt += `<option value="${d[0]}" ${disableAttr}>${d[0]} - Tgl: ${fDate(d[1])} (${Number(d[3]||0).toLocaleString('id-ID')} Tbg)${statusText}</option>`; 
           });
           refillSel.innerHTML = htmlOpt;
       }
