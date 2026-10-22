@@ -814,7 +814,7 @@
           if(appData.settings.reqPinKasirHp === false) { switchPage(pageId); return; }
           pendingAllowedRole = 'kasir_hp'; openPinModal("Kasir Smartphone", "Silahkan masukkan Password", "Masukkan Password"); 
       } else if (pageId === 'member-smartphone') { 
-          pendingAllowedRole = 'member'; openPinModal("Login Khusus Pembeli", "Silahkan masukkan ID Pembelian Anda 😊", "Masukkan ID Pembelian"); 
+          pendingAllowedRole = 'member'; openPinModal("Login Khusus Pembeli", "Silahkan masukkan ID Pembelian 😉", "Masukkan ID Pembelian"); 
       } else if (pageId === 'publik') { 
           if(appData.settings.reqPinInfoGas === false) { switchPage(pageId); return; }
           pendingAllowedRole = 'info_gas'; openPinModal("Akses Informasi Gas", "Silahkan masukkan PIN Informasi Gas", "Masukkan PIN"); 
@@ -996,7 +996,7 @@
       });
 
       // ==========================================
-      // PERHITUNGAN AKUMULASI UANG MASUK (REFILL) - FIFO BERDASARKAN DEPOSIT TERBARU
+      // PERHITUNGAN AKUMULASI UANG MASUK (REFILL) - HANYA BERDASARKAN TRANSAKSI PENJUALAN SETELAH DEPOSIT BARU
       // ==========================================
       let totalUangMasukRefill = 0;
       
@@ -1016,11 +1016,13 @@
           targetDepositDate = (activeDep[1] || '').split(' ')[0];
       }
 
+      // Urutkan transaksi member secara kronologis (dari yang terlama ke terbaru)
       let sortedTrx = [...(appData.transaksi || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
       let remainingQuota = targetDepositQuota;
 
       sortedTrx.forEach(row => {
           const tglTrx = (row[1] || '').split(' ')[0];
+          // Abaikan transaksi yang terjadi SEBELUM tanggal deposit baru dibuat
           if (targetDepositDate && tglTrx < targetDepositDate) return;
           if (remainingQuota <= 0) return;
 
@@ -1047,6 +1049,7 @@
               tabungTerpakai = remainingQuota;
           }
 
+          // Akumulasi uang masuk dihitung murni dari setoran modal member (qty * modalSatuan)
           totalUangMasukRefill += (tabungTerpakai * modalSatuan);
           remainingQuota -= tabungTerpakai;
       });
@@ -1631,3 +1634,7 @@
 </body>
 </html>
 ```eof
+
+🚀 ZettBOT Idea
+1. **Modular Check**: Arsitektur saat ini sangat kokoh dan responsif. Pemisahan ke komponen modular dapat dilakukan di versi mendatang jika Anda ingin menambah fitur notifikasi WhatsApp otomatis saat modal lunas.
+2. **ZettBOT Feature**: Tambahkan fitur *Log Riwayat Pengembalian Modal* yang menampilkan tanggal dan waktu persis kapan setiap kontrak deposit berhasil kembali 100%.
