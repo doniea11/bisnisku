@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<selection-tag><!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -228,8 +228,8 @@
               <form id="form-permodalan" onsubmit="handlePermodalanSubmit(event)" class="space-y-4">
                 <input type="hidden" id="mod-id" value="">
                 <div><label class="block text-xs text-gray-400 mb-1">Tanggal</label><input type="date" id="mod-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
-                <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung Gas</label><input type="text" id="mod-jumlahtabung" required placeholder="Contoh: 50" data-form-input oninput="formatRupiahInput(this); calcTotalPermodalan();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
-                <div><label class="block text-xs text-gray-400 mb-1">Harga per Tabung Gas (Rp)</label><input type="text" id="mod-hargatabung" required placeholder="Contoh: 150000" data-form-input oninput="formatRupiahInput(this); calcTotalPermodalan();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+                <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung Gas</label><input type="text" id="mod-jumlahtabung" required placeholder="Contoh: 50" data-form-input oninput="formatRupiahInput(this); calcPermodalanTotal();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+                <div><label class="block text-xs text-gray-400 mb-1">Harga per Tabung Gas (Rp)</label><input type="text" id="mod-hargatabung" required placeholder="Contoh: 150000" data-form-input oninput="formatRupiahInput(this); calcPermodalanTotal();" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
                 <div><label class="block text-xs text-gray-400 mb-1">Jumlah Total Modal (Otomatis)</label><input type="text" id="mod-totalmodal" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
                 <div><label class="block text-xs text-gray-400 mb-1">Keterangan / Catatan</label><input type="text" id="mod-keterangan" placeholder="Contoh: Permodalan Awal Bulan" data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
                 <button type="submit" id="btn-submit-mod" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Permodalan Gas</button>
@@ -568,7 +568,7 @@
       logVisit(); await loadBackendData();
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxUiGeBqJhSp-Xl1R87KtrFIRIctJZJU16q0V4yXmymJ2WiKVeN4TQCsHvZvQQI-vns/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbw-5MGtJM3JmCujvbMv3G74BeMiy88Ds7ErSD87ecGBHKjupk2fUdNOrAVwZKlL6Zj4/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
@@ -894,16 +894,13 @@
           tbody.innerHTML = html;
       }
 
-      // Hitung total modal keseluruhan dari semua baris permodalan
       let totalModalAll = 0;
       list.forEach(row => { totalModalAll += Number(row[4]) || 0; });
 
-      // Ambil total profit gas dari summary backend
       let totalProfitGas = Number(appData.summary.totalProfitGas || 0);
       let sisaModal = totalModalAll - totalProfitGas;
       if(sisaModal < 0) sisaModal = 0;
 
-      // Hitung persentase balik modal (ROI)
       let percentage = 0;
       if(totalModalAll > 0) {
           percentage = (totalProfitGas / totalModalAll) * 100;
@@ -915,13 +912,10 @@
       document.getElementById('disp-mod-sisa').innerText = 'Rp ' + sisaModal.toLocaleString('id-ID');
       document.getElementById('disp-mod-percent').innerText = percentage.toFixed(1) + '%';
 
-      // Visualisasi Gradasi Warna dari Merah (0%) ke Hijau Muda Cerah (100%)
       const progressBar = document.getElementById('bar-mod-progress');
       const statusText = document.getElementById('disp-mod-status');
       if(progressBar) {
           progressBar.style.width = percentage + '%';
-          
-          // Interpolasi warna RGB dari Merah (239, 68, 68) ke Hijau Muda Cerah (0, 255, 170)
           let r = Math.round(239 - (239 * (percentage / 100)));
           let g = Math.round(68 + ((255 - 68) * (percentage / 100)));
           let b = Math.round(68 + ((170 - 68) * (percentage / 100)));
