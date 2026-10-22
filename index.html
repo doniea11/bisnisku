@@ -650,31 +650,22 @@
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
         try {
-          if (GAS_URL === "YOUR_WEB_APP_URL_HERE" || !GAS_URL.startsWith("http") || window.location.protocol === 'blob:') {
+          if (GAS_URL.includes("YOUR_WEB_APP_URL") || !GAS_URL.startsWith("http") || window.location.protocol === 'blob:') {
               if (action === 'getAppData') {
                   resolve({
                       success: true,
                       adminPinSet: "122009",
                       settings: { digitalNarasi: "Selamat datang di portal informasi Digital Masdonie Group!", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
-                      deposit: [
-                          ["DEP-20261022-0001", "2026-10-22", 54000000, 300],
-                          ["DEP-20260827-0001", "2026-07-19", 18000000, 100]
-                      ],
-                      tabungMasuk: [["TM-20261022-0001", "2026-10-22", 88, "TOKO BERKAH"]],
-                      members: [
-                          ["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100],
-                          ["MEMBER-0002", "BAYU SAPUTRA", "bayu_01", "22-10-2026 10:00:00", "SMARTPHONE", 0, 0, 0, 0, "", 0]
-                      ],
-                      transaksi: [], // Bersih dari data dummy, nilai uang masuk awal akan 0 jika belum ada transaksi riil
-                      permodalanGas: [
-                          ["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""],
-                          ["MOD-20261022-0002", "2026-10-22", "Isi Ulang Tabung Gas", 300, 180000, 54000000, "Refill dari Deposit Kontrak DEP-20261022-0001", "DEP-20261022-0001"]
-                      ],
+                      deposit: [],
+                      tabungMasuk: [],
+                      members: [],
+                      transaksi: [],
+                      permodalanGas: [],
                       angsuran: [],
                       detailAngsuran: [],
                       riwayatTabungMember: [],
                       accessLogs: [],
-                      summary: { totalTabung: 300, sisaTabung: 212, totalTabungMasuk: 88, totalProfitGas: 0 }
+                      summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalProfitGas: 0 }
                   });
                   return;
               }
@@ -989,64 +980,102 @@
       });
 
       // ==========================================
-      // PERHITUNGAN AKUMULASI UANG MASUK (REFILL)
-      // Murni dari Transaksi Penjualan Member setelah Tanggal Deposit Baru
-      // Tanpa data dummy, jika belum ada transaksi riil maka bernilai Rp 0
+      // FIFO BERTAHAP: DISTRIBUSI KUOTA TABUNG DARI DEPOSIT LAMA KE DEPOSIT BARU
       // ==========================================
       let totalUangMasukRefill = 0;
       
-      let targetDepositQuota = 0;
-      let targetDepositDate = '';
-      
+      const allDeposits = [...(appData.deposit || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
+      let allTrx = [...(appData.transaksi || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
+
+      // Jika ada deposit yang dipilih di dropdown, kita identifikasi
       const selDepId = document.getElementById('refill-deposit-select') ? document.getElementById('refill-deposit-select').value : '';
-      let activeDep = null;
+      let targetDep = null;
       if (selDepId) {
-          activeDep = (appData.deposit || []).find(d => d[0] === selDepId);
-      } else if ((appData.deposit || []).length > 0) {
-          activeDep = appData.deposit[0]; // Ambil deposit paling atas (terbaru)
+          targetDep = allDeposits.find(d => d[0] === selDepId);
+      } else if (allDeposits.length > 0) {
+          targetDep = allDeposits[allDeposits.length - 1]; // Deposit terbaru
       }
 
-      if (activeDep) {
-          targetDepositQuota = Number(activeDep[3]) || 0;
-          targetDepositDate = (activeDep[1] || '').split(' ')[0];
-      }
+      if (targetDep && allDeposits.length > 0) {
+          // Simulasi FIFO berurutan untuk menghabiskan kuota deposit dari yang paling lama ke yang baru
+          let trxQueue = [];
+          allTrx.forEach(row => {
+              const jenis = row[3] || "";
+              if (jenis === 'Penjualan Gas') {
+                  trxQueue.push({
+                      date: (row[1] || '').split(' ')[0],
+                      qty: Number(row[5]) || 0,
+                      row: row
+                  });
+              }
+          });
 
-      // Urutkan transaksi member secara kronologis
-      let sortedTrx = [...(appData.transaksi || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
-      let remainingQuota = targetDepositQuota;
+          let currentTrxIdx = 0;
 
-      sortedTrx.forEach(row => {
-          const tglTrx = (row[1] || '').split(' ')[0];
-          // Abaikan jika transaksi terjadi sebelum tanggal deposit kontrak baru
-          if (targetDepositDate && tglTrx < targetDepositDate) return;
-          if (remainingQuota <= 0) return;
+          // Telusuri setiap deposit berdasarkan urutan waktu
+          for (let d = 0; d < allDeposits.length; d++) {
+              let depObj = allDeposits[d];
+              let depQuota = Number(depObj[3]) || 0;
+              let depDate = (depObj[1] || '').split(' ')[0];
 
-          const memberName = row[2] || ""; 
-          const jenis = row[3] || ""; 
-          // Pastikan murni dari transaksi Penjualan Gas yang sudah dibayar/disetor member
-          if (jenis !== 'Penjualan Gas') return;
+              // Alokasikan transaksi member untuk mengisi kuota deposit ini secara berurutan
+              let fulfilledForThisDep = 0;
+              while (fulfilledForThisDep < depQuota && currentTrxIdx < trxQueue.length) {
+                  let trx = trxQueue[currentTrxIdx];
+                  
+                  // Pastikan transaksi terjadi pada atau setelah tanggal deposit ini dibuat
+                  if (trx.date >= depDate) {
+                      let needed = depQuota - fulfilledForThisDep;
+                      let take = trx.qty;
+                      if (take > needed) {
+                          take = needed;
+                          trx.qty -= needed; // Sisa transaksi dialokasikan ke deposit berikutnya
+                      } else {
+                          currentTrxIdx++; // Transaksi ini habis terserap oleh deposit ini
+                          trx.qty = 0;
+                      }
 
-          const qtyTrx = Number(row[5]) || 0;
-          
-          let modalSatuan = 0;
-          if (row.length >= 11 && row[8] !== "" && row[8] !== undefined) {
-              modalSatuan = Number(row[8]) || 0;
-          } else {
-              for (let m = 0; m < (appData.members || []).length; m++) {
-                  if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === memberName.toUpperCase()) {
-                      modalSatuan = Number(appData.members[m][5]) || 0;
-                      break;
+                      fulfilledForThisDep += take;
+
+                      // Jika deposit yang sedang diproses ini adalah target yang dipilih pengguna, hitung uang masuknya
+                      if (targetDep && depObj[0] === targetDep[0]) {
+                          let memberName = trx.row[2] || "";
+                          let modalSatuan = 0;
+                          if (trx.row.length >= 11 && trx.row[8] !== "" && trx.row[8] !== undefined) {
+                              modalSatuan = Number(trx.row[8]) || 0;
+                          } else {
+                              for (let m = 0; m < (appData.members || []).length; m++) {
+                                  if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === memberName.toUpperCase()) {
+                                      modalSatuan = Number(appData.members[m][5]) || 0;
+                                      break;
+                                  }
+                              }
+                          }
+                          totalUangMasukRefill += (take * modalSatuan);
+                      }
+                  } else {
+                      currentTrxIdx++; // Lewati transaksi sebelum tanggal deposit
                   }
               }
-          }
 
-          let tabungTerpakai = qtyTrx;
-          if (tabungTerpakai > remainingQuota) {
-              tabungTerpakai = remainingQuota;
+              // Jika kita sudah mengevaluasi target deposit yang dipilih, hentikan loop
+              if (targetDep && depObj[0] === targetDep[0]) {
+                  break;
+              }
           }
+      }
 
-          totalUangMasukRefill += (tabungTerpakai * modalSatuan);
-          remainingQuota -= tabungTerpakai;
+      let totalModalRefill = 0;
+      list.forEach(row => {
+          const jenis = row[2] || 'Tabung Gas';
+          const modalVal = Number(row[5]) || 0;
+          if(jenis === 'Isi Ulang Tabung Gas') {
+              if (!selDepId || (row[7] || '') === selDepId) {
+                  totalModalRefill += modalVal;
+              }
+          } else {
+              totalModalTabung += modalVal;
+          }
       });
 
       // TABUNG GAS UPDATE
