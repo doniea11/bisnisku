@@ -660,14 +660,13 @@
                           ["DEP-20261022-0001", "2026-10-22", 54000000, 300],
                           ["DEP-20260827-0001", "2026-07-19", 18000000, 100]
                       ],
-                      tabungMasuk: [["TM-20261022-0001", "2026-10-22", 50, "TOKO BERKAH"]],
+                      tabungMasuk: [["TM-20261022-0001", "2026-10-22", 88, "TOKO BERKAH"]],
                       members: [
                           ["MEMBER-0001", "TOKO BERKAH", "'1234", "22-10-2026 10:00:00", "Gas", 150000, 150000, 180000, 180000, "", 100],
                           ["MEMBER-0002", "BAYU SAPUTRA", "bayu_01", "22-10-2026 10:00:00", "SMARTPHONE", 0, 0, 0, 0, "", 0]
                       ],
                       transaksi: [
-                          ["TRX-20260720-0001", "2026-07-20", "TOKO BERKAH", "Penjualan Gas", "Tunai", 100, 18000000, "Khusus", 150000, 180000, 3000000],
-                          ["TRX-20261023-0001", "2026-10-23", "TOKO BERKAH", "Penjualan Gas", "Tunai", 120, 21600000, "Khusus", 150000, 180000, 3600000]
+                          // Tabung 88 baru keluar, belum ada input transaksi penjualan member setelah tgl 22-10-2026
                       ],
                       permodalanGas: [
                           ["MOD-20261022-0001", "2026-10-22", "Tabung Gas", 260, 190000, 49400000, "Permodalan Gas Utama", ""],
@@ -681,7 +680,7 @@
                       ],
                       riwayatTabungMember: [],
                       accessLogs: [],
-                      summary: { totalTabung: 300, sisaTabung: 250, totalTabungMasuk: 50, totalProfitGas: 6600000 }
+                      summary: { totalTabung: 300, sisaTabung: 212, totalTabungMasuk: 88, totalProfitGas: 0 }
                   });
                   return;
               }
@@ -996,7 +995,9 @@
       });
 
       // ==========================================
-      // PERHITUNGAN AKUMULASI UANG MASUK (REFILL) - HANYA BERDASARKAN TRANSAKSI PENJUALAN SETELAH DEPOSIT BARU
+      // PERHITUNGAN AKUMULASI UANG MASUK (REFILL)
+      // Murni dari Transaksi Penjualan Member setelah Tanggal Deposit Baru
+      // Jika belum ada penjualan/pembayaran member, maka Uang Masuk = Rp 0
       // ==========================================
       let totalUangMasukRefill = 0;
       
@@ -1016,18 +1017,19 @@
           targetDepositDate = (activeDep[1] || '').split(' ')[0];
       }
 
-      // Urutkan transaksi member secara kronologis (dari yang terlama ke terbaru)
+      // Urutkan transaksi member secara kronologis
       let sortedTrx = [...(appData.transaksi || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
       let remainingQuota = targetDepositQuota;
 
       sortedTrx.forEach(row => {
           const tglTrx = (row[1] || '').split(' ')[0];
-          // Abaikan transaksi yang terjadi SEBELUM tanggal deposit baru dibuat
+          // Abaikan jika transaksi terjadi sebelum tanggal deposit kontrak baru
           if (targetDepositDate && tglTrx < targetDepositDate) return;
           if (remainingQuota <= 0) return;
 
           const memberName = row[2] || ""; 
           const jenis = row[3] || ""; 
+          // Pastikan murni dari transaksi Penjualan Gas yang sudah dibayar/disetor member
           if (jenis !== 'Penjualan Gas') return;
 
           const qtyTrx = Number(row[5]) || 0;
@@ -1049,7 +1051,6 @@
               tabungTerpakai = remainingQuota;
           }
 
-          // Akumulasi uang masuk dihitung murni dari setoran modal member (qty * modalSatuan)
           totalUangMasukRefill += (tabungTerpakai * modalSatuan);
           remainingQuota -= tabungTerpakai;
       });
