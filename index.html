@@ -643,40 +643,56 @@
     });
 
     // ==========================================
-    // URL WEB APP APPS SCRIPT ANDA
+    // URL WEB APP APPS SCRIPT ANDA (KHUSUS VERCEL)
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwmrDi9nRZvdx6hH7hP5Y-0UUl6VkARuO2RAAEmGd--cIF-DzsYbkrgru-qVB6sfwiy/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyTdEG0aJlSys08DD8Wp01cXmXtY0P4ob-FdAsSGdO-pikrfNrU4an8OIvLAMdcHRZb/exec"; 
 
     async function apiCall(action, payload = null) {
       return new Promise(async (resolve, reject) => {
         try {
-          if (GAS_URL.includes("YOUR_WEB_APP_URL") || !GAS_URL.startsWith("http") || window.location.protocol === 'blob:') {
+          // DETEKSI OTOMATIS: Jika dibuka di dalam Preview (iframe/canvas), gunakan Mode Dummy agar bisa di-preview.
+          const isPreview = (window.location.protocol === 'blob:' || window.location.protocol === 'about:' || window.location.hostname === '' || window.location.hostname.includes('googleusercontent') || window.location.hostname.includes('sandbox'));
+          
+          if (isPreview || GAS_URL.includes("URL_WEB_APP") || !GAS_URL.startsWith("http")) {
+              console.log("🛠️ ZettBOT: Berjalan di Mode Preview (Simulasi UI)");
               if (action === 'getAppData') {
                   resolve({
                       success: true,
                       adminPinSet: "122009",
-                      settings: { digitalNarasi: "Selamat datang di portal informasi Digital Masdonie Group!", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
-                      deposit: [],
+                      settings: { digitalNarasi: "<p>Selamat datang di portal informasi Digital Masdonie Group! <b>(MODE PREVIEW/SIMULASI)</b></p>", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
+                      deposit: [["DEP-20240101-0001", "01-01-2024 10:00:00", 5000000, 100]],
                       tabungMasuk: [],
-                      members: [],
+                      members: [["MEMBER-0001", "ZETTBOT PREVIEW", "ALAMAT DUMMY", "01-01-2024 10:00:00", "Gas", 15000, 150000, 18000, 180000, "", 15]],
                       transaksi: [],
                       permodalanGas: [],
                       angsuran: [],
                       detailAngsuran: [],
                       riwayatTabungMember: [],
                       accessLogs: [],
-                      summary: { totalTabung: 0, sisaTabung: 0, totalTabungMasuk: 0, totalProfitGas: 0 }
+                      summary: { totalTabung: 100, sisaTabung: 100, totalTabungMasuk: 0, totalProfitGas: 0 }
                   });
                   return;
               }
-              resolve({ success: true, message: "Aksi berhasil (Simulasi Preview)." });
+              resolve({ success: true, message: "Aksi " + action + " disimulasikan berhasil." });
               return;
           }
+
+          // MODE PRODUKSI VERCEL: Lakukan Bypass CORS Fetch
           let payloadString = payload ? JSON.stringify(payload) : null;
-          let response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: action, payload: payloadString }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+          let response = await fetch(GAS_URL, { 
+              method: 'POST', 
+              body: JSON.stringify({ action: action, payload: payloadString }), 
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              redirect: 'follow'
+          });
+          
           if (!response.ok) throw new Error("Gagal menghubungi server (HTTP " + response.status + ")");
-          let result = await response.json(); resolve(result);
-        } catch (error) { console.error("API Error:", error); reject(error); }
+          let result = await response.json(); 
+          resolve(result);
+        } catch (error) { 
+          console.error("API Error:", error); 
+          reject(error); 
+        }
       });
     }
 
@@ -688,7 +704,7 @@
             else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
         } catch (err) { 
             const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
-            showToast("Server Error. Pastikan URL sudah benar. " + (err.message || err), "error"); 
+            showToast("Koneksi API Gagal. Periksa konfigurasi URL Anda. " + (err.message || err), "error"); 
         }
     }
 
