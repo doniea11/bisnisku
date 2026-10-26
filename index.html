@@ -19,20 +19,9 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #0b0f19; } ::-webkit-scrollbar-thumb { background: #00ffaa; border-radius: 4px; } ::-webkit-scrollbar-thumb:hover { background: #00cc88; }
     
     /* Radial Progress Bar CSS */
-    .radial-progress {
-        transform: rotate(-90deg);
-    }
-    .radial-progress-bg {
-        fill: none;
-        stroke: #1f2937; /* gray-800 */
-        stroke-width: 4;
-    }
-    .radial-progress-bar {
-        fill: none;
-        stroke-width: 4;
-        stroke-linecap: round;
-        transition: stroke-dasharray 1.5s ease-out, stroke 0.5s ease;
-    }
+    .radial-progress { transform: rotate(-90deg); }
+    .radial-progress-bg { fill: none; stroke: #1f2937; stroke-width: 4; }
+    .radial-progress-bar { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dasharray 1.5s ease-out, stroke 0.5s ease; }
   </style>
 </head>
 <body class="bg-nature-theme min-h-screen flex flex-col justify-between">
@@ -638,84 +627,100 @@
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation(); 
       switchPage('dashboard'); 
-      logVisit(); 
-      await loadBackendData();
+      
+      await loadBackendData(); // Load data dulu
+      logVisit(); // Background running
     });
 
     // ==========================================
-    // URL WEB APP APPS SCRIPT ANDA (KHUSUS VERCEL)
+    // URL WEB APP APPS SCRIPT ANDA
     // ==========================================
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyTdEG0aJlSys08DD8Wp01cXmXtY0P4ob-FdAsSGdO-pikrfNrU4an8OIvLAMdcHRZb/exec"; 
 
     async function apiCall(action, payload = null) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          // DETEKSI OTOMATIS: Jika dibuka di dalam Preview (iframe/canvas), gunakan Mode Dummy agar bisa di-preview.
-          const isPreview = (window.location.protocol === 'blob:' || window.location.protocol === 'about:' || window.location.hostname === '' || window.location.hostname.includes('googleusercontent') || window.location.hostname.includes('sandbox'));
-          
-          if (isPreview || GAS_URL.includes("URL_WEB_APP") || !GAS_URL.startsWith("http")) {
-              console.log("🛠️ ZettBOT: Berjalan di Mode Preview (Simulasi UI)");
+      try {
+          if (!GAS_URL.startsWith("http")) {
+              return { success: false, message: "URL Apps Script belum diisi." };
+          }
+          if (GAS_URL.includes("YOUR_WEB_APP") || window.location.protocol === 'blob:') {
               if (action === 'getAppData') {
-                  resolve({
-                      success: true,
-                      adminPinSet: "122009",
-                      settings: { digitalNarasi: "<p>Selamat datang di portal informasi Digital Masdonie Group! <b>(MODE PREVIEW/SIMULASI)</b></p>", reqPinAdmin: false, reqPinKasirGas: false, reqPinKasirHp: false, reqPinInfoGas: false },
-                      deposit: [["DEP-20240101-0001", "01-01-2024 10:00:00", 5000000, 100]],
-                      tabungMasuk: [],
-                      members: [["MEMBER-0001", "ZETTBOT PREVIEW", "ALAMAT DUMMY", "01-01-2024 10:00:00", "Gas", 15000, 150000, 18000, 180000, "", 15]],
-                      transaksi: [],
-                      permodalanGas: [],
-                      angsuran: [],
-                      detailAngsuran: [],
-                      riwayatTabungMember: [],
-                      accessLogs: [],
-                      summary: { totalTabung: 100, sisaTabung: 100, totalTabungMasuk: 0, totalProfitGas: 0 }
-                  });
-                  return;
+                  return { success: true, settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], permodalanGas: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], summary: {} };
               }
-              resolve({ success: true, message: "Aksi " + action + " disimulasikan berhasil." });
-              return;
+              return { success: true, message: "Aksi disimulasikan." };
           }
 
-          // MODE PRODUKSI VERCEL: Lakukan Bypass CORS Fetch
           let payloadString = payload ? JSON.stringify(payload) : null;
-          let response = await fetch(GAS_URL, { 
-              method: 'POST', 
-              body: JSON.stringify({ action: action, payload: payloadString }), 
+          let reqBody = JSON.stringify({ action: action, payload: payloadString });
+          
+          // Timeout protection (15 seconds)
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+          
+          const response = await fetch(GAS_URL, {
+              method: 'POST',
+              body: reqBody,
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              redirect: 'follow'
+              redirect: 'follow', // Pastikan mengikuti redirect GAS 302
+              signal: controller.signal
           });
           
-          if (!response.ok) throw new Error("Gagal menghubungi server (HTTP " + response.status + ")");
-          let result = await response.json(); 
-          resolve(result);
-        } catch (error) { 
-          console.error("API Error:", error); 
-          reject(error); 
-        }
-      });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+              throw new Error(`HTTP Error ${response.status}`);
+          }
+
+          // Cek tipe konten sebelum parse JSON
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.indexOf("application/json") === -1) {
+              const text = await response.text();
+              if (text.includes("<html") || text.includes("<body") || text.includes("google.com/accounts")) {
+                  throw new Error("Menerima halaman HTML. Pastikan deployment 'Who has access' diset ke 'Anyone'!");
+              }
+              try {
+                  return JSON.parse(text);
+              } catch(e) {
+                  throw new Error("Respon server bukan JSON yang valid.");
+              }
+          }
+
+          return await response.json();
+      } catch (error) {
+          console.error("API Call Error:", error);
+          let errorMsg = error.name === 'AbortError' ? 'Koneksi Timeout (15 detik)' : error.message;
+          return { success: false, message: errorMsg };
+      }
     }
 
     async function loadBackendData() {
+        const loader = document.getElementById('global-loader');
         try {
             const res = await apiCall('getAppData');
-            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none';
-            if (res && res.success) { appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); } 
-            else if (res && !res.success) { showToast("Gagal memuat data: " + res.message, "error"); }
+            if (loader) loader.style.display = 'none';
+            
+            if (res && res.success) { 
+                appData = res; ensureDataArrays(); populateSettingsForm(); updateUIAll(); 
+            } else { 
+                showToast("Gagal memuat data: " + (res.message || "Unknown error"), "error"); 
+            }
         } catch (err) { 
-            const loader = document.getElementById('global-loader'); if (loader) loader.style.display = 'none'; 
-            showToast("Koneksi API Gagal. Periksa konfigurasi URL Anda. " + (err.message || err), "error"); 
+            if (loader) loader.style.display = 'none'; 
+            showToast("Koneksi Error: " + err.message, "error"); 
+        } finally {
+            if (loader) loader.style.display = 'none'; // PASTI disembunyikan
         }
     }
 
     async function logVisit() {
-        if (sessionStorage.getItem('visit_logged')) return;
         try {
+            if (sessionStorage.getItem('visit_logged')) return;
             let ip = "Unknown";
             try { const response = await fetch('https://api.ipify.org?format=json'); const data = await response.json(); ip = data.ip; } catch(e) {}
             await apiCall('saveAccessLog', { ip: ip, device: navigator.userAgent });
             sessionStorage.setItem('visit_logged', 'true');
-        } catch(e) {}
+        } catch (e) {
+            console.warn("Log visit error", e);
+        }
     }
 
     function setupSmartEnterNavigation() { document.addEventListener('keydown', function(e) { if (e.key === 'Enter') { const act = document.activeElement; if (act && act.hasAttribute('data-form-input')) { const form = act.closest('form'); if (!form) return; const inputs = Array.from(form.querySelectorAll('[data-form-input]')); const idx = inputs.indexOf(act); let next = null; for (let i=idx+1; i<inputs.length; i++) { if (!inputs[i].value || inputs[i].value.trim() === '' || inputs[i].value === '0') { next = inputs[i]; break; } } if (next) { e.preventDefault(); next.focus(); } } } }); }
@@ -1081,7 +1086,8 @@
           }
       }
 
-      let totalModalRefill = 0;
+      totalModalRefill = 0;
+      totalModalTabung = 0;
       list.forEach(row => {
           const jenis = row[2] || 'Tabung Gas';
           const modalVal = Number(row[5]) || 0;
@@ -1668,7 +1674,7 @@
       if (!toast || !msg || !icon) return; msg.innerText = message;
       if (type === "success") { title.innerText = "BERHASIL"; title.className = "text-2xl font-bold tracking-wide mb-2 text-[#00ffaa]"; icon.className = "fa-solid fa-circle-check text-[#00ffaa] text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-[#00ffaa] text-white text-center shadow-2xl zett-glow max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; } 
       else { title.innerText = "PERHATIAN / ERROR"; title.className = "text-2xl font-bold tracking-wide mb-2 text-red-400"; icon.className = "fa-solid fa-circle-exclamation text-red-400 text-4xl"; box.className = "glass-card p-8 rounded-3xl border-2 border-red-500 text-white text-center shadow-2xl max-w-md w-full mx-4 transform scale-100 transition-transform duration-300"; }
-      toast.classList.remove('opacity-0', 'pointer-events-none'); toast.classList.add('opacity-100', 'pointer-events-auto'); setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
+      toast.classList.remove('opacity-0', 'pointer-events-none'); toast.classList.add('opacity-100', 'pointer-events-auto'); setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 6000);
     }
   </script>
 </body>
