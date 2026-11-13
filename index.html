@@ -437,11 +437,11 @@
               <h4 id="kasir-trx-titipan" class="text-xl font-bold text-yellow-400 mt-1">0</h4>
             </div>
             <div class="glass-card p-3 rounded-xl border border-gray-800 flex flex-col items-center justify-center text-center">
-              <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Keluar Fisik (Gudang)</span>
+              <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">TABUNG KELUAR (GUDANG)</span>
               <h4 id="kasir-trx-keluar" class="text-xl font-bold text-blue-400 mt-1">0</h4>
             </div>
             <div class="glass-card p-3 rounded-xl border border-emerald-900/50 bg-[#00ffaa]/5 flex flex-col items-center justify-center text-center shadow-inner">
-              <span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-bold">Sisa Tabung Gudang</span>
+              <span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-bold">SISA TABUNG (GUDANG)</span>
               <h4 id="kasir-trx-sisa" class="text-xl font-black text-[#00ffaa] mt-1">0</h4>
             </div>
           </div>
@@ -611,10 +611,6 @@
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4"><div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6"><div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 rounded-2xl bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center zett-glow"><i class="fa-solid fa-globe text-[#00ffaa] text-2xl"></i></div><div><h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3></div></div><button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-[#00ffaa] flex items-center justify-center transition-all cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="digital-modal-content" class="text-gray-300 space-y-4 text-sm sm:text-base leading-relaxed py-2"></div><div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div></div></div>
 
   <script>
-    if (typeof google !== 'undefined') {
-        // Safe Preview Rendering
-    }
-    
     let appData = { settings: {}, deposit: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], permodalanGas: [], summary: {} };
     let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
 
@@ -644,7 +640,7 @@
       logVisit(); 
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyoedAaCcv1hND3dpzUgIEr-gzErOfrhayk5-gChE8pibVPVLbLJT5iPZSzhxuDrqQH/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxc67Ua9v72x9MDQcMsW91CXMYfkuf2DTyEpn8uMhQmlmUJdGdApjpyFOsv06GzQsbO/exec"; 
 
     async function apiCall(action, payload = null) {
       try {
@@ -1188,20 +1184,57 @@
       const elTot = document.getElementById('pub-total-tabung'); 
       const elSisa = document.getElementById('pub-sisa-tabung');
       const elKeluar = document.getElementById('pub-tabung-masuk');
+      const elNominal = document.getElementById('pub-total-nominal'); // jika masih ada
       
-      let totalDepositKeseluruhan = Number(appData.summary.totalTabung || 0);
-      let currentSisa = Number(appData.summary.sisaTabung || 0);
-      let totalKeluarFisik = Number(appData.summary.totalTabungMasuk || 0);
-      
+      let totalDepositKeseluruhan = 0;
       let latestDepositTabung = 0;
-      if (appData.deposit && appData.deposit.length > 0 && appData.deposit[0]) {
+      let latestDepositDate = '';
+      
+      if (appData.deposit && appData.deposit.length > 0) {
           latestDepositTabung = Number(appData.deposit[0][3]) || 0;
+          latestDepositDate = (appData.deposit[0][1] || '').split(' ')[0];
+          
+          appData.deposit.forEach(d => {
+              totalDepositKeseluruhan += Number(d[3]) || 0;
+          });
       }
+
+      function toYYYYMMDD(dStr) {
+          if(!dStr) return '';
+          if(dStr.includes('-') && dStr.split('-')[0].length === 2) {
+              let p = dStr.split('-'); return p[2] + '-' + p[1] + '-' + p[0];
+          }
+          if(dStr.includes('/')) {
+              let p = dStr.split('/');
+              if(p[0].length === 2) return p[2] + '-' + p[1] + '-' + p[0];
+          }
+          return dStr;
+      }
+
+      let normDepDate = toYYYYMMDD(latestDepositDate);
+      
+      let trxSejakDepositBaru = 0;
+      (appData.transaksi || []).forEach(row => {
+          let trxDateStr = String(row[1] || '').split(' ')[0];
+          let normTrxDate = toYYYYMMDD(trxDateStr);
+          if (normTrxDate >= normDepDate) {
+              trxSejakDepositBaru += Number(row[5]) || 0;
+          }
+      });
+
+      let totalTitipanMember = 0;
+      (appData.members || []).forEach(m => {
+          totalTitipanMember += Number(m[10]) || 0;
+      });
+
+      let totalKeluarDariGudang = trxSejakDepositBaru + totalTitipanMember;
+      let sisaTabungDiGudang = latestDepositTabung - totalKeluarDariGudang;
 
       if(elTotKes) elTotKes.innerText = totalDepositKeseluruhan.toLocaleString('id-ID');
       if(elTot) elTot.innerText = latestDepositTabung.toLocaleString('id-ID'); 
-      if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
-      if(elKeluar) elKeluar.innerText = totalKeluarFisik.toLocaleString('id-ID');
+      if(elSisa) elSisa.innerText = sisaTabungDiGudang.toLocaleString('id-ID');
+      if(elKeluar) elKeluar.innerText = totalKeluarDariGudang.toLocaleString('id-ID');
+      if(elNominal && appData.summary.totalNominalTrx !== undefined) elNominal.innerText = 'Rp ' + Number(appData.summary.totalNominalTrx).toLocaleString('id-ID');
 
       // UI Update Kasir Transaksi Indikator
       const elKasirDepBaru = document.getElementById('kasir-trx-depbaru');
@@ -1210,9 +1243,9 @@
       const elKasirSisa = document.getElementById('kasir-trx-sisa');
       
       if(elKasirDepBaru) elKasirDepBaru.innerText = latestDepositTabung.toLocaleString('id-ID');
-      if(elKasirTitipan) elKasirTitipan.innerText = Number(appData.summary.totalTabungDiTanganMember || 0).toLocaleString('id-ID');
-      if(elKasirKeluar) elKasirKeluar.innerText = totalKeluarFisik.toLocaleString('id-ID');
-      if(elKasirSisa) elKasirSisa.innerText = currentSisa.toLocaleString('id-ID');
+      if(elKasirTitipan) elKasirTitipan.innerText = totalTitipanMember.toLocaleString('id-ID');
+      if(elKasirKeluar) elKasirKeluar.innerText = totalKeluarDariGudang.toLocaleString('id-ID');
+      if(elKasirSisa) elKasirSisa.innerText = sisaTabungDiGudang.toLocaleString('id-ID');
 
       try { filterTabungMasukPublik(); } catch(e){} 
       try { renderRekapDeposit(); } catch(e){} 
@@ -1436,7 +1469,7 @@
       const baseFiltered = appData.transaksi.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
       const tbody = document.getElementById('table-laporan-body'); if (!tbody) return; tbody.innerHTML = '';
       
-      let html = ''; let sumTabungDibayar = 0; let sumRupiah = 0; 
+      let html = ''; let sumTabung = 0; let sumRupiah = 0; 
       let sumProfitLama = 0; let sumProfitBaru = 0; let sumProfit = 0; 
       let memberProfit = {};
 
@@ -1453,8 +1486,7 @@
 
       baseFiltered.forEach(row => { 
           const memberName = row[2] || '-'; const jenis = row[3] || '-'; 
-          const qtyDibayar = Number(row[5]) || 0; 
-          const hargaJualTotal = Number(row[6]) || 0;
+          const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
           let profit = 0;
           let badgeSistem = '';
 
@@ -1469,71 +1501,33 @@
                   if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
                   else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
               }
-              profit = hargaJualTotal - (qtyDibayar * modalSatuan);
+              profit = hargaJualTotal - (qty * modalSatuan);
               sumProfitLama += profit;
               badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA LAMA</span>`;
           }
           
-          sumTabungDibayar += qtyDibayar; sumRupiah += hargaJualTotal; sumProfit += profit;
+          sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
           
-          if(!memberProfit[memberName]) memberProfit[memberName] = { qtyDibayar: 0, profit: 0 };
-          memberProfit[memberName].qtyDibayar += qtyDibayar; 
-          memberProfit[memberName].profit += profit;
+          if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
+          memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
 
           const isKhusus = (row[7] || '') === 'Khusus';
           const infoBadge = isKhusus ? `<span class="text-[9px] text-blue-400 ml-1" title="Khusus"><i class="fa-solid fa-tag"></i></span>` : `<span class="text-[9px] text-yellow-400 ml-1" title="Harga 0"><i class="fa-solid fa-triangle-exclamation"></i></span>`;
           
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
-              <td class="px-4 py-3 text-xs">${row[0]}</td>
-              <td class="px-4 py-3 text-xs">${fDate(row[1])}</td>
-              <td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td>
-              <td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td>
-              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td>
-              <td class="px-4 py-3">${qtyDibayar.toLocaleString('id-ID')} Tbg</td>
-              <td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td>
-              <td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td>
-          </tr>`; 
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
       });
 
-      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold">
-          <td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total:</td>
-          <td class="px-4 py-4 text-white">${sumTabungDibayar.toLocaleString('id-ID')} Tbg</td>
-          <td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td>
-          <td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td>
-      </tr>`;
+      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
       tbody.innerHTML = html;
       
-      document.getElementById('lap-tot-tabung').innerText = sumTabungDibayar.toLocaleString('id-ID'); 
+      document.getElementById('lap-tot-tabung').innerText = sumTabung.toLocaleString('id-ID'); 
       document.getElementById('lap-tot-omzet').innerText = 'Rp ' + sumRupiah.toLocaleString('id-ID'); 
       document.getElementById('lap-tot-profit-lama').innerText = 'Rp ' + sumProfitLama.toLocaleString('id-ID');
       document.getElementById('lap-tot-profit-baru').innerText = 'Rp ' + sumProfitBaru.toLocaleString('id-ID');
       document.getElementById('lap-tot-profit').innerText = 'Rp ' + sumProfit.toLocaleString('id-ID');
       
       let memberHtml = '';
-      for (const [name, data] of Object.entries(memberProfit)) { 
-          // Cari titipan saat ini dari getAppData
-          let tabungTitipan = 0;
-          const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === name.toUpperCase());
-          if (memberData) { tabungTitipan = Number(memberData[10]) || 0; }
-          
-          let badgeUtang = '';
-          if (tabungTitipan > 0) {
-              badgeUtang = `<span class="text-xs text-yellow-400 font-bold block mt-1"><i class="fa-solid fa-boxes-stacked"></i> Titipan: ${tabungTitipan} Tbg</span>`;
-          } else {
-              badgeUtang = `<span class="text-xs text-gray-500 block mt-1">Stok Titipan: 0 (Balance)</span>`;
-          }
-
-          memberHtml += `<div class="bg-[#161b22] p-3 rounded-xl border border-gray-800 flex flex-col justify-between">
-              <div>
-                  <strong class="text-white block truncate text-sm">${name}</strong>
-                  <span class="text-gray-400 block mt-1">Dibayar: ${data.qtyDibayar.toLocaleString('id-ID')} Tbg</span>
-                  ${badgeUtang}
-              </div>
-              <div class="mt-2 pt-2 border-t border-gray-700">
-                  <span class="text-[#00ffaa] font-bold block">Profit: Rp ${data.profit.toLocaleString('id-ID')}</span>
-              </div>
-          </div>`; 
-      }
+      for (const [name, data] of Object.entries(memberProfit)) { memberHtml += `<div class="bg-[#161b22] p-2 rounded border border-gray-800"><strong class="text-white block truncate">${name}</strong><span class="text-gray-400 block">${data.qty.toLocaleString('id-ID')} Tabung</span><span class="text-[#00ffaa] font-bold">Rp ${data.profit.toLocaleString('id-ID')}</span></div>`; }
       document.getElementById('lap-profit-member').innerHTML = memberHtml;
     }
 
