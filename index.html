@@ -614,6 +614,18 @@
     let appData = { settings: {}, deposit: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], permodalanGas: [], summary: {} };
     let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
 
+    function toYYYYMMDD(dStr) {
+        if(!dStr) return '';
+        if(dStr.includes('-') && dStr.split('-')[0].length === 2) {
+            let p = dStr.split('-'); return p[2] + '-' + p[1] + '-' + p[0];
+        }
+        if(dStr.includes('/')) {
+            let p = dStr.split('/');
+            if(p[0].length === 2) return p[2] + '-' + p[1] + '-' + p[0];
+        }
+        return dStr;
+    }
+
     function fDate(val) {
         if (!val) return '-';
         let str = String(val).trim();
@@ -1173,18 +1185,6 @@
           appData.deposit.forEach(d => {
               totalDepositKeseluruhan += Number(d[3]) || 0;
           });
-      }
-
-      function toYYYYMMDD(dStr) {
-          if(!dStr) return '';
-          if(dStr.includes('-') && dStr.split('-')[0].length === 2) {
-              let p = dStr.split('-'); return p[2] + '-' + p[1] + '-' + p[0];
-          }
-          if(dStr.includes('/')) {
-              let p = dStr.split('/');
-              if(p[0].length === 2) return p[2] + '-' + p[1] + '-' + p[0];
-          }
-          return dStr;
       }
 
       let normDepDate = toYYYYMMDD(latestDepositDate);
