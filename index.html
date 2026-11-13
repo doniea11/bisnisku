@@ -60,7 +60,7 @@
     <section id="page-gas-portal" class="page-view hidden space-y-8 text-center pt-10">
       <h2 class="text-3xl font-bold text-white mb-6 bubble-glowing-title">Portal Liquefied Petroleum Gas</h2>
       <div class="flex flex-col sm:flex-row justify-center gap-6 max-w-2xl mx-auto">
-        <button onclick="requestAccessPage('publik')" class="w-full py-6 px-6 rounded-xl glass-card text-[#00ffaa] font-bold border border-[#00ffaa]/40 hover:bg-[#00ffaa]/20 transition-all flex flex-col items-center justify-center shadow-lg cursor-pointer"><i class="fa-solid fa-chart-pie text-5xl mb-3"></i> Informasi</button>
+        <button onclick="requestAccessPage('publik')" class="w-full py-6 px-6 rounded-xl glass-card text-[#00ffaa] font-bold border border-[#00ffaa]/40 hover:bg-[#00ffaa]/20 transition-all flex flex-col items-center justify-center shadow-lg cursor-pointer"><i class="fa-solid fa-chart-pie text-5xl mb-3"></i> Informasi & Monitoring</button>
         <button onclick="requestAccessPage('kasir')" class="w-full py-6 px-6 rounded-xl glass-card text-white font-bold border border-gray-700 hover:border-[#00ffaa] transition-all flex flex-col items-center justify-center shadow-lg cursor-pointer"><i class="fa-solid fa-cash-register text-5xl mb-3"></i> Kasir</button>
       </div>
     </section>
@@ -195,7 +195,7 @@
         
         <div class="mb-8">
           <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-list mr-2 text-[#00ffaa]"></i>Riwayat Tabung Keluar (Dari Transaksi)</h3>
-          <div class="overflow-x-auto rounded-xl border border-gray-800"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Transaksi</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Tabung Dibayar</th></tr></thead><tbody id="table-publik-masuk-body"></tbody></table></div>
+          <div class="overflow-x-auto rounded-xl border border-gray-800"><table class="w-full text-left text-sm text-gray-300"><thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800"><tr><th class="px-4 py-3">ID Transaksi</th><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Jumlah Tabung</th></tr></thead><tbody id="table-publik-masuk-body"></tbody></table></div>
         </div>
       </div>
     </section>
@@ -356,17 +356,17 @@
                 <div><label class="block text-xs text-gray-400 mb-1">Alamat Member (Otomatis)</label><input type="text" id="tm-disp-alamat" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-white outline-none"></div>
               </div>
               <div><label class="block text-xs text-gray-400 mb-1">Tanggal Update</label><input type="date" id="tm-tanggal-update" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
-              <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung (Diisi Manual)</label><input type="text" id="tm-jumlah-manual" required placeholder="Masukkan Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+              <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung di Tangan Member (Titipan)</label><input type="text" id="tm-jumlah-manual" required placeholder="Masukkan Jumlah Tabung" data-form-input oninput="formatRupiahInput(this)" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
               <button type="submit" id="btn-submit-tabung-member" class="w-full py-2.5 bg-[#00ffaa] text-gray-900 font-bold rounded-lg text-sm hover:bg-[#00cc88] cursor-pointer">Simpan Perubahan Tabung</button>
             </form>
           </div>
 
           <div class="mt-8">
-            <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-table mr-2 text-[#00ffaa]"></i>Data Jumlah Tabung Member</h3>
+            <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-table mr-2 text-[#00ffaa]"></i>Data Tabung Di Tangan Member (Titipan)</h3>
             <div class="overflow-x-auto rounded-xl border border-gray-800">
               <table class="w-full text-left text-sm text-gray-300">
                 <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
-                  <tr><th class="px-4 py-3">ID Member</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Alamat</th><th class="px-4 py-3">Jumlah Tabung Saat Ini</th><th class="px-4 py-3 text-center">Aksi</th></tr>
+                  <tr><th class="px-4 py-3">ID Member</th><th class="px-4 py-3">Nama Member</th><th class="px-4 py-3">Alamat</th><th class="px-4 py-3">Tabung di Member Saat Ini</th><th class="px-4 py-3 text-center">Aksi</th></tr>
                 </thead>
                 <tbody id="table-data-tabung-member"></tbody>
               </table>
@@ -374,7 +374,7 @@
           </div>
 
           <div class="mt-8">
-            <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-clock-rotate-left mr-2 text-[#00ffaa]"></i>Riwayat Update Data Tabung Member (Penambahan & Pengurangan)</h3>
+            <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-clock-rotate-left mr-2 text-[#00ffaa]"></i>Riwayat Update Data Tabung Member</h3>
             <div class="overflow-x-auto rounded-xl border border-gray-800">
               <table class="w-full text-left text-sm text-gray-300">
                 <thead class="bg-[#161b22] text-xs uppercase text-gray-400 border-b border-gray-800">
@@ -426,13 +426,33 @@
         </div>
 
         <div id="kasir-sub-member" class="kasir-sub-content hidden space-y-4">
+          <!-- INDIKATOR STOK KASIR -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="glass-card p-3 rounded-xl border border-gray-800 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Deposit Baru</span>
+              <h4 id="kasir-trx-depbaru" class="text-xl font-bold text-purple-400 mt-1">0</h4>
+            </div>
+            <div class="glass-card p-3 rounded-xl border border-gray-800 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" title="Tabung yang sudah dibawa tapi belum dibayar">Di Member (Titipan)</span>
+              <h4 id="kasir-trx-titipan" class="text-xl font-bold text-yellow-400 mt-1">0</h4>
+            </div>
+            <div class="glass-card p-3 rounded-xl border border-gray-800 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Keluar Fisik (Gudang)</span>
+              <h4 id="kasir-trx-keluar" class="text-xl font-bold text-blue-400 mt-1">0</h4>
+            </div>
+            <div class="glass-card p-3 rounded-xl border border-emerald-900/50 bg-[#00ffaa]/5 flex flex-col items-center justify-center text-center shadow-inner">
+              <span class="text-[10px] text-[#00ffaa] uppercase tracking-wider font-bold">Sisa Tabung Gudang</span>
+              <h4 id="kasir-trx-sisa" class="text-xl font-black text-[#00ffaa] mt-1">0</h4>
+            </div>
+          </div>
+
           <form id="form-transaksi" onsubmit="handleTransaksiMemberSubmit(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input type="hidden" id="trx-id" value="">
             <div><label class="block text-xs text-gray-400 mb-1">Tanggal</label><input type="date" id="trx-tanggal" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none cursor-pointer"></div>
             <div><label class="block text-xs text-gray-400 mb-1">Nama Member</label><select id="trx-namamember" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none" onchange="calcTransaksiTotal()"></select></div>
             <div><label class="block text-xs text-gray-400 mb-1">Jenis Transaksi</label><select id="trx-jenis" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none" onchange="calcTransaksiTotal()"><option value="" disabled selected>-- Pilih Jenis --</option><option value="Penjualan Gas">Penjualan Gas</option><option value="Penjualan Tabung Kosong">Penjualan Tabung Kosong</option></select></div>
             <div><label class="block text-xs text-gray-400 mb-1">Metode Setoran</label><select id="trx-metode" required data-form-input class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"><option value="" disabled selected>-- Pilih Metode --</option><option value="Tunai">Tunai</option><option value="Transfer">Transfer</option></select></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung Dibayar</label><input type="text" id="trx-jumlahtabung" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this); calcTransaksiTotal();" onclick="calcTransaksiTotal()" onblur="calcTransaksiTotal()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
+            <div><label class="block text-xs text-gray-400 mb-1">Jumlah Tabung</label><input type="text" id="trx-jumlahtabung" required placeholder="Jumlah Tabung" data-form-input oninput="formatRupiahInput(this); calcTransaksiTotal();" onclick="calcTransaksiTotal()" onblur="calcTransaksiTotal()" class="w-full bg-[#161b22] border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:border-[#00ffaa] outline-none"></div>
             <div><label class="block text-xs text-gray-400 mb-1">Jumlah Rupiah (Auto Calculate)</label><input type="text" id="trx-jumlahrupiah" readonly class="w-full bg-[#161b22]/50 border border-gray-800 rounded-lg p-2.5 text-sm text-[#00ffaa] font-bold outline-none" value="0"></div>
             <div class="md:col-span-3 pt-2 flex gap-3"><button type="submit" id="btn-submit-trx" class="flex-1 py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer">Simpan Transaksi Member</button></div>
           </form>
@@ -591,7 +611,11 @@
   <div id="digital-info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-300 p-4"><div class="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#00ffaa] text-white shadow-2xl zett-glow max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 space-y-6"><div class="flex justify-between items-start border-b border-[#00ffaa]/30 pb-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 rounded-2xl bg-[#00ffaa]/20 border border-[#00ffaa] flex items-center justify-center zett-glow"><i class="fa-solid fa-globe text-[#00ffaa] text-2xl"></i></div><div><h3 class="text-xl sm:text-2xl font-black tracking-wide text-[#00ffaa]">Satu Aplikasi Buat Semua Urusan Digitalmu</h3></div></div><button onclick="closeDigitalModal()" class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-[#00ffaa] flex items-center justify-center transition-all cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="digital-modal-content" class="text-gray-300 space-y-4 text-sm sm:text-base leading-relaxed py-2"></div><div class="pt-2"><button onclick="closeDigitalModal()" class="w-full py-3 bg-[#00ffaa] text-gray-900 font-bold rounded-xl hover:bg-[#00cc88] transition-all cursor-pointer shadow-lg">Mengerti, Lanjutkan!</button></div></div></div>
 
   <script>
-    let appData = { settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], permodalanGas: [], summary: {} };
+    if (typeof google !== 'undefined') {
+        // Safe Preview Rendering
+    }
+    
+    let appData = { settings: {}, deposit: [], members: [], transaksi: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], permodalanGas: [], summary: {} };
     let pendingTargetPage = ''; let pendingAllowedRole = ''; let currentLoggedInMember = '';
 
     function fDate(val) {
@@ -611,19 +635,16 @@
     }
 
     window.addEventListener('DOMContentLoaded', async function() {
-      const dateInputs = ['dep-tanggal', 'tm-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal', 'refill-tanggal'];
+      const dateInputs = ['dep-tanggal', 'trx-tanggal', 'rep-start', 'rep-end', 'pay-hp-tanggal', 'ang-tgl-invoice', 'tm-tanggal-update', 'mod-tanggal', 'refill-tanggal'];
       dateInputs.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       setupSmartEnterNavigation(); 
       switchPage('dashboard'); 
       
-      await loadBackendData(); // Load data dulu
-      logVisit(); // Background running
+      await loadBackendData(); 
+      logVisit(); 
     });
 
-    // ==========================================
-    // URL WEB APP APPS SCRIPT ANDA
-    // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxc67Ua9v72x9MDQcMsW91CXMYfkuf2DTyEpn8uMhQmlmUJdGdApjpyFOsv06GzQsbO/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzLYXJmrFU0ucXc8kphpEdWtr2UsFOskLUrqenrYhN7Q-xK68QT0kwds5V4UNpAdg7O/exec"; 
 
     async function apiCall(action, payload = null) {
       try {
@@ -632,7 +653,7 @@
           }
           if (GAS_URL.includes("YOUR_WEB_APP") || window.location.protocol === 'blob:') {
               if (action === 'getAppData') {
-                  return { success: true, settings: {}, deposit: [], tabungMasuk: [], members: [], transaksi: [], permodalanGas: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], summary: {} };
+                  return { success: true, settings: {}, deposit: [], members: [], transaksi: [], permodalanGas: [], angsuran: [], detailAngsuran: [], riwayatTabungMember: [], accessLogs: [], summary: {} };
               }
               return { success: true, message: "Aksi disimulasikan." };
           }
@@ -640,7 +661,6 @@
           let payloadString = payload ? JSON.stringify(payload) : null;
           let reqBody = JSON.stringify({ action: action, payload: payloadString });
           
-          // Timeout protection (15 seconds)
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 15000);
           
@@ -648,7 +668,7 @@
               method: 'POST',
               body: reqBody,
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              redirect: 'follow', // Pastikan mengikuti redirect GAS 302
+              redirect: 'follow', 
               signal: controller.signal
           });
           
@@ -658,7 +678,6 @@
               throw new Error(`HTTP Error ${response.status}`);
           }
 
-          // Cek tipe konten sebelum parse JSON
           const contentType = response.headers.get("content-type");
           if (contentType && contentType.indexOf("application/json") === -1) {
               const text = await response.text();
@@ -695,7 +714,7 @@
             if (loader) loader.style.display = 'none'; 
             showToast("Koneksi Error: " + err.message, "error"); 
         } finally {
-            if (loader) loader.style.display = 'none'; // PASTI disembunyikan
+            if (loader) loader.style.display = 'none'; 
         }
     }
 
@@ -1184,6 +1203,17 @@
       if(elSisa) elSisa.innerText = currentSisa.toLocaleString('id-ID');
       if(elKeluar) elKeluar.innerText = totalKeluarFisik.toLocaleString('id-ID');
 
+      // UI Update Kasir Transaksi Indikator
+      const elKasirDepBaru = document.getElementById('kasir-trx-depbaru');
+      const elKasirTitipan = document.getElementById('kasir-trx-titipan');
+      const elKasirKeluar = document.getElementById('kasir-trx-keluar');
+      const elKasirSisa = document.getElementById('kasir-trx-sisa');
+      
+      if(elKasirDepBaru) elKasirDepBaru.innerText = latestDepositTabung.toLocaleString('id-ID');
+      if(elKasirTitipan) elKasirTitipan.innerText = Number(appData.summary.totalTabungDiTanganMember || 0).toLocaleString('id-ID');
+      if(elKasirKeluar) elKasirKeluar.innerText = totalKeluarFisik.toLocaleString('id-ID');
+      if(elKasirSisa) elKasirSisa.innerText = currentSisa.toLocaleString('id-ID');
+
       try { filterTabungMasukPublik(); } catch(e){} 
       try { renderRekapDeposit(); } catch(e){} 
       try { renderRekapTransaksiMember(); } catch(e){}
@@ -1280,7 +1310,7 @@
                 <td class="px-4 py-3 font-mono text-xs text-gray-400">${idM}</td>
                 <td class="px-4 py-3 font-semibold text-white">${nama}</td>
                 <td class="px-4 py-3 text-gray-300">${alamat}</td>
-                <td class="px-4 py-3 font-bold text-[#00ffaa]">${jumlahTabung.toLocaleString('id-ID')} Tabung</td>
+                <td class="px-4 py-3 font-bold text-yellow-400">${jumlahTabung.toLocaleString('id-ID')} Tabung</td>
                 <td class="px-4 py-3 text-center"><button onclick="prepareEditTabungMember('${idM}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded transition-all cursor-pointer"><i class="fa-solid fa-pen-to-square mr-1"></i> Update</button></td>
             </tr>`;
         });
@@ -1383,8 +1413,19 @@
         let html = ''; 
         appData.transaksi.forEach(row => { 
             const isKhusus = (row[7] || '') === 'Khusus';
+            const qtyDibayar = Number(row[5]) || 0;
+            
             const infoBadge = isKhusus ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga Jual telah diatur untuk member ini"><i class="fa-solid fa-tag"></i> KHUSUS</span>` : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap" title="Harga belum diatur untuk member ini, silakan cek pengaturan"><i class="fa-solid fa-triangle-exclamation"></i> HARGA 0 (CEK MODAL)</span>`;
-            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td><td class="px-4 py-3">${Number(row[5] || 0).toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td></tr>`; 
+            
+            html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+                <td class="px-4 py-3 text-xs font-mono">${row[0] || '-'}</td>
+                <td class="px-4 py-3 text-xs">${fDate(row[1])}</td>
+                <td class="px-4 py-3 font-semibold text-white flex items-center">${row[2] || '-'}${infoBadge}</td>
+                <td class="px-4 py-3 text-xs text-[#00ffaa]">${row[3] || '-'}</td>
+                <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4] || '-'}</span></td>
+                <td class="px-4 py-3 font-bold text-white">${qtyDibayar.toLocaleString('id-ID')} Tbg</td>
+                <td class="px-4 py-3 font-bold text-blue-400">Rp ${Number(row[6] || 0).toLocaleString('id-ID')}</td>
+            </tr>`; 
         }); 
         tbody.innerHTML = html; 
     }
@@ -1493,7 +1534,7 @@
       filtered.forEach(row => { 
           const nama = row[2] || '-';
           const qtyDibayar = Number(row[5]) || 0;
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${nama}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${qtyDibayar.toLocaleString('id-ID')} Tabung Dibayar</td></tr>`; 
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs text-gray-400 font-mono">${row[0] || '-'}</td><td class="px-4 py-3">${fDate(row[1])}</td><td class="px-4 py-3 text-white">${nama}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">${qtyDibayar.toLocaleString('id-ID')} Tabung</td></tr>`; 
       });
       tbody.innerHTML = html; 
     }
