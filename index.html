@@ -1002,10 +1002,25 @@
           }
       });
 
+      // Menambahkan kalibrator Tanggal yang baku
+      function toYYYYMMDD(dStr) {
+          if(!dStr) return '';
+          let str = String(dStr).split(' ')[0];
+          if(str.includes('-') && str.split('-')[0].length === 2) {
+              let p = str.split('-'); return p[2] + '-' + p[1] + '-' + p[0];
+          }
+          if(str.includes('/')) {
+              let p = str.split('/');
+              if(p[0].length === 2) return p[2] + '-' + p[1] + '-' + p[0];
+          }
+          return str;
+      }
+
       let totalUangMasukRefill = 0;
       
-      const allDeposits = [...(appData.deposit || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
-      let allTrx = [...(appData.transaksi || [])].sort((a, b) => (a[1] || '').localeCompare(b[1] || ''));
+      // Mengurutkan dengan format tanggal standar agar tidak salah antrean
+      const allDeposits = [...(appData.deposit || [])].sort((a, b) => toYYYYMMDD(a[1]).localeCompare(toYYYYMMDD(b[1])));
+      let allTrx = [...(appData.transaksi || [])].sort((a, b) => toYYYYMMDD(a[1]).localeCompare(toYYYYMMDD(b[1])));
 
       const selDepId = document.getElementById('refill-deposit-select') ? document.getElementById('refill-deposit-select').value : '';
       let targetDep = null;
@@ -1021,7 +1036,7 @@
               const jenis = row[3] || "";
               if (jenis === 'Penjualan Gas') {
                   trxQueue.push({
-                      date: (row[1] || '').split(' ')[0],
+                      date: toYYYYMMDD(row[1]),
                       qty: Number(row[5]) || 0,
                       row: row
                   });
@@ -1033,12 +1048,13 @@
           for (let d = 0; d < allDeposits.length; d++) {
               let depObj = allDeposits[d];
               let depQuota = Number(depObj[3]) || 0;
-              let depDate = (depObj[1] || '').split(' ')[0];
+              let depDate = toYYYYMMDD(depObj[1]); // Cek tanggal dalam format yang bisa dikalkulasi (Matematika)
 
               let fulfilledForThisDep = 0;
               while (fulfilledForThisDep < depQuota && currentTrxIdx < trxQueue.length) {
                   let trx = trxQueue[currentTrxIdx];
                   
+                  // Murni membaca transaksi SEJAK tanggal Deposit target
                   if (trx.date >= depDate) {
                       let needed = depQuota - fulfilledForThisDep;
                       let take = trx.qty;
