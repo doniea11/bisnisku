@@ -184,11 +184,11 @@
             <h3 id="pub-total-tabung" class="text-4xl font-black text-blue-400 drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
-            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Tabung Keluar Fisik</p>
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">TABUNG KELUAR DARI GUDANG</p>
             <h3 id="pub-tabung-masuk" class="text-4xl font-black text-yellow-400 drop-shadow-md">0</h3>
           </div>
           <div class="glass-card p-5 rounded-xl border border-gray-800 text-center flex flex-col justify-center">
-            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Sisa Tabung Tersedia</p>
+            <p class="text-[11px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">SISA TABUNG TERSEDIA DI GUDANG</p>
             <h3 id="pub-sisa-tabung" class="text-4xl font-black text-[#00ffaa] drop-shadow-md">0</h3>
           </div>
         </div>
@@ -644,7 +644,7 @@
       logVisit(); 
     });
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzLYXJmrFU0ucXc8kphpEdWtr2UsFOskLUrqenrYhN7Q-xK68QT0kwds5V4UNpAdg7O/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyoedAaCcv1hND3dpzUgIEr-gzErOfrhayk5-gChE8pibVPVLbLJT5iPZSzhxuDrqQH/exec"; 
 
     async function apiCall(action, payload = null) {
       try {
@@ -1436,7 +1436,7 @@
       const baseFiltered = appData.transaksi.filter(row => { const tgl = row[1]; if (start && tgl < start) return false; if (end && tgl > end) return false; return true; });
       const tbody = document.getElementById('table-laporan-body'); if (!tbody) return; tbody.innerHTML = '';
       
-      let html = ''; let sumTabung = 0; let sumRupiah = 0; 
+      let html = ''; let sumTabungDibayar = 0; let sumRupiah = 0; 
       let sumProfitLama = 0; let sumProfitBaru = 0; let sumProfit = 0; 
       let memberProfit = {};
 
@@ -1453,7 +1453,8 @@
 
       baseFiltered.forEach(row => { 
           const memberName = row[2] || '-'; const jenis = row[3] || '-'; 
-          const qty = Number(row[5]) || 0; const hargaJualTotal = Number(row[6]) || 0;
+          const qtyDibayar = Number(row[5]) || 0; 
+          const hargaJualTotal = Number(row[6]) || 0;
           let profit = 0;
           let badgeSistem = '';
 
@@ -1468,33 +1469,71 @@
                   if(jenis === 'Penjualan Gas') modalSatuan = Number(memberData[5]) || 0; 
                   else if(jenis === 'Penjualan Tabung Kosong') modalSatuan = Number(memberData[6]) || 0;
               }
-              profit = hargaJualTotal - (qty * modalSatuan);
+              profit = hargaJualTotal - (qtyDibayar * modalSatuan);
               sumProfitLama += profit;
               badgeSistem = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold whitespace-nowrap">HARGA LAMA</span>`;
           }
           
-          sumTabung += qty; sumRupiah += hargaJualTotal; sumProfit += profit;
+          sumTabungDibayar += qtyDibayar; sumRupiah += hargaJualTotal; sumProfit += profit;
           
-          if(!memberProfit[memberName]) memberProfit[memberName] = { qty: 0, profit: 0 };
-          memberProfit[memberName].qty += qty; memberProfit[memberName].profit += profit;
+          if(!memberProfit[memberName]) memberProfit[memberName] = { qtyDibayar: 0, profit: 0 };
+          memberProfit[memberName].qtyDibayar += qtyDibayar; 
+          memberProfit[memberName].profit += profit;
 
           const isKhusus = (row[7] || '') === 'Khusus';
           const infoBadge = isKhusus ? `<span class="text-[9px] text-blue-400 ml-1" title="Khusus"><i class="fa-solid fa-tag"></i></span>` : `<span class="text-[9px] text-yellow-400 ml-1" title="Harga 0"><i class="fa-solid fa-triangle-exclamation"></i></span>`;
           
-          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40"><td class="px-4 py-3 text-xs">${row[0]}</td><td class="px-4 py-3 text-xs">${fDate(row[1])}</td><td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td><td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td><td class="px-4 py-3">${qty.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td><td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td></tr>`; 
+          html += `<tr class="border-b border-gray-800 hover:bg-gray-800/40">
+              <td class="px-4 py-3 text-xs">${row[0]}</td>
+              <td class="px-4 py-3 text-xs">${fDate(row[1])}</td>
+              <td class="px-4 py-3 font-semibold text-white flex items-center">${memberName}${infoBadge}${badgeSistem}</td>
+              <td class="px-4 py-3 text-xs text-[#00ffaa]">${jenis}</td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300">${row[4]}</span></td>
+              <td class="px-4 py-3">${qtyDibayar.toLocaleString('id-ID')} Tbg</td>
+              <td class="px-4 py-3 text-blue-400">Rp ${hargaJualTotal.toLocaleString('id-ID')}</td>
+              <td class="px-4 py-3 font-bold text-[#00ffaa]">Rp ${profit.toLocaleString('id-ID')}</td>
+          </tr>`; 
       });
 
-      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold"><td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total Laporan:</td><td class="px-4 py-4 text-[#00ffaa]">${sumTabung.toLocaleString('id-ID')} Tbg</td><td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td><td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td></tr>`;
+      html += `<tr class="bg-[#161b22] border-t-2 border-gray-700 text-white font-bold">
+          <td colspan="5" class="px-4 py-4 text-right uppercase tracking-wider text-xs">Total:</td>
+          <td class="px-4 py-4 text-white">${sumTabungDibayar.toLocaleString('id-ID')} Tbg</td>
+          <td class="px-4 py-4 text-blue-400">Rp ${sumRupiah.toLocaleString('id-ID')}</td>
+          <td class="px-4 py-4 text-[#00ffaa]">Rp ${sumProfit.toLocaleString('id-ID')}</td>
+      </tr>`;
       tbody.innerHTML = html;
       
-      document.getElementById('lap-tot-tabung').innerText = sumTabung.toLocaleString('id-ID'); 
+      document.getElementById('lap-tot-tabung').innerText = sumTabungDibayar.toLocaleString('id-ID'); 
       document.getElementById('lap-tot-omzet').innerText = 'Rp ' + sumRupiah.toLocaleString('id-ID'); 
       document.getElementById('lap-tot-profit-lama').innerText = 'Rp ' + sumProfitLama.toLocaleString('id-ID');
       document.getElementById('lap-tot-profit-baru').innerText = 'Rp ' + sumProfitBaru.toLocaleString('id-ID');
       document.getElementById('lap-tot-profit').innerText = 'Rp ' + sumProfit.toLocaleString('id-ID');
       
       let memberHtml = '';
-      for (const [name, data] of Object.entries(memberProfit)) { memberHtml += `<div class="bg-[#161b22] p-2 rounded border border-gray-800"><strong class="text-white block truncate">${name}</strong><span class="text-gray-400 block">${data.qty.toLocaleString('id-ID')} Tabung</span><span class="text-[#00ffaa] font-bold">Rp ${data.profit.toLocaleString('id-ID')}</span></div>`; }
+      for (const [name, data] of Object.entries(memberProfit)) { 
+          // Cari titipan saat ini dari getAppData
+          let tabungTitipan = 0;
+          const memberData = appData.members.find(m => m[1] && m[1].toString().toUpperCase() === name.toUpperCase());
+          if (memberData) { tabungTitipan = Number(memberData[10]) || 0; }
+          
+          let badgeUtang = '';
+          if (tabungTitipan > 0) {
+              badgeUtang = `<span class="text-xs text-yellow-400 font-bold block mt-1"><i class="fa-solid fa-boxes-stacked"></i> Titipan: ${tabungTitipan} Tbg</span>`;
+          } else {
+              badgeUtang = `<span class="text-xs text-gray-500 block mt-1">Stok Titipan: 0 (Balance)</span>`;
+          }
+
+          memberHtml += `<div class="bg-[#161b22] p-3 rounded-xl border border-gray-800 flex flex-col justify-between">
+              <div>
+                  <strong class="text-white block truncate text-sm">${name}</strong>
+                  <span class="text-gray-400 block mt-1">Dibayar: ${data.qtyDibayar.toLocaleString('id-ID')} Tbg</span>
+                  ${badgeUtang}
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-700">
+                  <span class="text-[#00ffaa] font-bold block">Profit: Rp ${data.profit.toLocaleString('id-ID')}</span>
+              </div>
+          </div>`; 
+      }
       document.getElementById('lap-profit-member').innerHTML = memberHtml;
     }
 
