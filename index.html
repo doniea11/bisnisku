@@ -305,7 +305,7 @@
                 <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-chart-line text-[#00ffaa] mr-2"></i> Laporan Status Modal (Isi Ulang Tabung Gas)</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Total Permodalan Refill</span><h4 id="disp-refill-total" class="text-lg font-bold text-white">Rp 0</h4></div>
-                  <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Uang Masuk</span><h4 id="disp-refill-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
+                  <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Akumulasi Profit Refill</span><h4 id="disp-refill-profit" class="text-lg font-bold text-[#00ffaa]">Rp 0</h4></div>
                   <div class="bg-[#161b22] p-4 rounded-xl border border-gray-800"><span class="text-xs text-gray-400 block mb-1">Sisa Modal Belum Kembali</span><h4 id="disp-refill-sisa" class="text-lg font-bold text-red-400">Rp 0</h4></div>
                 </div>
                 <div class="bg-[#161b22] p-5 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -1002,20 +1002,6 @@
           }
       });
 
-      // Menambahkan kalibrator Tanggal yang baku
-      function toYYYYMMDD(dStr) {
-          if(!dStr) return '';
-          let str = String(dStr).split(' ')[0];
-          if(str.includes('-') && str.split('-')[0].length === 2) {
-              let p = str.split('-'); return p[2] + '-' + p[1] + '-' + p[0];
-          }
-          if(str.includes('/')) {
-              let p = str.split('/');
-              if(p[0].length === 2) return p[2] + '-' + p[1] + '-' + p[0];
-          }
-          return str;
-      }
-
       let totalUangMasukRefill = 0;
       
       // Mengurutkan dengan format tanggal standar agar tidak salah antrean
@@ -1030,68 +1016,42 @@
           targetDep = allDeposits[allDeposits.length - 1]; 
       }
 
-      if (targetDep && allDeposits.length > 0) {
-          let trxQueue = [];
+      if (targetDep) {
+          let depQuota = Number(targetDep[3]) || 0;
+          let depDate = toYYYYMMDD(targetDep[1]);
+          let fulfilledForThisDep = 0;
+
+          // Hanya kalkulasi transaksi yang terjadi pada atau setelah tanggal deposit target
           allTrx.forEach(row => {
+              let trxDate = toYYYYMMDD(row[1]);
               const jenis = row[3] || "";
-              if (jenis === 'Penjualan Gas') {
-                  trxQueue.push({
-                      date: toYYYYMMDD(row[1]),
-                      qty: Number(row[5]) || 0,
-                      row: row
-                  });
-              }
-          });
-
-          let currentTrxIdx = 0;
-
-          for (let d = 0; d < allDeposits.length; d++) {
-              let depObj = allDeposits[d];
-              let depQuota = Number(depObj[3]) || 0;
-              let depDate = toYYYYMMDD(depObj[1]); // Cek tanggal dalam format yang bisa dikalkulasi (Matematika)
-
-              let fulfilledForThisDep = 0;
-              while (fulfilledForThisDep < depQuota && currentTrxIdx < trxQueue.length) {
-                  let trx = trxQueue[currentTrxIdx];
-                  
-                  // Murni membaca transaksi SEJAK tanggal Deposit target
-                  if (trx.date >= depDate) {
+              
+              if (jenis === 'Penjualan Gas' && trxDate >= depDate && fulfilledForThisDep < depQuota) {
+                  let qty = Number(row[5]) || 0;
+                  if (qty > 0) {
                       let needed = depQuota - fulfilledForThisDep;
-                      let take = trx.qty;
-                      if (take > needed) {
-                          take = needed;
-                          trx.qty -= needed; 
+                      let take = qty > needed ? needed : qty;
+                      
+                      let profitTotal = 0;
+                      if (row.length >= 11 && row[10] !== "" && row[10] !== undefined) {
+                          profitTotal = Number(row[10]) || 0;
                       } else {
-                          currentTrxIdx++; 
-                          trx.qty = 0;
-                      }
-
-                      fulfilledForThisDep += take;
-
-                      if (targetDep && depObj[0] === targetDep[0]) {
-                          let memberName = trx.row[2] || "";
                           let modalSatuan = 0;
-                          if (trx.row.length >= 11 && trx.row[8] !== "" && trx.row[8] !== undefined) {
-                              modalSatuan = Number(trx.row[8]) || 0;
-                          } else {
-                              for (let m = 0; m < (appData.members || []).length; m++) {
-                                  if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === memberName.toUpperCase()) {
-                                      modalSatuan = Number(appData.members[m][5]) || 0;
-                                      break;
-                                  }
+                          for (let m = 0; m < (appData.members || []).length; m++) {
+                              if (appData.members[m][1] && appData.members[m][1].toString().toUpperCase() === (row[2] || "").toString().toUpperCase()) {
+                                  modalSatuan = Number(appData.members[m][5]) || 0;
+                                  break;
                               }
                           }
-                          totalUangMasukRefill += (take * modalSatuan);
+                          profitTotal = (Number(row[6]) || 0) - (qty * modalSatuan);
                       }
-                  } else {
-                      currentTrxIdx++; 
+                      
+                      let profitForTake = (take / qty) * profitTotal;
+                      totalUangMasukRefill += profitForTake;
+                      fulfilledForThisDep += take;
                   }
               }
-
-              if (targetDep && depObj[0] === targetDep[0]) {
-                  break;
-              }
-          }
+          });
       }
 
       totalModalRefill = 0;
